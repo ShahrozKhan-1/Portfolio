@@ -7,6 +7,19 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { DEFAULT_SITE_DATA } from "@/lib/site-defaults"
+import type { SiteData } from "@/lib/site-types"
+import {
+  siDocker,
+  siDjango,
+  siFastapi,
+  siN8n,
+  siPostgresql,
+  siPython,
+  siRedis,
+  siSelenium,
+  siZapier,
+} from "simple-icons"
 import {
   Github,
   Linkedin,
@@ -29,18 +42,56 @@ import {
 import { motion, AnimatePresence } from "framer-motion"
 import { sendContactEmail } from "./actions/contact"
 
+type BrandIcon = {
+  path: string
+  hex: string
+}
+
+const brandSkillIcons: Record<string, BrandIcon> = {
+  python: siPython,
+  django: siDjango,
+  fastapi: siFastapi,
+  postgresql: siPostgresql,
+  selenium: siSelenium,
+  docker: siDocker,
+  redis: siRedis,
+  automation: siZapier,
+  zapier: siZapier,
+  n8n: siN8n,
+}
+
+function SkillBrandIcon({ icon, className }: { icon: BrandIcon; className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      focusable="false"
+      role="img"
+      viewBox="0 0 24 24"
+      className={className}
+      style={{ color: `#${icon.hex}` }}
+    >
+      <path fill="currentColor" d={icon.path} />
+    </svg>
+  )
+}
+
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
   const observerRef = useRef<IntersectionObserver | null>(null)
   const [contactState, setContactState] = useState<{ success: boolean; message: string } | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [siteData, setSiteData] = useState<SiteData>(DEFAULT_SITE_DATA)
 
   // Developer-specific animations
   const [currentCode, setCurrentCode] = useState(0)
   const [isTyping, setIsTyping] = useState(true)
   const [debugMode, setDebugMode] = useState(false)
   const [coffeeCount, setCoffeeCount] = useState(0)
+  const profile = siteData.profile
+  const skills = siteData.skills
+  const projects = siteData.projects
+  const reviews = siteData.reviews
 
   const codeSnippets = [
     "developer = 'Shahroz Khan'",
@@ -61,6 +112,51 @@ export default function Home() {
   ]
 
   const [currentState, setCurrentState] = useState(0)
+  const skillIcons = {
+    code: <Code className="h-8 w-8" />,
+    database: <Database className="h-8 w-8" />,
+    figma: <FigmaIcon className="h-8 w-8" />,
+    server: <Server className="h-8 w-8" />,
+    smartphone: <Smartphone className="h-8 w-8" />,
+    terminal: <Terminal className="h-8 w-8" />,
+    zap: <Zap className="h-8 w-8" />,
+  } as const
+
+  const getBrandSkillIcon = (skill: SiteData["skills"][number]) => {
+    const normalizedName = skill.name.trim().toLowerCase()
+    const normalizedKey = skill.iconKey.trim().toLowerCase()
+    return brandSkillIcons[normalizedName] ?? brandSkillIcons[normalizedKey] ?? null
+  }
+
+  const getFallbackSkillIcon = (skill: SiteData["skills"][number]) => {
+    return skillIcons[skill.iconKey as keyof typeof skillIcons] ?? <Code className="h-8 w-8" />
+  }
+
+  useEffect(() => {
+    let isMounted = true
+
+    const loadSiteData = async () => {
+      try {
+        const response = await fetch("/api/site-data", { cache: "no-store" })
+        if (!response.ok) {
+          return
+        }
+
+        const data = (await response.json()) as SiteData
+        if (isMounted && data) {
+          setSiteData(data)
+        }
+      } catch {
+        // Keep the bundled defaults if the JSON source is unavailable.
+      }
+    }
+
+    loadSiteData()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   useEffect(() => {
     const sections = document.querySelectorAll("section[id]")
@@ -217,7 +313,7 @@ export default function Home() {
         <div className="container flex h-16 items-center justify-between">
           <Link href="/" className="font-bold text-xl flex items-center">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500">
-              Shahroz Khan
+              {profile.name}
             </span>
           </Link>
 
@@ -227,11 +323,10 @@ export default function Home() {
               <Link
                 key={section}
                 href={`#${section}`}
-                className={`text-sm font-medium transition-colors relative ${
-                  activeSection === section
+                className={`text-sm font-medium transition-colors relative ${activeSection === section
                     ? "text-purple-600 dark:text-purple-400"
                     : "text-slate-700 hover:text-purple-600 dark:text-slate-300 dark:hover:text-purple-400"
-                }`}
+                  }`}
               >
                 {section.charAt(0).toUpperCase() + section.slice(1)}
                 {activeSection === section && (
@@ -246,12 +341,12 @@ export default function Home() {
 
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon" className="rounded-full" asChild>
-              <Link href="https://github.com" target="_blank" aria-label="GitHub">
+              <Link href={profile.githubUrl} target="_blank" aria-label="GitHub">
                 <Github className="h-4 w-4" />
               </Link>
             </Button>
             <Button variant="ghost" size="icon" className="rounded-full" asChild>
-              <Link href="https://www.linkedin.com/in/shahroz-khan-b08911274" target="_blank" aria-label="LinkedIn">
+              <Link href={profile.linkedinUrl} target="_blank" aria-label="LinkedIn">
                 <Linkedin className="h-4 w-4" />
               </Link>
             </Button>
@@ -285,11 +380,10 @@ export default function Home() {
                 <Link
                   key={section}
                   href={`#${section}`}
-                  className={`py-3 px-4 text-sm font-medium ${
-                    activeSection === section
+                  className={`py-3 px-4 text-sm font-medium ${activeSection === section
                       ? "text-purple-600 dark:text-purple-400 bg-slate-100 dark:bg-slate-900 rounded-md"
                       : "text-slate-700 dark:text-slate-300"
-                  }`}
+                    }`}
                   onClick={closeMenu}
                 >
                   {section.charAt(0).toUpperCase() + section.slice(1)}
@@ -311,7 +405,7 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section id="home" className="py-20 md:py-32 relative overflow-hidden">
+        <section id="home" className="py-20 md:py-2 relative overflow-hidden">
           <div className="container px-4 md:px-6 relative z-10">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_500px]">
               <motion.div
@@ -356,7 +450,7 @@ export default function Home() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.2 }}
                     >
-                      Hi, I&apos;m Shahroz Khan
+                      Hi, I&apos;m {profile.name}
                     </motion.span>
                     <motion.span
                       className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500"
@@ -364,7 +458,7 @@ export default function Home() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.4 }}
                     >
-                      Python Developer
+                      {profile.role}
                     </motion.span>
                   </h1>
 
@@ -417,7 +511,7 @@ export default function Home() {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.8 }}
                   >
-                    Python Developer with experience in backend development, RESTful APIs, web scraping, Django, Flask, FastAPI, PostgreSQL, and AI integrations.
+                    {profile.headline}
                   </motion.p>
                 </div>
 
@@ -465,7 +559,7 @@ export default function Home() {
                       className="rounded-full h-9 w-9 bg-transparent hover:scale-110 transition-transform"
                       asChild
                     >
-                      <Link href="https://github.com" target="_blank" aria-label="GitHub">
+                      <Link href={profile.githubUrl} target="_blank" aria-label="GitHub">
                         <Github className="h-4 w-4" />
                       </Link>
                     </Button>
@@ -476,7 +570,7 @@ export default function Home() {
                       asChild
                     >
                       <Link
-                        href="https://www.linkedin.com/in/shahroz-khan-b08911274"
+                        href={profile.linkedinUrl}
                         target="_blank"
                         aria-label="LinkedIn"
                       >
@@ -508,7 +602,7 @@ export default function Home() {
                   />
                   <div className="relative bg-white dark:bg-slate-900 rounded-full p-2 shadow-xl">
                     <img
-                      alt="Shahroz Khan"
+                      alt={profile.name}
                       className="aspect-square overflow-hidden rounded-full object-cover object-center sm:w-full border-4 border-white dark:border-slate-900"
                       height="500"
                       src="#"
@@ -562,7 +656,7 @@ export default function Home() {
         </section>
 
         {/* About Section */}
-        <section id="about" className="py-20 md:py-32 relative">
+        <section id="about" className="py-20 md:py-2 relative">
           <div className="container px-4 md:px-6">
             <div className="mx-auto max-w-6xl">
               <div className="grid gap-12 lg:grid-cols-2 items-center">
@@ -599,7 +693,7 @@ export default function Home() {
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
                       >
-                        I&apos;m a motivated Python Developer focused on building reliable backend systems, RESTful APIs, and practical automation solutions. I enjoy turning complex requirements into clean, maintainable software.
+                        {profile.about}
                       </motion.p>
                       <motion.p
                         className="text-slate-700 dark:text-slate-300 leading-relaxed"
@@ -607,7 +701,7 @@ export default function Home() {
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4 }}
                       >
-                        My experience includes internal management systems, AI-powered hiring workflows, data extraction platforms, and cross-platform automations using modern Python tools and third-party APIs.
+                        {profile.summary}
                       </motion.p>
                       <div className="pt-4">
                         <motion.h3
@@ -678,14 +772,12 @@ export default function Home() {
                       Reality
                     </span>
                   </h2>
-                  <p className="text-slate-700 dark:text-slate-300 text-lg">
-                    With hands-on experience in backend development, I build reliable services, automation workflows, and AI-enabled applications that streamline real-world operations.
-                  </p>
+                  <p className="text-slate-700 dark:text-slate-300 text-lg">{profile.summary}</p>
                   <div className="grid grid-cols-2 gap-4">
                     {[
                       { number: "1+", label: "Year Experience" },
-                      { number: "4", label: "Featured Projects" },
-                      { number: "3", label: "Core Frameworks" },
+                      { number: String(projects.length), label: "Featured Projects" },
+                      { number: String(skills.length), label: "Core Frameworks" },
                       { number: "10+", label: "Tools & Services" },
                     ].map((stat, index) => (
                       <motion.div
@@ -715,7 +807,7 @@ export default function Home() {
         </section>
 
         {/* Skills Section */}
-        <section id="skills" className="py-20 md:py-32 relative">
+        <section id="skills" className="py-20 md:py-2 relative">
           <div className="container px-4 md:px-6">
             <div className="text-center mb-12">
               <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 mb-4">
@@ -734,55 +826,50 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-              {[
-                { title: "Python", icon: <Code className="h-8 w-8" />, color: "from-blue-500 to-cyan-500" },
-                { title: "Django", icon: <Server className="h-8 w-8" />, color: "from-emerald-500 to-teal-500" },
-                { title: "FastAPI", icon: <Zap className="h-8 w-8" />, color: "from-green-500 to-cyan-500" },
-                { title: "PostgreSQL", icon: <Database className="h-8 w-8" />, color: "from-blue-600 to-indigo-600" },
-                { title: "Selenium", icon: <Terminal className="h-8 w-8" />, color: "from-orange-500 to-amber-500" },
-                { title: "Docker", icon: <Server className="h-8 w-8" />, color: "from-sky-500 to-blue-600" },
-                { title: "Redis", icon: <Database className="h-8 w-8" />, color: "from-red-500 to-rose-500" },
-                { title: "n8n / Zapier", icon: <FigmaIcon className="h-8 w-8" />, color: "from-purple-500 to-violet-500" },
-              ].map((skill, index) => (
-                <motion.div
-                  key={skill.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{
-                    y: -10,
-                    scale: 1.05,
-                    rotateY: 10,
-                  }}
-                  className="group cursor-pointer"
-                >
-                  <div className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-800 h-full flex flex-col items-center justify-center text-center transition-all duration-300 group-hover:shadow-xl">
-                    <motion.div
-                      className={`p-3 rounded-full bg-gradient-to-r ${skill.color} mb-4 text-white`}
-                      whileHover={{ rotate: 360 }}
-                      transition={{ duration: 0.6 }}
-                    >
-                      {skill.icon}
-                    </motion.div>
-                    <h3 className="text-lg font-semibold mb-2 tech-tag">{skill.title}</h3>
-                    <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full mt-2 overflow-hidden">
+              {skills.map((skill, index) => {
+                const brandIcon = getBrandSkillIcon(skill)
+
+                return (
+                  <motion.div
+                    key={skill.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    whileHover={{
+                      y: -10,
+                      scale: 1.05,
+                      rotateY: 10,
+                    }}
+                    className="group cursor-pointer"
+                  >
+                    <div className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-800 h-full flex flex-col items-center justify-center text-center transition-all duration-300 group-hover:shadow-xl">
                       <motion.div
-                        className={`h-full rounded-full bg-gradient-to-r ${skill.color}`}
-                        initial={{ width: 0 }}
-                        whileInView={{ width: "85%" }}
-                        transition={{ duration: 1, delay: index * 0.1 }}
-                      />
+                        className={
+                          brandIcon
+                            ? "mb-4 rounded-full bg-white/95 p-3 text-slate-900 shadow-md ring-1 ring-slate-200/80 dark:bg-slate-950/90 dark:text-slate-100 dark:ring-slate-700/60"
+                            : `mb-4 rounded-full bg-gradient-to-r ${skill.accent} p-3 text-white`
+                        }
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.6 }}
+                      >
+                        {brandIcon ? (
+                          <SkillBrandIcon icon={brandIcon} className="h-8 w-8" />
+                        ) : (
+                          getFallbackSkillIcon(skill)
+                        )}
+                      </motion.div>
+                      <h3 className="text-lg font-semibold mb-2 tech-tag">{skill.name}</h3>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                )
+              })}
             </div>
           </div>
         </section>
 
         {/* Projects Section */}
-        <section id="projects" className="py-20 md:py-32 relative">
+        <section id="projects" className="py-20 md:py-2 relative">
           <div className="container px-4 md:px-6">
             <div className="text-center mb-12">
               <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 mb-4">
@@ -800,39 +887,9 @@ export default function Home() {
             </div>
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  title: "VisionIMS",
-                  description:
-                    "Internal management system with projects, leads, tickets, attendance, real-time chat, milestones, and role-based access control.",
-                  tags: ["Django", "DRF", "PostgreSQL"],
-                  image: "/placeholder.svg?height=300&width=500",
-                },
-                {
-                  title: "EvaHires",
-                  description:
-                    "AI-powered hiring platform with candidate onboarding, resume matching, live interviews, recording, transcripts, and AI-generated evaluations.",
-                  tags: ["FastAPI", "React", "PostgreSQL"],
-                  image: "/placeholder.svg?height=300&width=500",
-                },
-                {
-                  title: "Web Scraping Automation",
-                  description:
-                    "Reusable Selenium and BeautifulSoup scraping solutions with pagination, dynamic content handling, data cleaning, multithreading, and CSV export.",
-                  tags: ["Python", "Selenium", "BeautifulSoup"],
-                  image: "/placeholder.svg?height=300&width=500",
-                },
-                {
-                  title: "Automation & AI Integration",
-                  description:
-                    "Zapier and n8n workflows connecting QuickBooks, Monday.com, AI services, and automated contextual chatbot responses.",
-                  tags: ["Zapier", "n8n", "AI Integrations"],
-                  image: "/placeholder.svg?height=300&width=500",
-                  link: "#contact",
-                },
-              ].map((project, index) => (
+              {projects.map((project, index) => (
                 <motion.div
-                  key={project.title}
+                  key={project.id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -857,13 +914,13 @@ export default function Home() {
                           className="gap-2 bg-white text-slate-900 hover:bg-slate-100"
                           asChild
                         >
-                          <Link href={project.link || "#"}>
+                          <Link href={project.linkUrl || "#"}>
                             View Project <ExternalLink className="h-4 w-4" />
                           </Link>
                         </Button>
                       </motion.div>
                       <motion.img
-                        src={project.image || "/placeholder.svg"}
+                        src={project.imageUrl || "/placeholder.svg"}
                         alt={project.title}
                         className="w-full h-48 object-cover"
                         whileHover={{ scale: 1.1 }}
@@ -876,22 +933,26 @@ export default function Home() {
                       </h3>
                       <p className="text-slate-700 dark:text-slate-300 mb-4 line-clamp-3">{project.description}</p>
                       <div className="flex flex-wrap gap-2 mb-4">
-                        {project.tags.map((tag, tagIndex) => (
-                          <motion.div
-                            key={tag}
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: tagIndex * 0.1 }}
-                            whileHover={{ scale: 1.1 }}
-                          >
-                            <Badge
-                              variant="secondary"
-                              className="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-900/50 font-mono text-xs"
+                        {project.tags
+                          .split(",")
+                          .map((tag) => tag.trim())
+                          .filter(Boolean)
+                          .map((tag, tagIndex) => (
+                            <motion.div
+                              key={tag}
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              whileInView={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: tagIndex * 0.1 }}
+                              whileHover={{ scale: 1.1 }}
                             >
-                              {tag}
-                            </Badge>
-                          </motion.div>
-                        ))}
+                              <Badge
+                                variant="secondary"
+                                className="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-900/50 font-mono text-xs"
+                              >
+                                {tag}
+                              </Badge>
+                            </motion.div>
+                          ))}
                       </div>
                     </CardContent>
                   </Card>
@@ -909,7 +970,7 @@ export default function Home() {
         </section>
 
         {/* Testimonials Section */}
-        <section className="py-20 md:py-32 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 relative">
+        <section className="py-20 md:py-2 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 relative">
           <div className="container px-4 md:px-6">
             <div className="text-center mb-12">
               <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 mb-4">
@@ -927,31 +988,9 @@ export default function Home() {
             </div>
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  name: "Sarah Johnson",
-                  role: "CEO, TechStart",
-                  content:
-                    "Shahroz built dependable backend services and consistently approached complex requirements with clear, practical solutions.",
-                  image: "/images/rupesh-profile.jpeg",
-                },
-                {
-                  name: "Michael Chen",
-                  role: "Marketing Director, GrowthLabs",
-                  content:
-                    "Shahroz&apos;s API work and debugging made our internal workflows more reliable and easier to maintain.",
-                  image: "/images/rupesh-profile.jpeg",
-                },
-                {
-                  name: "Emily Rodriguez",
-                  role: "Founder, DesignHub",
-                  content:
-                    "Shahroz brings strong Python fundamentals, thoughtful backend design, and a genuine drive to keep learning.",
-                  image: "/images/rupesh-profile.jpeg",
-                },
-              ].map((testimonial, index) => (
+              {reviews.map((testimonial, index) => (
                 <motion.div
-                  key={testimonial.name}
+                  key={testimonial.id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -967,7 +1006,7 @@ export default function Home() {
                             transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
                           />
                           <img
-                            src="/images/rupesh-profile.jpeg"
+                            src={testimonial.avatarUrl || "/images/rupesh-profile.jpeg"}
                             alt={testimonial.name}
                             className="relative w-12 h-12 rounded-full object-cover border-2 border-white dark:border-slate-900"
                           />
@@ -1001,7 +1040,7 @@ export default function Home() {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="py-20 md:py-32 relative">
+        <section id="contact" className="py-20 md:py-2 relative">
           <div className="container px-4 md:px-6">
             <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2">
               <motion.div
@@ -1035,7 +1074,7 @@ export default function Home() {
                     </div>
                     <div>
                       <h3 className="font-medium">Email</h3>
-                      <p className="text-slate-700 dark:text-slate-300">shahrozkha83@gmail.com</p>
+                      <p className="text-slate-700 dark:text-slate-300">{profile.email}</p>
                     </div>
                   </motion.div>
                 </div>
@@ -1139,11 +1178,10 @@ export default function Home() {
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className={`mt-4 p-4 rounded-md ${
-                        contactState.success
+                      className={`mt-4 p-4 rounded-md ${contactState.success
                           ? "bg-green-50 text-green-800 border border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800"
                           : "bg-red-50 text-red-800 border border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800"
-                      }`}
+                        }`}
                     >
                       {contactState.message}
                     </motion.div>
@@ -1161,22 +1199,22 @@ export default function Home() {
             <div className="flex flex-col items-center gap-4 md:items-start md:gap-2">
               <Link href="/" className="font-bold text-xl flex items-center">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500">
-                  Shahroz Khan
+                  {profile.name}
                 </span>
               </Link>
               <p className="text-center text-sm leading-loose text-slate-600 dark:text-slate-400 md:text-left">
-                © 2026 Shahroz Khan. All rights reserved.
+                © 2026 {profile.name}. All rights reserved.
               </p>
             </div>
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="icon" className="rounded-full" asChild>
-                <Link href="https://github.com" target="_blank" aria-label="GitHub">
+                <Link href={profile.githubUrl} target="_blank" aria-label="GitHub">
                   <Github className="h-4 w-4" />
                 </Link>
               </Button>
               <Button variant="ghost" size="icon" className="rounded-full" asChild>
                 <Link
-                  href="https://www.linkedin.com/in/shahroz-khan-b08911274"
+                  href={profile.linkedinUrl}
                   target="_blank"
                   aria-label="LinkedIn"
                 >
@@ -1190,3 +1228,4 @@ export default function Home() {
     </div>
   )
 }
+

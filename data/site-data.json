@@ -1,0 +1,155 @@
+{
+  "profile": {
+    "name": "Shahroz Khan",
+    "role": "Python Developer",
+    "headline": "Building backend systems, REST APIs, and automation workflows.",
+    "about": "I am a motivated Python Developer focused on building reliable backend systems, RESTful APIs, and practical automation solutions. I enjoy turning complex requirements into clean, maintainable software.",
+    "summary": "My experience includes internal management systems, AI-powered hiring workflows, data extraction platforms, and cross-platform automations using modern Python tools and third-party APIs.",
+    "email": "shahrozkha83@gmail.com",
+    "location": "Lahore, Punjab, Pakistan",
+    "githubUrl": "https://github.com/ShahrozKhan-1",
+    "linkedinUrl": "https://www.linkedin.com/in/shahroz-khan-b08911274",
+    "imageUrl": "/images/rupesh-profile.jpeg"
+  },
+  "skills": [
+    {
+      "id": 1,
+      "name": "Python",
+      "category": "Language",
+      "description": "Strong backend development, scripting, and automation.",
+      "iconKey": "code",
+      "accent": "from-blue-500 to-cyan-500",
+      "orderIndex": 1
+    },
+    {
+      "id": 2,
+      "name": "Django",
+      "category": "Framework",
+      "description": "Reliable CRUD apps, admin panels, and API-backed systems.",
+      "iconKey": "server",
+      "accent": "from-emerald-500 to-teal-500",
+      "orderIndex": 2
+    },
+    {
+      "id": 3,
+      "name": "FastAPI",
+      "category": "Framework",
+      "description": "Fast, modern APIs with clean request and response handling.",
+      "iconKey": "zap",
+      "accent": "from-green-500 to-cyan-500",
+      "orderIndex": 3
+    },
+    {
+      "id": 4,
+      "name": "PostgreSQL",
+      "category": "Database",
+      "description": "Structured data modeling and query optimization.",
+      "iconKey": "database",
+      "accent": "from-blue-600 to-indigo-600",
+      "orderIndex": 4
+    },
+    {
+      "id": 5,
+      "name": "Selenium",
+      "category": "Automation",
+      "description": "Browser automation for scraping and testing workflows.",
+      "iconKey": "terminal",
+      "accent": "from-orange-500 to-amber-500",
+      "orderIndex": 5
+    },
+    {
+      "id": 6,
+      "name": "Docker",
+      "category": "Infrastructure",
+      "description": "Portable app packaging and reproducible deployments.",
+      "iconKey": "server",
+      "accent": "from-sky-500 to-blue-600",
+      "orderIndex": 6
+    },
+    {
+      "id": 7,
+      "name": "Redis",
+      "category": "Cache",
+      "description": "Fast background jobs and low-latency data handling.",
+      "iconKey": "database",
+      "accent": "from-red-500 to-rose-500",
+      "orderIndex": 7
+    },
+    {
+      "id": 8,
+      "name": "Automation",
+      "category": "Workflow",
+      "description": "Zapier, n8n, and third-party integration workflows.",
+      "iconKey": "zap",
+      "accent": "from-purple-500 to-violet-500",
+      "orderIndex": 8
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "title": "VisionIMS",
+      "description": "Internal management system with projects, leads, tickets, attendance, real-time chat, milestones, and role-based access control.",
+      "tags": "Django, DRF, PostgreSQL",
+      "imageUrl": "/placeholder.svg?height=300&width=500",
+      "linkUrl": "",
+      "orderIndex": 1
+    },
+    {
+      "id": 2,
+      "title": "EvaHires",
+      "description": "AI-powered hiring platform with candidate onboarding, resume matching, live interviews, recording, transcripts, and AI-generated evaluations.",
+      "tags": "FastAPI, React, PostgreSQL",
+      "imageUrl": "/placeholder.svg?height=300&width=500",
+      "linkUrl": "",
+      "orderIndex": 2
+    },
+    {
+      "id": 3,
+      "title": "Web Scraping Automation",
+      "description": "Reusable Selenium and BeautifulSoup scraping solutions with pagination, dynamic content handling, data cleaning, multithreading, and CSV export.",
+      "tags": "Python, Selenium, BeautifulSoup",
+      "imageUrl": "/placeholder.svg?height=300&width=500",
+      "linkUrl": "",
+      "orderIndex": 3
+    },
+    {
+      "id": 4,
+      "title": "Automation & AI Integration",
+      "description": "Zapier and n8n workflows connecting QuickBooks, Monday.com, AI services, and automated contextual chatbot responses.",
+      "tags": "Zapier, n8n, AI Integrations",
+      "imageUrl": "/placeholder.svg?height=300&width=500",
+      "linkUrl": "#contact",
+      "orderIndex": 4
+    }
+  ],
+  "reviews": [
+    {
+      "id": 1,
+      "name": "Sarah Johnson",
+      "role": "CEO, TechStart",
+      "content": "Shahroz built dependable backend services and consistently approached complex requirements with clear, practical solutions.",
+      "avatarUrl": "/images/rupesh-profile.jpeg",
+      "rating": 5,
+      "orderIndex": 1
+    },
+    {
+      "id": 2,
+      "name": "Michael Chen",
+      "role": "Marketing Director, GrowthLabs",
+      "content": "Shahroz's API work and debugging made our internal workflows more reliable and easier to maintain.",
+      "avatarUrl": "/images/rupesh-profile.jpeg",
+      "rating": 5,
+      "orderIndex": 2
+    },
+    {
+      "id": 3,
+      "name": "Emily Rodriguez",
+      "role": "Founder, DesignHub",
+      "content": "Shahroz brings strong Python fundamentals, thoughtful backend design, and a genuine drive to keep learning.",
+      "avatarUrl": "/images/rupesh-profile.jpeg",
+      "rating": 5,
+      "orderIndex": 3
+    }
+  ]
+}

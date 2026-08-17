@@ -1,5 +1,5 @@
 {
-  "name": "rupesh-portfolio",
+  "name": "shahroz-portfolio",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -53,6 +53,7 @@
     "react-resizable-panels": "^2.1.7",
     "recharts": "^2.15.4",
     "resend": "^3.2.0",
+    "simple-icons": "^16.28.0",
     "sonner": "^2.0.8",
     "tailwind-merge": "3.3.1",
     "vaul": "^1.1.2"
