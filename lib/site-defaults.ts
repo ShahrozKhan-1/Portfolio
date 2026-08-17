@@ -13,7 +13,7 @@ export const DEFAULT_SITE_DATA: SiteData = {
     location: "Lahore, Punjab, Pakistan",
     githubUrl: "https://github.com/ShahrozKhan-1",
     linkedinUrl: "https://www.linkedin.com/in/shahroz-khan-b08911274",
-    imageUrl: "/images/rupesh-profile.jpeg",
+    imageUrl: "/avatar.jpeg",
   },
   skills: [
     {
@@ -164,4 +164,3 @@ export const DEFAULT_SITE_DATA: SiteData = {
     },
   ],
 }
-

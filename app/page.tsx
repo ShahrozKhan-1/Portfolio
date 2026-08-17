@@ -82,6 +82,7 @@ export default function Home() {
   const [contactState, setContactState] = useState<{ success: boolean; message: string } | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [siteData, setSiteData] = useState<SiteData>(DEFAULT_SITE_DATA)
+  const [displayedCode, setDisplayedCode] = useState("")
 
   // Developer-specific animations
   const [currentCode, setCurrentCode] = useState(0)
@@ -93,15 +94,19 @@ export default function Home() {
   const projects = siteData.projects
   const reviews = siteData.reviews
 
-  const codeSnippets = [
-    "developer = 'Shahroz Khan'",
-    "def buildAmazingApps():",
-    "  return 'Django + FastAPI'",
-    "",
-    "// Coffee.exe has stopped working",
-    "git commit -m 'Another day, another bug fixed'",
-    "print('Hello, World! 👋')",
-  ]
+const codeSnippets = [
+  "developer = 'Shahroz Khan'",
+  "import django",
+  "from fastapi import FastAPI",
+  "def build_solution(problem):",
+  "    return clean_code",
+  "async def scale(app):",
+  "    await app.grow()",
+  "try: ship(feature)",
+  "except Bug: debug()",
+  "tests = 'passing'",
+  "deployment = 'successful'",
+]
 
   const developerStates = [
     { icon: <Code className="h-4 w-4" />, text: "Coding", color: "text-green-500" },
@@ -131,6 +136,24 @@ export default function Home() {
   const getFallbackSkillIcon = (skill: SiteData["skills"][number]) => {
     return skillIcons[skill.iconKey as keyof typeof skillIcons] ?? <Code className="h-8 w-8" />
   }
+
+  useEffect(() => {
+    const code = codeSnippets[currentCode]
+    let index = 0
+
+    setDisplayedCode("")
+
+    const typingInterval = setInterval(() => {
+      if (index < code.length) {
+        setDisplayedCode(code.slice(0, index + 1))
+        index++
+      } else {
+        clearInterval(typingInterval)
+      }
+    }, 50)
+
+    return () => clearInterval(typingInterval)
+  }, [currentCode])
 
   useEffect(() => {
     let isMounted = true
@@ -407,7 +430,7 @@ export default function Home() {
         {/* Hero Section */}
         <section id="home" className="py-20 md:py-22 relative overflow-hidden">
           <div className="container px-4 md:px-6 relative z-10">
-            <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_500px]">
+            <div className="grid gap-3 lg:grid-cols-[1fr_400px] lg:gap-5 xl:grid-cols-[1fr_500px]">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -486,17 +509,16 @@ export default function Home() {
                         className="flex items-center"
                       >
                         <span className="text-purple-400">$</span>
-                        <motion.span
-                          className="ml-2"
-                          initial={{ width: 0 }}
-                          animate={{ width: "auto" }}
-                          transition={{ duration: 1, ease: "easeInOut" }}
-                        >
-                          {codeSnippets[currentCode]}
-                        </motion.span>
+                        <span className="ml-2">
+                          {displayedCode}
+                        </span>
+
                         <motion.span
                           animate={{ opacity: [1, 0, 1] }}
-                          transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
+                          transition={{
+                            duration: 0.8,
+                            repeat: Number.POSITIVE_INFINITY,
+                          }}
                           className="ml-1 text-white"
                         >
                           |
@@ -605,7 +627,7 @@ export default function Home() {
                       alt={profile.name}
                       className="aspect-square overflow-hidden rounded-full object-cover object-center sm:w-full border-4 border-white dark:border-slate-900"
                       height="500"
-                      src="#"
+                      src={profile.imageUrl || "/avatar.jpeg"}
                       width="500"
                     />
                   </div>
