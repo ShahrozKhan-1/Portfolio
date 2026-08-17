@@ -242,30 +242,33 @@ const codeSnippets = [
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
   const closeMenu = () => setIsMenuOpen(false)
 
-  const handleContactSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setIsSubmitting(true)
-    setContactState(null)
+  const handleContactSubmit = async (
+  event: React.FormEvent<HTMLFormElement>
+) => {
+  event.preventDefault()
+  setIsSubmitting(true)
+  setContactState(null)
 
-    const formData = new FormData(event.currentTarget)
+  const form = event.currentTarget
+  const formData = new FormData(form)
 
-    try {
-      const result = await sendContactEmail(formData)
-      setContactState(result)
+  try {
+    const result = await sendContactEmail(formData)
+    setContactState(result)
 
-      if (result.success) {
-        event.currentTarget.reset()
-      }
-    } catch (error) {
-      console.error("Form submission error:", error)
-      setContactState({
-        success: false,
-        message: "An unexpected error occurred. Please try again.",
-      })
-    } finally {
-      setIsSubmitting(false)
+    if (result.success) {
+      form.reset()
     }
+  } catch (error) {
+    console.error("Form submission error:", error)
+    setContactState({
+      success: false,
+      message: "An unexpected error occurred. Please try again.",
+    })
+  } finally {
+    setIsSubmitting(false)
   }
+}
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 relative">
@@ -303,29 +306,37 @@ const codeSnippets = [
 
         {/* Floating Code Elements */}
         <div className="absolute inset-0 pointer-events-none">
-          {[...Array(6)].map((_, i) => (
+          {[
+            { symbol: "{ }", left: 10, top: 20, rotate: 45, duration: 12 },
+            { symbol: "< />", left: 80, top: 15, rotate: 120, duration: 15 },
+            { symbol: "( )", left: 25, top: 70, rotate: 200, duration: 13 },
+            { symbol: "[ ]", left: 70, top: 75, rotate: 280, duration: 17 },
+            { symbol: "=> {}", left: 90, top: 45, rotate: 160, duration: 14 },
+            { symbol: "fn()", left: 5, top: 50, rotate: 320, duration: 16 },
+          ].map((item, i) => (
             <motion.div
               key={i}
               className="absolute text-slate-300 dark:text-slate-700 font-mono text-xs opacity-20"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
+                left: `${item.left}%`,
+                top: `${item.top}%`,
               }}
               initial={{
-                rotate: Math.random() * 360,
+                rotate: item.rotate,
               }}
               animate={{
-                y: [null, -20, 0],
-                rotate: [null, 360],
+                y: [0, -20, 0],
+                rotate: [item.rotate, item.rotate + 360],
                 opacity: [0.2, 0.1, 0.2],
               }}
               transition={{
-                duration: 10 + Math.random() * 10,
+                duration: item.duration,
                 repeat: Number.POSITIVE_INFINITY,
                 delay: i * 2,
+                ease: "easeInOut",
               }}
             >
-              {["{ }", "< />", "( )", "[ ]", "=> {}", "fn()"][i]}
+              {item.symbol}
             </motion.div>
           ))}
         </div>
@@ -627,7 +638,7 @@ const codeSnippets = [
                       alt={profile.name}
                       className="aspect-square overflow-hidden rounded-full object-cover object-center sm:w-full border-4 border-white dark:border-slate-900"
                       height="500"
-                      src={profile.imageUrl || "/avatar.jpeg"}
+                      src={profile.imageUrl || "/avatar.png"}
                       width="500"
                     />
                   </div>
@@ -1028,7 +1039,7 @@ const codeSnippets = [
                             transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
                           />
                           <img
-                            src={testimonial.avatarUrl || "/images/rupesh-profile.jpeg"}
+                            src={testimonial.avatarUrl || "/placeholder-user.jpg"}
                             alt={testimonial.name}
                             className="relative w-12 h-12 rounded-full object-cover border-2 border-white dark:border-slate-900"
                           />

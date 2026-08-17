@@ -13,7 +13,7 @@ export const DEFAULT_SITE_DATA: SiteData = {
     location: "Lahore, Punjab, Pakistan",
     githubUrl: "https://github.com/ShahrozKhan-1",
     linkedinUrl: "https://www.linkedin.com/in/shahroz-khan-b08911274",
-    imageUrl: "/avatar.jpeg",
+    imageUrl: "/avatar.png",
   },
   skills: [
     {
@@ -138,7 +138,7 @@ export const DEFAULT_SITE_DATA: SiteData = {
       role: "CEO, TechStart",
       content:
         "Shahroz built dependable backend services and consistently approached complex requirements with clear, practical solutions.",
-      avatarUrl: "/images/rupesh-profile.jpeg",
+      avatarUrl: "/placeholder-user.jpg",
       rating: 5,
       orderIndex: 1,
     },
@@ -148,7 +148,7 @@ export const DEFAULT_SITE_DATA: SiteData = {
       role: "Marketing Director, GrowthLabs",
       content:
         "Shahroz's API work and debugging made our internal workflows more reliable and easier to maintain.",
-      avatarUrl: "/images/rupesh-profile.jpeg",
+      avatarUrl: "/placeholder-user.jpg",
       rating: 5,
       orderIndex: 2,
     },
@@ -158,7 +158,7 @@ export const DEFAULT_SITE_DATA: SiteData = {
       role: "Founder, DesignHub",
       content:
         "Shahroz brings strong Python fundamentals, thoughtful backend design, and a genuine drive to keep learning.",
-      avatarUrl: "/images/rupesh-profile.jpeg",
+      avatarUrl: "/placeholder-user.jpg",
       rating: 5,
       orderIndex: 3,
     },

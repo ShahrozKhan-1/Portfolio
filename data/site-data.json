@@ -129,7 +129,7 @@
       "name": "Sarah Johnson",
       "role": "CEO, TechStart",
       "content": "Shahroz built dependable backend services and consistently approached complex requirements with clear, practical solutions.",
-      "avatarUrl": "/images/rupesh-profile.jpeg",
+      "avatarUrl": "/placeholder-user.jpg",
       "rating": 5,
       "orderIndex": 1
     },
@@ -138,7 +138,7 @@
       "name": "Michael Chen",
       "role": "Marketing Director, GrowthLabs",
       "content": "Shahroz's API work and debugging made our internal workflows more reliable and easier to maintain.",
-      "avatarUrl": "/images/rupesh-profile.jpeg",
+      "avatarUrl": "/placeholder-user.jpg",
       "rating": 5,
       "orderIndex": 2
     },
@@ -147,7 +147,7 @@
       "name": "Emily Rodriguez",
       "role": "Founder, DesignHub",
       "content": "Shahroz brings strong Python fundamentals, thoughtful backend design, and a genuine drive to keep learning.",
-      "avatarUrl": "/images/rupesh-profile.jpeg",
+      "avatarUrl": "/placeholder-user.jpg",
       "rating": 5,
       "orderIndex": 3
     }

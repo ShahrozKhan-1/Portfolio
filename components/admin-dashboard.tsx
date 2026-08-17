@@ -495,7 +495,7 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
                 <Textarea name="content" className="md:col-span-2 min-h-[96px]" required />
               </Field>
               <Field label="Avatar URL">
-                <Input name="avatarUrl" placeholder="/images/rupesh-profile.jpeg" required />
+                <Input name="avatarUrl" placeholder="/placeholder-user.jpg" required />
               </Field>
               <Field label="Rating">
                 <Input name="rating" type="number" min={1} max={5} defaultValue={5} />

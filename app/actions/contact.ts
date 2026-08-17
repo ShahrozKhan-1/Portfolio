@@ -10,8 +10,7 @@ function getRecipientEmail(formData: FormData) {
 export async function sendContactEmail(formData: FormData) {
   const apiKey = process.env.RESEND_API_KEY?.trim() ?? ""
 
-  const isLikelyValid = /^re_[A-Za-z0-9]{36}$/.test(apiKey)
-  if (!isLikelyValid) {
+  if (!apiKey) {
     return {
       success: false,
       message:
