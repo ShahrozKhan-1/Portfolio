@@ -14,7 +14,12 @@ export const metadata: Metadata = {
   title: "Shahroz Khan - Python Developer",
   description:
     "Python Developer specializing in Django, FastAPI, Flask, REST APIs, web scraping, and AI integrations. Based in Lahore, Pakistan.",
-    generator: 'v0.app'
+  generator: "v0.app",
+  icons: {
+    icon: "/favicon-image.png",
+    shortcut: "/favicon-image.png",
+    apple: "/apple-icon.png",
+  },
 }
 
 export default function RootLayout({
