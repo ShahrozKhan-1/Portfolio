@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -19,6 +20,9 @@ export default function AdminLoginPage({
       <Card className="w-full max-w-md border border-slate-200/70 bg-white/90 shadow-2xl backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
         <CardContent className="p-6 md:p-8">
           <div className="mb-8">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/20">
+              <Lock className="h-5 w-5" />
+            </div>
             <p className="text-sm uppercase tracking-[0.25em] text-purple-600 dark:text-purple-300">Admin Login</p>
             <h1 className="mt-2 text-3xl font-bold">Portfolio control panel</h1>
             <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">

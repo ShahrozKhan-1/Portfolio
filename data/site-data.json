@@ -92,8 +92,8 @@
       "description": "Internal management system with projects, leads, tickets, attendance, real-time chat, milestones, and role-based access control.",
       "tags": "Django, DRF, PostgreSQL",
       "imageUrl": "/placeholder.svg?height=300&width=500",
-      "linkUrl": "",
-      "orderIndex": 1
+      "linkUrl": "https://www.visionims.com",
+      "orderIndex": 2
     },
     {
       "id": 2,
@@ -101,8 +101,8 @@
       "description": "AI-powered hiring platform with candidate onboarding, resume matching, live interviews, recording, transcripts, and AI-generated evaluations.",
       "tags": "FastAPI, React, PostgreSQL",
       "imageUrl": "/placeholder.svg?height=300&width=500",
-      "linkUrl": "",
-      "orderIndex": 2
+      "linkUrl": "https://www.evahires.com",
+      "orderIndex": 1
     },
     {
       "id": 3,

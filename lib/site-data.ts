@@ -109,6 +109,16 @@ export async function createSkill(skill: Omit<Skill, "id">) {
   })
 }
 
+export async function updateSkill(id: number, skill: Omit<Skill, "id">) {
+  await queueWrite(async () => {
+    const current = await readSiteDataFile()
+    await writeSiteDataFile({
+      ...current,
+      skills: current.skills.map((existing) => (existing.id === id ? { id, ...skill } : existing)),
+    })
+  })
+}
+
 export async function deleteSkill(id: number) {
   await queueWrite(async () => {
     const current = await readSiteDataFile()
@@ -134,6 +144,16 @@ export async function createProject(project: Omit<Project, "id">) {
   })
 }
 
+export async function updateProject(id: number, project: Omit<Project, "id">) {
+  await queueWrite(async () => {
+    const current = await readSiteDataFile()
+    await writeSiteDataFile({
+      ...current,
+      projects: current.projects.map((existing) => (existing.id === id ? { id, ...project } : existing)),
+    })
+  })
+}
+
 export async function deleteProject(id: number) {
   await queueWrite(async () => {
     const current = await readSiteDataFile()
@@ -155,6 +175,16 @@ export async function createReview(review: Omit<Review, "id">) {
     await writeSiteDataFile({
       ...current,
       reviews,
+    })
+  })
+}
+
+export async function updateReview(id: number, review: Omit<Review, "id">) {
+  await queueWrite(async () => {
+    const current = await readSiteDataFile()
+    await writeSiteDataFile({
+      ...current,
+      reviews: current.reviews.map((existing) => (existing.id === id ? { id, ...review } : existing)),
     })
   })
 }
