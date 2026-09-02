@@ -3,8 +3,7 @@
 import React, { Suspense, useEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Environment, PerspectiveCamera } from '@react-three/drei'
-import { EffectComposer, Bloom, ChromaticAberration } from '@react-three/postprocessing'
-import { BlendFunction } from 'postprocessing'
+import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import Monogram from './Monogram'
 import CodeParticles from './CodeParticles'
 
@@ -28,10 +27,6 @@ function SceneContent() {
           luminanceSmoothing={0.9}
           intensity={1.2}
           mipmapBlur
-        />
-        <ChromaticAberration
-          blendFunction={BlendFunction.NORMAL}
-          offset={[0.002, 0.002]}
         />
       </EffectComposer>
     </>
