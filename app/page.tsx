@@ -41,6 +41,7 @@ import {
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { sendContactEmail } from "./actions/contact"
+import { Scene } from "@/components/three-scene/Scene"
 
 type BrandIcon = {
   path: string
@@ -271,7 +272,9 @@ const codeSnippets = [
 }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 relative">
+    <>
+      <Scene />
+      <div className="flex flex-col min-h-screen bg-slate-50/80 dark:bg-slate-950/80 relative">
       {/* Debug Mode Overlay */}
       <AnimatePresence>
         {debugMode && (
@@ -1258,7 +1261,8 @@ const codeSnippets = [
           </div>
         </div>
       </footer>
-    </div>
+      </div>
+    </>
   )
 }
 
