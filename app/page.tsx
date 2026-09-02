@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useEffect, useRef, useState } from "react"
+import dynamic from "next/dynamic"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -41,7 +42,7 @@ import {
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { sendContactEmail } from "./actions/contact"
-import { Scene } from "@/components/three-scene/Scene"
+const Scene = dynamic(() => import("@/components/three-scene/Scene").then((module) => module.Scene), { ssr: false })
 
 type BrandIcon = {
   path: string
