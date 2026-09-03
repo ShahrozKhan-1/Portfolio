@@ -53,7 +53,7 @@ function normalizeSiteData(data: Partial<SiteData> | null | undefined): SiteData
 async function readSiteDataFile(): Promise<SiteData> {
   if (usesBlobStorage()) {
     try {
-      const storedData = await get(blobDataPath, { access: "public", useCache: false })
+      const storedData = await get(blobDataPath, { access: "private", useCache: false })
       if (storedData?.stream) {
         const raw = await new Response(storedData.stream).text()
         return normalizeSiteData(JSON.parse(raw) as Partial<SiteData>)
@@ -83,7 +83,7 @@ async function readSiteDataFile(): Promise<SiteData> {
 async function writeSiteDataFile(data: SiteData) {
   if (usesBlobStorage()) {
     await put(blobDataPath, JSON.stringify(data, null, 2), {
-      access: "public",
+      access: "private",
       addRandomSuffix: false,
       allowOverwrite: true,
       contentType: "application/json",
