@@ -31,7 +31,13 @@ function normalizeSiteData(data: Partial<SiteData> | null | undefined): SiteData
       ...(data?.profile ?? {}),
     },
     skills: Array.isArray(data?.skills) && data.skills.length > 0 ? data.skills : fallback.skills,
-    projects: Array.isArray(data?.projects) && data.projects.length > 0 ? data.projects : fallback.projects,
+    projects:
+      Array.isArray(data?.projects) && data.projects.length > 0
+        ? data.projects.map((project) => ({
+            ...project,
+            imageUrl: typeof project.imageUrl === "string" ? project.imageUrl.trim() : "",
+          }))
+        : fallback.projects,
     reviews: Array.isArray(data?.reviews) && data.reviews.length > 0 ? data.reviews : fallback.reviews,
   }
 }
@@ -222,4 +228,3 @@ export function parseOrderIndex(value: FormDataEntryValue | null, fallback = 0) 
   const parsed = Number(value)
   return Number.isFinite(parsed) ? parsed : fallback
 }
-

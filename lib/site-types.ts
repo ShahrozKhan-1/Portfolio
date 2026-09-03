@@ -26,7 +26,8 @@ export type Project = {
   title: string
   description: string
   tags: string
-  imageUrl: string
+  /** Optional thumbnail URL. The UI uses a local placeholder when it is empty. */
+  imageUrl?: string
   linkUrl: string
   orderIndex: number
 }
@@ -47,4 +48,3 @@ export type SiteData = {
   projects: Project[]
   reviews: Review[]
 }
-

@@ -536,8 +536,8 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
                           <Field label="Tags">
                             <Input name="tags" placeholder="Django, PostgreSQL, Docker" required />
                           </Field>
-                          <Field label="Image URL">
-                            <Input name="imageUrl" placeholder="/placeholder.svg?height=300&width=500" required />
+                          <Field label="Image URL (optional)">
+                            <Input name="imageUrl" placeholder="https://example.com/project-image.jpg or /project-image.jpg" />
                           </Field>
                           <Field label="Order">
                             <Input name="orderIndex" type="number" defaultValue={0} />
@@ -818,8 +818,8 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
               <Field label="Tags">
                 <Input name="tags" defaultValue={editingProject.tags} required />
               </Field>
-              <Field label="Image URL">
-                <Input name="imageUrl" defaultValue={editingProject.imageUrl} required />
+              <Field label="Image URL (optional)">
+                <Input name="imageUrl" defaultValue={editingProject.imageUrl ?? ""} />
               </Field>
               <Field label="Order">
                 <Input name="orderIndex" type="number" defaultValue={editingProject.orderIndex} />

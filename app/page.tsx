@@ -953,9 +953,13 @@ const codeSnippets = [
                         </Button>
                       </motion.div>
                       <motion.img
-                        src={project.imageUrl || "/placeholder.svg"}
+                        src={project.imageUrl?.trim() || "/placeholder.svg"}
                         alt={project.title}
                         className="w-full h-48 object-cover"
+                        onError={(event) => {
+                          event.currentTarget.onerror = null
+                          event.currentTarget.src = "/placeholder.svg"
+                        }}
                         whileHover={{ scale: 1.1 }}
                         transition={{ duration: 0.3 }}
                       />
