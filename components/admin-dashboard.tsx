@@ -527,8 +527,8 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
                           <Field label="Project title">
                             <Input name="title" placeholder="e.g. VisionIMS" required />
                           </Field>
-                          <Field label="Project link">
-                            <Input name="linkUrl" placeholder="https://..." />
+                          <Field label="Live website URL">
+                            <Input name="linkUrl" placeholder="https://... (shown as the project preview)" />
                           </Field>
                           <Field label="Description">
                             <Textarea name="description" className="md:col-span-2 min-h-[96px]" required />
@@ -536,8 +536,8 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
                           <Field label="Tags">
                             <Input name="tags" placeholder="Django, PostgreSQL, Docker" required />
                           </Field>
-                          <Field label="Image URL (optional)">
-                            <Input name="imageUrl" placeholder="https://example.com/project-image.jpg or /project-image.jpg" />
+                          <Field label="Fallback image URL (optional)">
+                            <Input name="imageUrl" placeholder="Used only when no live website URL is available" />
                           </Field>
                           <Field label="Order">
                             <Input name="orderIndex" type="number" defaultValue={0} />
@@ -804,7 +804,7 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
               <Field label="Project title">
                 <Input name="title" defaultValue={editingProject.title} required />
               </Field>
-              <Field label="Project link">
+              <Field label="Live website URL">
                 <Input name="linkUrl" defaultValue={editingProject.linkUrl} />
               </Field>
               <Field label="Description">
@@ -818,7 +818,7 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
               <Field label="Tags">
                 <Input name="tags" defaultValue={editingProject.tags} required />
               </Field>
-              <Field label="Image URL (optional)">
+              <Field label="Fallback image URL (optional)">
                 <Input name="imageUrl" defaultValue={editingProject.imageUrl ?? ""} />
               </Field>
               <Field label="Order">

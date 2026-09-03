@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
 import { isAdminAuthenticated } from "@/lib/auth"
-import { deleteProject, parseOrderIndex, updateProject } from "@/lib/site-data"
+import { deleteProject, parseOrderIndex, SiteDataStorageError, updateProject } from "@/lib/site-data"
 import { getTextField, validateProjectFields } from "@/lib/project-validation"
 
 export async function PATCH(
@@ -44,7 +44,12 @@ export async function PATCH(
   } catch (error) {
     console.error("Unable to update portfolio project", error)
     return NextResponse.json(
-      { error: "The project could not be saved. Please try again, or contact the site administrator if the problem continues." },
+      {
+        error:
+          error instanceof SiteDataStorageError
+            ? error.message
+            : "The project could not be saved. Please try again, or contact the site administrator if the problem continues.",
+      },
       { status: 500 },
     )
   }

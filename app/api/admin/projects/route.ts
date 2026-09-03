@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { revalidatePath } from "next/cache"
 import { isAdminAuthenticated } from "@/lib/auth"
-import { createProject, parseOrderIndex } from "@/lib/site-data"
+import { createProject, parseOrderIndex, SiteDataStorageError } from "@/lib/site-data"
 import { getTextField, validateProjectFields } from "@/lib/project-validation"
 
 export async function POST(request: Request) {
@@ -35,7 +35,12 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Unable to create portfolio project", error)
     return NextResponse.json(
-      { error: "The project could not be saved. Please try again, or contact the site administrator if the problem continues." },
+      {
+        error:
+          error instanceof SiteDataStorageError
+            ? error.message
+            : "The project could not be saved. Please try again, or contact the site administrator if the problem continues.",
+      },
       { status: 500 },
     )
   }

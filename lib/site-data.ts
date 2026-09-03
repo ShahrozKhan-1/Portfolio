@@ -1,13 +1,17 @@
 import "server-only"
 
+import { get, put } from "@vercel/blob"
 import { mkdir, readFile, writeFile } from "fs/promises"
 import path from "path"
 import type { Profile, Project, Review, SiteData, Skill } from "@/lib/site-types"
 import { DEFAULT_SITE_DATA } from "@/lib/site-defaults"
 
 const dataFilePath = path.join(process.cwd(), "data", "site-data.json")
+const blobDataPath = "portfolio/site-data.json"
 
 let writeQueue: Promise<unknown> = Promise.resolve()
+
+export class SiteDataStorageError extends Error {}
 
 function cloneDefaultData(): SiteData {
   return JSON.parse(JSON.stringify(DEFAULT_SITE_DATA)) as SiteData
@@ -20,6 +24,10 @@ async function ensureDataFile() {
     await mkdir(path.dirname(dataFilePath), { recursive: true })
     await writeFile(dataFilePath, JSON.stringify(DEFAULT_SITE_DATA, null, 2), "utf8")
   }
+}
+
+function usesBlobStorage() {
+  return Boolean(process.env.BLOB_READ_WRITE_TOKEN)
 }
 
 function normalizeSiteData(data: Partial<SiteData> | null | undefined): SiteData {
@@ -43,6 +51,14 @@ function normalizeSiteData(data: Partial<SiteData> | null | undefined): SiteData
 }
 
 async function readSiteDataFile(): Promise<SiteData> {
+  if (usesBlobStorage()) {
+    const storedData = await get(blobDataPath, { access: "public", useCache: false })
+    if (storedData?.stream) {
+      const raw = await new Response(storedData.stream).text()
+      return normalizeSiteData(JSON.parse(raw) as Partial<SiteData>)
+    }
+  }
+
   await ensureDataFile()
   const raw = await readFile(dataFilePath, "utf8")
   const parsed = JSON.parse(raw) as Partial<SiteData>
@@ -50,6 +66,23 @@ async function readSiteDataFile(): Promise<SiteData> {
 }
 
 async function writeSiteDataFile(data: SiteData) {
+  if (usesBlobStorage()) {
+    await put(blobDataPath, JSON.stringify(data, null, 2), {
+      access: "public",
+      addRandomSuffix: false,
+      allowOverwrite: true,
+      contentType: "application/json",
+      cacheControlMaxAge: 60,
+    })
+    return
+  }
+
+  if (process.env.VERCEL) {
+    throw new SiteDataStorageError(
+      "Persistent storage is not configured. Create and connect a Vercel Blob store, then redeploy the site.",
+    )
+  }
+
   await mkdir(path.dirname(dataFilePath), { recursive: true })
   await writeFile(dataFilePath, JSON.stringify(data, null, 2), "utf8")
 }
