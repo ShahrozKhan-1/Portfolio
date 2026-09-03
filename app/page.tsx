@@ -75,10 +75,6 @@ function SkillBrandIcon({ icon, className }: { icon: BrandIcon; className?: stri
   )
 }
 
-function canEmbedLivePreview(url: string) {
-  return url.startsWith("https://") || url.startsWith("http://")
-}
-
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
@@ -941,7 +937,7 @@ const codeSnippets = [
                   <Card className="overflow-hidden border-0 shadow-lg h-full transform-gpu">
                     <div className="relative overflow-hidden">
                       <motion.div
-                        className="absolute inset-0 z-10 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6"
+                        className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6"
                         initial={{ y: 20 }}
                         whileHover={{ y: 0 }}
                       >
@@ -958,26 +954,17 @@ const codeSnippets = [
                           </Button>
                         ) : null}
                       </motion.div>
-                      {canEmbedLivePreview(project.linkUrl) ? (
-                        <iframe
-                          src={project.linkUrl}
-                          title={`${project.title} live preview`}
-                          className="h-48 w-full border-0 bg-slate-100 dark:bg-slate-900"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <motion.img
-                          src={project.imageUrl?.trim() || "/placeholder.svg"}
-                          alt={project.title}
-                          className="w-full h-48 object-cover"
-                          onError={(event) => {
-                            event.currentTarget.onerror = null
-                            event.currentTarget.src = "/placeholder.svg"
-                          }}
-                          whileHover={{ scale: 1.1 }}
-                          transition={{ duration: 0.3 }}
-                        />
-                      )}
+                      <motion.img
+                        src={project.imageUrl?.trim() || "/placeholder.svg"}
+                        alt={project.title}
+                        className="w-full h-48 object-cover"
+                        onError={(event) => {
+                          event.currentTarget.onerror = null
+                          event.currentTarget.src = "/placeholder.svg"
+                        }}
+                        whileHover={{ scale: 1.1 }}
+                        transition={{ duration: 0.3 }}
+                      />
                     </div>
                     <CardContent className="p-6">
                       <h3 className="text-xl font-bold mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
