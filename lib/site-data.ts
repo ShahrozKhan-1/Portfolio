@@ -52,11 +52,26 @@ function normalizeSiteData(data: Partial<SiteData> | null | undefined): SiteData
 
 async function readSiteDataFile(): Promise<SiteData> {
   if (usesBlobStorage()) {
-    const storedData = await get(blobDataPath, { access: "public", useCache: false })
-    if (storedData?.stream) {
-      const raw = await new Response(storedData.stream).text()
-      return normalizeSiteData(JSON.parse(raw) as Partial<SiteData>)
+    try {
+      const storedData = await get(blobDataPath, { access: "public", useCache: false })
+      if (storedData?.stream) {
+        const raw = await new Response(storedData.stream).text()
+        return normalizeSiteData(JSON.parse(raw) as Partial<SiteData>)
+      }
+    } catch (error) {
+      // A newly connected Blob store has no site-data object yet. Treat that
+      // first read as an empty initialization and let the pending mutation
+      // create the object. Re-throw configuration and network failures.
+      const message = error instanceof Error ? error.message.toLowerCase() : ""
+      const status = typeof error === "object" && error !== null && "status" in error ? error.status : undefined
+      const isMissingBlob = status === 404 || message.includes("not found") || message.includes("does not exist")
+
+      if (!isMissingBlob) {
+        throw error
+      }
     }
+
+    return cloneDefaultData()
   }
 
   await ensureDataFile()
