@@ -39,3 +39,18 @@ nav { display:flex; gap: 25px; } nav a, .header-link, .site-footer { color:hsl(v
 @keyframes motion-in { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
 @keyframes console-in { from { opacity:0; transform:translateY(22px) rotate(.5deg); } to { opacity:1; transform:translateY(0) rotate(0); } }
 @media (prefers-reduced-motion: reduce) { .site-header, .hero-copy, .hero-console, .project-detail { animation:none; } .project-card:hover .project-art img { transform:none; filter:none; } }
+
+/* layered system atmosphere */
+main { position: relative; isolation: isolate; overflow: hidden; }
+main::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: -1; opacity: .24; background-image: linear-gradient(hsl(var(--border) / .22) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border) / .22) 1px, transparent 1px); background-size: 72px 72px; mask-image: linear-gradient(to bottom, black, transparent 78%); }
+main::after { content: ""; position: absolute; top: 0; right: -18rem; width: 42rem; height: 42rem; pointer-events: none; z-index: -1; background: radial-gradient(circle, hsl(var(--primary) / .09), transparent 66%); }
+.hero { position: relative; }
+.hero::after { content: "SYSTEM / 01"; position: absolute; right: 24px; top: 42px; color: hsl(var(--muted-foreground) / .5); font-size: 9px; letter-spacing: .18em; }
+.hero-visual-stack { display: flex; flex-direction: column; gap: 22px; }
+.system-visualization { position: relative; height: 330px; border: 1px solid hsl(var(--border)); background: radial-gradient(circle at center, hsl(var(--card)), hsl(var(--background))); overflow: hidden; box-shadow: 16px 16px 0 hsl(var(--muted) / .72); }
+.system-visualization canvas { display: block; width: 100% !important; height: 100% !important; }
+.system-visual-label { position: absolute; left: 16px; bottom: 14px; display: flex; align-items: center; gap: 7px; color: hsl(var(--foreground)); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }
+.system-visual-label .status-dot { margin-right: 0; width: 5px; height: 5px; }.system-visual-label small { color: hsl(var(--muted-foreground)); margin-left: 8px; text-transform: lowercase; letter-spacing: 0; }
+.hero-visual-stack .hero-console { box-shadow: 8px 8px 0 hsl(var(--muted)); }
+@media (max-width: 720px) { .hero::after { right: 20px; top: 28px; }.system-visualization { height: 290px; box-shadow: 9px 9px 0 hsl(var(--muted) / .72); } }
+@media (prefers-reduced-motion: reduce) { .system-visualization canvas { opacity: .9; } }
