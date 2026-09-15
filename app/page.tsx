@@ -84,31 +84,12 @@ export default function Home() {
   const [contactState, setContactState] = useState<{ success: boolean; message: string } | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [siteData, setSiteData] = useState<SiteData>(DEFAULT_SITE_DATA)
-  const [displayedCode, setDisplayedCode] = useState("")
-
-  // Developer-specific animations
-  const [currentCode, setCurrentCode] = useState(0)
-  const [isTyping, setIsTyping] = useState(true)
   const [debugMode, setDebugMode] = useState(false)
   const [coffeeCount, setCoffeeCount] = useState(0)
   const profile = siteData.profile
   const skills = siteData.skills
   const projects = siteData.projects
   const reviews = siteData.reviews
-
-const codeSnippets = [
-  "developer = 'Shahroz Khan'",
-  "import django",
-  "from fastapi import FastAPI",
-  "def build_solution(problem):",
-  "    return clean_code",
-  "async def scale(app):",
-  "    await app.grow()",
-  "try: ship(feature)",
-  "except Bug: debug()",
-  "tests = 'passing'",
-  "deployment = 'successful'",
-]
 
   const developerStates = [
     { icon: <Code className="h-4 w-4" />, text: "Coding", color: "text-green-500" },
@@ -118,7 +99,6 @@ const codeSnippets = [
     { icon: <Terminal className="h-4 w-4" />, text: "Deploying", color: "text-purple-500" },
   ]
 
-  const [currentState, setCurrentState] = useState(0)
   const skillIcons = {
     code: <Code className="h-8 w-8" />,
     database: <Database className="h-8 w-8" />,
@@ -140,24 +120,6 @@ const codeSnippets = [
   }
 
   useEffect(() => {
-    const code = codeSnippets[currentCode]
-    let index = 0
-
-    setDisplayedCode("")
-
-    const typingInterval = setInterval(() => {
-      if (index < code.length) {
-        setDisplayedCode(code.slice(0, index + 1))
-        index++
-      } else {
-        clearInterval(typingInterval)
-      }
-    }, 50)
-
-    return () => clearInterval(typingInterval)
-  }, [currentCode])
-
-  useEffect(() => {
     let isMounted = true
 
     const loadSiteData = async () => {
@@ -176,12 +138,23 @@ const codeSnippets = [
       }
     }
 
-    loadSiteData()
+    const loadTimer = window.setTimeout(() => {
+      void loadSiteData()
+    }, 800)
 
     return () => {
       isMounted = false
+      window.clearTimeout(loadTimer)
     }
   }, [])
+
+  useEffect(() => {
+    const prefetchTimer = window.setTimeout(() => {
+      projects.forEach((project) => router.prefetch(`/projects/${project.slug}`))
+    }, 1500)
+
+    return () => window.clearTimeout(prefetchTimer)
+  }, [projects, router])
 
   useEffect(() => {
     const sections = document.querySelectorAll("section[id]")
@@ -207,26 +180,6 @@ const codeSnippets = [
       })
     }
   }, [])
-
-  // Code typing animation
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentCode((prev) => (prev + 1) % codeSnippets.length)
-      setIsTyping(false)
-      setTimeout(() => setIsTyping(true), 100)
-    }, 3000)
-
-    return () => clearInterval(interval)
-  }, [codeSnippets.length])
-
-  // Developer state rotation
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentState((prev) => (prev + 1) % developerStates.length)
-    }, 2000)
-
-    return () => clearInterval(interval)
-  }, [developerStates.length])
 
   // Debug mode toggle
   useEffect(() => {
@@ -288,7 +241,7 @@ const codeSnippets = [
               <span>DEBUG MODE</span>
             </div>
             <div>Coffee consumed: {coffeeCount} ☕</div>
-            <div>Current state: {developerStates[currentState].text}</div>
+            <div>Current state: {developerStates[0].text}</div>
             <div>Lines of code: 42,069</div>
             <button onClick={() => setDebugMode(false)} className="text-red-400 hover:text-red-300 mt-2">
               [ESC] Close
@@ -465,18 +418,10 @@ const codeSnippets = [
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-600"></span>
                     </motion.span>
-                    <AnimatePresence mode="wait">
-                      <motion.span
-                        key={currentState}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className={`flex items-center gap-1 ${developerStates[currentState].color}`}
-                      >
-                        {developerStates[currentState].icon}
-                        {developerStates[currentState].text}...
-                      </motion.span>
-                    </AnimatePresence>
+                    <span className={`flex items-center gap-1 ${developerStates[0].color}`}>
+                      {developerStates[0].icon}
+                      {developerStates[0].text}...
+                    </span>
                   </motion.div>
 
                   <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
@@ -513,31 +458,11 @@ const codeSnippets = [
                       </div>
                       <span className="text-slate-400 text-xs">terminal</span>
                     </div>
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={currentCode}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="flex items-center"
-                      >
-                        <span className="text-purple-400">$</span>
-                        <span className="ml-2">
-                          {displayedCode}
-                        </span>
-
-                        <motion.span
-                          animate={{ opacity: [1, 0, 1] }}
-                          transition={{
-                            duration: 0.8,
-                            repeat: Number.POSITIVE_INFINITY,
-                          }}
-                          className="ml-1 text-white"
-                        >
-                          |
-                        </motion.span>
-                      </motion.div>
-                    </AnimatePresence>
+                    <div className="flex items-center">
+                      <span className="text-purple-400">$</span>
+                      <span className="ml-2">def build_solution(problem): return clean_code</span>
+                      <span className="ml-1 animate-pulse text-white" aria-hidden="true">|</span>
+                    </div>
                   </motion.div>
 
                   <motion.p
@@ -937,6 +862,8 @@ const codeSnippets = [
                   className="group cursor-pointer"
                   role="link"
                   tabIndex={0}
+                  onMouseEnter={() => router.prefetch(`/projects/${project.slug}`)}
+                  onFocus={() => router.prefetch(`/projects/${project.slug}`)}
                   onClick={() => router.push(`/projects/${project.slug}`)}
                   onKeyDown={(event) => {
                     if (event.key === "Enter" || event.key === " ") {
@@ -968,6 +895,8 @@ const codeSnippets = [
                       <motion.img
                         src={project.imageUrl?.trim() || "/placeholder.svg"}
                         alt={project.title}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-48 object-cover"
                         onError={(event) => {
                           event.currentTarget.onerror = null
@@ -1058,6 +987,8 @@ const codeSnippets = [
                           <img
                             src={testimonial.avatarUrl || "/placeholder-user.jpg"}
                             alt={testimonial.name}
+                            loading="lazy"
+                            decoding="async"
                             className="relative w-12 h-12 rounded-full object-cover border-2 border-white dark:border-slate-900"
                           />
                         </div>

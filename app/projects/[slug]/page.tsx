@@ -1,16 +1,14 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, ArrowUpRight, CalendarDays, CheckCircle2, ExternalLink, Github, Briefcase, Sparkles } from "lucide-react"
+import { ArrowLeft, ArrowRight, ArrowUpRight, Briefcase, CalendarDays, CheckCircle2, Code2, Github, Layers3 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ProjectGallery } from "@/components/project-gallery"
 import { getSiteData } from "@/lib/site-data"
 import type { Project } from "@/lib/site-types"
 
-function findProject(projects: Project[], slug: string) {
-  return projects.find((project) => project.slug === slug)
-}
+function findProject(projects: Project[], slug: string) { return projects.find((project) => project.slug === slug) }
 
 function formatDate(value: string) {
   if (!value) return "Not documented"
@@ -18,30 +16,12 @@ function formatDate(value: string) {
   return new Date(Number(year), Number(month) - 1).toLocaleDateString("en", { month: "short", year: "numeric" })
 }
 
-function ListSection({ title, items }: { title: string; items: string[] }) {
+function DetailList({ title, items }: { title: string; items: string[] }) {
   if (!items.length) return null
-  return (
-    <section className="detail-section">
-      <div className="mb-5 flex items-center gap-3">
-        <span className="h-px w-8 bg-primary" />
-        <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
-      </div>
-      <ul className="grid gap-3 sm:grid-cols-2">
-        {items.map((item, index) => (
-          <li key={item} className="detail-list-item" style={{ animationDelay: `${index * 70}ms` }}>
-            <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" />
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )
+  return <section className="rounded-2xl border border-slate-200 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/70 sm:p-8"><h2 className="mb-5 text-2xl font-bold tracking-tight">{title}</h2><ul className="grid gap-3 sm:grid-cols-2">{items.map((item) => <li key={item} className="flex gap-3 rounded-xl border border-slate-200 bg-slate-50/80 p-4 text-sm leading-6 text-slate-700 dark:border-slate-800 dark:bg-slate-950/50 dark:text-slate-300"><CheckCircle2 className="mt-0.5 size-4 shrink-0 text-purple-600 dark:text-purple-400" /><span>{item}</span></li>)}</ul></section>
 }
 
-export async function generateStaticParams() {
-  const data = await getSiteData()
-  return data.projects.map(({ slug }) => ({ slug }))
-}
+export async function generateStaticParams() { return (await getSiteData()).projects.map(({ slug }) => ({ slug })) }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
@@ -57,51 +37,22 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   if (!project) notFound()
   const previous = data.projects[index - 1]
   const next = data.projects[index + 1]
+  const tags = project.tags.split(",").map((tag) => tag.trim()).filter(Boolean)
+  const techStack = project.techStack.length ? project.techStack : tags
+  const projectUrl = project.liveUrl || project.linkUrl
 
-  return (
-    <main className="project-detail min-h-screen overflow-hidden px-4 py-6 text-foreground sm:px-6 lg:px-8">
-      <div className="detail-noise" aria-hidden="true" />
-      <div className="detail-orb detail-orb-one" aria-hidden="true" />
-      <div className="detail-orb detail-orb-two" aria-hidden="true" />
-      <div className="detail-pink-beam" aria-hidden="true" />
-      <article className="relative mx-auto max-w-6xl">
-        <Link href="/#projects" className="detail-back-link"><ArrowLeft className="size-4" /> Back to projects</Link>
-        <header className="detail-hero mt-10 grid gap-8 lg:grid-cols-[1fr_310px] lg:items-end">
-          <div className="max-w-4xl">
-            <div className="mb-5 flex flex-wrap items-center gap-2">
-              <Badge className="capitalize">{project.status.replace("-", " ")}</Badge>
-              {project.tags.split(",").map((tag) => tag.trim()).filter(Boolean).map((tag) => <Badge key={tag} variant="secondary">{tag}</Badge>)}
-            </div>
-            <p className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.24em] text-primary"><Sparkles className="size-4" /> Selected project</p>
-            <h1 className="text-5xl font-bold tracking-[-0.06em] sm:text-7xl">{project.title}</h1>
-            <p className="mt-6 max-w-3xl text-lg leading-8 text-muted-foreground sm:text-xl">{project.longDescription || project.description}</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              {project.liveUrl || project.linkUrl ? <Button asChild size="lg"><a href={project.liveUrl || project.linkUrl} target="_blank" rel="noreferrer">Live project <ArrowUpRight data-icon="inline-end" /></a></Button> : null}
-              {project.repoUrl ? <Button asChild variant="outline" size="lg"><a href={project.repoUrl} target="_blank" rel="noreferrer"><Github data-icon="inline-start" /> Repository</a></Button> : null}
-            </div>
-          </div>
-          <aside className="detail-meta-card">
-            <div className="flex items-center gap-3"><Briefcase className="size-5 text-primary" /><div><p className="detail-label">Role</p><p className="font-semibold">{project.role || "Not documented"}</p></div></div>
-            <div className="my-5 h-px bg-border" />
-            <div className="flex items-center gap-3"><CalendarDays className="size-5 text-primary" /><div><p className="detail-label">Timeline</p><p className="font-semibold">{formatDate(project.startDate)} — {formatDate(project.endDate)}</p></div></div>
-          </aside>
-        </header>
-
-        <div className="mt-20 grid gap-14 lg:grid-cols-[1fr_280px]">
-          <div>
-            <section className="detail-section"><p className="detail-kicker">01 / Context</p><h2 className="mb-5 text-3xl font-bold tracking-tight">Overview</h2><p className="max-w-3xl text-lg leading-8 text-muted-foreground">{project.description}</p></section>
-            {project.problem ? <section className="detail-section"><p className="detail-kicker">02 / Direction</p><h2 className="mb-4 text-2xl font-bold">Problem</h2><p className="max-w-3xl leading-8 text-muted-foreground">{project.problem}</p></section> : null}
-            {project.solution ? <section className="detail-section"><p className="detail-kicker">03 / Approach</p><h2 className="mb-4 text-2xl font-bold">Solution</h2><p className="max-w-3xl leading-8 text-muted-foreground">{project.solution}</p></section> : null}
-            <ListSection title="Contributions" items={project.contributions} />
-            <ListSection title="Features" items={project.features} />
-            <ListSection title="Challenges" items={project.challenges} />
-            <ListSection title="Results" items={project.results} />
-            <ProjectGallery images={project.gallery} />
-          </div>
-          <aside className="detail-stack-card h-fit lg:sticky lg:top-6"><h2 className="font-bold">Tech stack</h2><p className="mt-2 text-sm text-muted-foreground">Tools behind the build</p><div className="mt-5 flex flex-wrap gap-2">{(project.techStack.length ? project.techStack : project.tags.split(",")).map((item) => <Badge key={item} variant="secondary">{item.trim()}</Badge>)}</div></aside>
-        </div>
-        <nav className="mt-20 flex justify-between gap-4 border-t border-border py-8">{previous ? <Link href={`/projects/${previous.slug}`} className="detail-nav-link"><ArrowLeft className="size-4" /><span><small>Previous project</small>{previous.title}</span></Link> : <span />}{next ? <Link href={`/projects/${next.slug}`} className="detail-nav-link text-right"><span><small>Next project</small>{next.title}</span><ExternalLink className="size-4 rotate-[-45deg]" /></Link> : <span />}</nav>
-      </article>
+  return <div className="min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 text-foreground dark:from-slate-950 dark:to-slate-900">
+    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true"><div className="absolute -left-24 top-24 size-80 rounded-full bg-purple-300/30 blur-3xl dark:bg-purple-900/30" /><div className="absolute -right-24 top-1/3 size-96 rounded-full bg-pink-300/25 blur-3xl dark:bg-pink-900/20" /><div className="absolute bottom-0 left-1/3 size-72 rounded-full bg-blue-300/20 blur-3xl dark:bg-blue-900/20" /></div>
+    <header className="sticky top-0 z-30 border-b bg-white/70 backdrop-blur-lg dark:bg-slate-950/70"><div className="container flex h-16 items-center justify-between px-4 md:px-6"><Link href="/" className="text-xl font-bold"><span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-purple-500 dark:to-pink-500">{data.profile.name}</span></Link><nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-300 sm:flex"><Link className="transition-colors hover:text-purple-600 dark:hover:text-purple-400" href="/#about">About</Link><Link className="text-purple-600 dark:text-purple-400" href="/#projects">Projects</Link><Link className="transition-colors hover:text-purple-600 dark:hover:text-purple-400" href="/#contact">Contact</Link></nav><Button variant="outline" size="sm" className="rounded-full" asChild><Link href="/#projects"><ArrowLeft className="mr-2 size-4" />All projects</Link></Button></div></header>
+    <main className="container px-4 pb-16 pt-10 md:px-6 md:pb-24 md:pt-16">
+      <Link href="/#projects" className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-purple-600 dark:text-slate-400 dark:hover:text-purple-400"><ArrowLeft className="size-4" />Back to selected work</Link>
+      <section className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(340px,.9fr)] lg:items-stretch">
+        <div className="rounded-3xl border border-slate-200 bg-white/80 p-7 shadow-xl shadow-purple-950/5 backdrop-blur sm:p-10 dark:border-slate-800 dark:bg-slate-900/75"><div className="mb-7 flex flex-wrap items-center gap-2"><Badge className="bg-gradient-to-r from-purple-600 to-pink-600 capitalize text-white">{project.status.replace("-", " ")}</Badge><span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Project {String(index + 1).padStart(2, "0")}</span></div><h1 className="max-w-3xl text-4xl font-bold tracking-[-0.055em] sm:text-6xl lg:text-7xl"><span className="bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-600 bg-clip-text text-transparent dark:from-purple-400 dark:via-fuchsia-400 dark:to-pink-400">{project.title}</span></h1><p className="mt-6 max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300 sm:text-lg">{project.longDescription || project.description}</p><div className="mt-8 flex flex-wrap gap-3">{projectUrl ? <Button size="lg" className="rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700" asChild><a href={projectUrl} target="_blank" rel="noreferrer">View live project <ArrowUpRight className="ml-2 size-4" /></a></Button> : null}{project.repoUrl ? <Button variant="outline" size="lg" className="rounded-full" asChild><a href={project.repoUrl} target="_blank" rel="noreferrer"><Github className="mr-2 size-4" />View repository</a></Button> : null}</div></div>
+        <div className="relative min-h-[300px] overflow-hidden rounded-3xl border border-slate-200 bg-slate-900 shadow-xl shadow-purple-950/10 dark:border-slate-800 sm:min-h-[360px]">{project.imageUrl ? <img src={project.imageUrl} alt={`${project.title} preview`} className="absolute inset-0 size-full object-cover" /> : <><div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(168,85,247,.6),transparent_35%),radial-gradient(circle_at_80%_75%,rgba(236,72,153,.55),transparent_40%),linear-gradient(135deg,#111827,#312e81)]" /><div className="absolute inset-8 rounded-2xl border border-white/15" /><div className="absolute inset-0 grid place-items-center"><Code2 className="size-16 text-white/70" /></div></>}<div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/90 via-slate-950/35 to-transparent p-6 text-white"><div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em]"><span className="size-2 rounded-full bg-emerald-400" />Case study</div><p className="mt-2 text-sm text-slate-300">{tags.slice(0, 3).join(" · ") || "Selected work"}</p></div></div>
+      </section>
+      <section className="mt-8 grid gap-4 sm:grid-cols-3"><div className="rounded-2xl border border-slate-200 bg-white/70 p-5 backdrop-blur dark:border-slate-800 dark:bg-slate-900/70"><Briefcase className="mb-3 size-5 text-purple-600 dark:text-purple-400" /><p className="text-xs font-semibold uppercase tracking-[.16em] text-slate-500">Role</p><p className="mt-1 font-semibold">{project.role || "Not documented"}</p></div><div className="rounded-2xl border border-slate-200 bg-white/70 p-5 backdrop-blur dark:border-slate-800 dark:bg-slate-900/70"><CalendarDays className="mb-3 size-5 text-pink-600 dark:text-pink-400" /><p className="text-xs font-semibold uppercase tracking-[.16em] text-slate-500">Timeline</p><p className="mt-1 font-semibold">{formatDate(project.startDate)} — {formatDate(project.endDate)}</p></div><div className="rounded-2xl border border-slate-200 bg-white/70 p-5 backdrop-blur dark:border-slate-800 dark:bg-slate-900/70"><Layers3 className="mb-3 size-5 text-indigo-600 dark:text-indigo-400" /><p className="text-xs font-semibold uppercase tracking-[.16em] text-slate-500">Stack</p><p className="mt-1 font-semibold">{techStack.length} technologies</p></div></section>
+      <section className="mt-14 grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]"><div className="space-y-8"><section className="rounded-2xl border border-slate-200 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/70 sm:p-8"><p className="text-xs font-semibold uppercase tracking-[.18em] text-purple-600 dark:text-purple-400">Overview</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Built with purpose.</h2><p className="mt-5 max-w-3xl leading-8 text-slate-600 dark:text-slate-300">{project.description}</p></section>{project.problem ? <section className="rounded-2xl border border-slate-200 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/70 sm:p-8"><p className="text-xs font-semibold uppercase tracking-[.18em] text-pink-600 dark:text-pink-400">The challenge</p><h2 className="mt-3 text-2xl font-bold">Problem</h2><p className="mt-4 leading-8 text-slate-600 dark:text-slate-300">{project.problem}</p></section> : null}{project.solution ? <section className="rounded-2xl border border-slate-200 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/70 sm:p-8"><p className="text-xs font-semibold uppercase tracking-[.18em] text-purple-600 dark:text-purple-400">The approach</p><h2 className="mt-3 text-2xl font-bold">Solution</h2><p className="mt-4 leading-8 text-slate-600 dark:text-slate-300">{project.solution}</p></section> : null}<DetailList title="Contributions" items={project.contributions} /><DetailList title="Key features" items={project.features} /><DetailList title="Challenges" items={project.challenges} /><DetailList title="Results" items={project.results} /><ProjectGallery images={project.gallery} /></div><aside className="h-fit rounded-2xl border border-slate-200 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/70 lg:sticky lg:top-24"><p className="text-xs font-semibold uppercase tracking-[.18em] text-purple-600 dark:text-purple-400">Technology</p><h2 className="mt-2 text-xl font-bold">Tech stack</h2><div className="mt-5 flex flex-wrap gap-2">{techStack.map((item) => <Badge key={item} variant="secondary" className="bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">{item.trim()}</Badge>)}</div></aside></section>
+      <nav className="mt-14 grid gap-4 border-t border-slate-200 pt-8 dark:border-slate-800 sm:grid-cols-2">{previous ? <Link href={`/projects/${previous.slug}`} className="group rounded-2xl border border-slate-200 bg-white/70 p-5 transition hover:-translate-y-1 hover:border-purple-300 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/70 dark:hover:border-purple-700"><span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[.16em] text-slate-500"><ArrowLeft className="size-4" />Previous project</span><span className="mt-2 block text-lg font-bold group-hover:text-purple-600 dark:group-hover:text-purple-400">{previous.title}</span></Link> : <span />}{next ? <Link href={`/projects/${next.slug}`} className="group rounded-2xl border border-slate-200 bg-white/70 p-5 text-right transition hover:-translate-y-1 hover:border-pink-300 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/70 dark:hover:border-pink-700"><span className="flex items-center justify-end gap-2 text-xs font-semibold uppercase tracking-[.16em] text-slate-500">Next project <ArrowRight className="size-4" /></span><span className="mt-2 block text-lg font-bold group-hover:text-pink-600 dark:group-hover:text-pink-400">{next.title}</span></Link> : <span />}</nav>
     </main>
-  )
+  </div>
 }

@@ -38,7 +38,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    await createProject({ title, slug, description, longDescription, problem: getTextField(formData, "problem"), solution: getTextField(formData, "solution"), role: getTextField(formData, "role"), contributions: split("contributions"), features: split("features"), challenges: split("challenges"), results: split("results"), techStack: split("techStack"), tags, imageUrl, gallery: [], linkUrl, liveUrl, repoUrl, status, startDate, endDate, orderIndex })
+    await createProject({ title, slug, description, longDescription, problem: getTextField(formData, "problem"), solution: getTextField(formData, "solution"), role: getTextField(formData, "role"), contributions: split("contributions"), features: split("features"), challenges: split("challenges"), results: split("results"), techStack: split("techStack"), tags, imageUrl, gallery: split("gallery").map((url) => ({ url, alt: title })), linkUrl, liveUrl, repoUrl, status, startDate, endDate, orderIndex })
     revalidatePath("/")
     revalidatePath("/admin")
   } catch (error) {

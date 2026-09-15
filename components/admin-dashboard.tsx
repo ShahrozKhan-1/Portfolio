@@ -500,7 +500,7 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
                           Add project
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="max-w-xl">
+                      <DialogContent className="max-h-[calc(100vh-2rem)] max-w-xl overflow-y-auto">
                         <DialogHeader>
                           <DialogTitle>Add project</DialogTitle>
                           <DialogDescription>Add a new project card to the homepage.</DialogDescription>
@@ -527,8 +527,17 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
                           <Field label="Project title">
                             <Input name="title" placeholder="e.g. VisionIMS" required />
                           </Field>
+                          <Field label="Slug (optional)">
+                            <Input name="slug" placeholder="visionims" />
+                          </Field>
                           <Field label="Project link">
                             <Input name="linkUrl" placeholder="https://..." />
+                          </Field>
+                          <Field label="Live URL">
+                            <Input name="liveUrl" placeholder="https://..." />
+                          </Field>
+                          <Field label="Repository URL">
+                            <Input name="repoUrl" placeholder="https://github.com/..." />
                           </Field>
                           <Field label="Description">
                             <Textarea name="description" className="md:col-span-2 min-h-[96px]" required />
@@ -538,6 +547,25 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
                           </Field>
                           <Field label="Image URL (optional)">
                             <Input name="imageUrl" placeholder="https://example.com/project-image.jpg or /project-image.jpg" />
+                          </Field>
+                          <Field label="Status">
+                            <Input name="status" defaultValue="completed" placeholder="completed, in-progress, planned, or maintenance" />
+                          </Field>
+                          <Field label="Long description">
+                            <Textarea name="longDescription" className="md:col-span-2 min-h-[120px]" />
+                          </Field>
+                          <Field label="Problem"><Textarea name="problem" /></Field>
+                          <Field label="Solution"><Textarea name="solution" /></Field>
+                          <Field label="Role"><Input name="role" placeholder="e.g. Full-stack developer" /></Field>
+                          <Field label="Tech stack (comma separated)"><Input name="techStack" placeholder="Django, PostgreSQL, Docker" /></Field>
+                          <Field label="Start month"><Input name="startDate" type="month" /></Field>
+                          <Field label="End month"><Input name="endDate" type="month" /></Field>
+                          <Field label="Contributions (one per line)"><Textarea name="contributions" /></Field>
+                          <Field label="Features (one per line)"><Textarea name="features" /></Field>
+                          <Field label="Challenges (one per line)"><Textarea name="challenges" /></Field>
+                          <Field label="Results (one per line)"><Textarea name="results" /></Field>
+                          <Field label="Gallery image URLs (one per line)">
+                            <Textarea name="gallery" placeholder="https://example.com/screenshot-1.jpg" />
                           </Field>
                           <Field label="Order">
                             <Input name="orderIndex" type="number" defaultValue={0} />
@@ -780,7 +808,7 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
 
       {/* Edit project dialog */}
       <Dialog open={editingProject !== null} onOpenChange={(open) => !open && setEditingProject(null)}>
-        <DialogContent className="max-w-xl">
+        <DialogContent className="max-h-[calc(100vh-2rem)] max-w-xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit project</DialogTitle>
             <DialogDescription>Update this project&apos;s details.</DialogDescription>
@@ -841,8 +869,11 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
   <Field label="Tags">
                 <Input name="tags" defaultValue={editingProject.tags} required />
               </Field>
-              <Field label="Image URL (optional)">
+  <Field label="Image URL (optional)">
                 <Input name="imageUrl" defaultValue={editingProject.imageUrl ?? ""} />
+              </Field>
+              <Field label="Gallery image URLs (one per line)">
+                <Textarea name="gallery" defaultValue={editingProject.gallery.map((image) => image.url).join("\n")} />
               </Field>
               <Field label="Order">
                 <Input name="orderIndex" type="number" defaultValue={editingProject.orderIndex} />
