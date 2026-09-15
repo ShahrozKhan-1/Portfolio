@@ -60,8 +60,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   return (
     <main className="project-detail min-h-screen overflow-hidden px-4 py-6 text-foreground sm:px-6 lg:px-8">
+      <div className="detail-noise" aria-hidden="true" />
       <div className="detail-orb detail-orb-one" aria-hidden="true" />
       <div className="detail-orb detail-orb-two" aria-hidden="true" />
+      <div className="detail-pink-beam" aria-hidden="true" />
       <article className="relative mx-auto max-w-6xl">
         <Link href="/#projects" className="detail-back-link"><ArrowLeft className="size-4" /> Back to projects</Link>
         <header className="detail-hero mt-10 grid gap-8 lg:grid-cols-[1fr_310px] lg:items-end">
