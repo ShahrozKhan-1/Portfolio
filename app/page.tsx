@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -76,6 +77,7 @@ function SkillBrandIcon({ icon, className }: { icon: BrandIcon; className?: stri
 }
 
 export default function Home() {
+  const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
   const observerRef = useRef<IntersectionObserver | null>(null)
@@ -933,6 +935,15 @@ const codeSnippets = [
                     rotateY: 5,
                   }}
                   className="group cursor-pointer"
+                  role="link"
+                  tabIndex={0}
+                  onClick={() => router.push(`/projects/${project.slug}`)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault()
+                      router.push(`/projects/${project.slug}`)
+                    }
+                  }}
                 >
                   <Card className="overflow-hidden border-0 shadow-lg h-full transform-gpu">
                     <div className="relative overflow-hidden">
@@ -948,7 +959,7 @@ const codeSnippets = [
                             className="gap-2 bg-white text-slate-900 hover:bg-slate-100"
                             asChild
                           >
-                            <Link href={project.linkUrl} target="_blank" rel="noreferrer">
+                            <Link href={project.linkUrl} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}>
                               View Project <ExternalLink className="h-4 w-4" />
                             </Link>
                           </Button>
