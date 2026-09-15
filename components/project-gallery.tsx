@@ -22,8 +22,8 @@ export function ProjectGallery({ images }: { images: ProjectImage[] }) {
   return <section aria-labelledby="gallery-heading" className="mt-16">
     <div className="mb-5 flex items-center gap-3"><ImageIcon className="size-5 text-purple-500" /><h2 id="gallery-heading" className="text-2xl font-bold">Gallery</h2></div>
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {images.map((image, index) => <button key={`${image.url}-${index}`} type="button" onClick={() => setActive(index)} className="group overflow-hidden rounded-2xl border border-slate-200 text-left dark:border-slate-800">
-        <img src={image.url} alt={image.alt} loading="lazy" className="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+      {images.map((image, index) => <button key={`${image.url}-${index}`} type="button" onClick={() => setActive(index)} className="group overflow-hidden rounded-2xl border border-border bg-card/40 text-left shadow-sm transition duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10">
+        <img src={image.url} alt={image.alt} loading="lazy" className="aspect-video w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" />
         {image.caption ? <span className="block p-3 text-sm text-slate-600 dark:text-slate-300">{image.caption}</span> : null}
       </button>)}
     </div>
