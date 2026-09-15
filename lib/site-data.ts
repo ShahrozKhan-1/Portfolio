@@ -41,10 +41,26 @@ function normalizeSiteData(data: Partial<SiteData> | null | undefined): SiteData
     skills: Array.isArray(data?.skills) && data.skills.length > 0 ? data.skills : fallback.skills,
     projects:
       Array.isArray(data?.projects) && data.projects.length > 0
-        ? data.projects.map((project) => ({
-            ...project,
-            imageUrl: typeof project.imageUrl === "string" ? project.imageUrl.trim() : "",
-          }))
+        ? data.projects.map((project, index) => {
+            const seeded = fallback.projects.find((item) => item.id === project.id) ?? fallback.projects[index]
+            return {
+              ...(seeded ?? fallback.projects[0]),
+              ...project,
+              slug: typeof project.slug === "string" && project.slug.trim() ? project.slug.trim() : `${project.title ?? "project"}-${project.id}`.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+              imageUrl: typeof project.imageUrl === "string" ? project.imageUrl.trim() : "",
+              gallery: Array.isArray(project.gallery) ? project.gallery : [],
+              contributions: Array.isArray(project.contributions) ? project.contributions : [],
+              features: Array.isArray(project.features) ? project.features : [],
+              challenges: Array.isArray(project.challenges) ? project.challenges : [],
+              results: Array.isArray(project.results) ? project.results : [],
+              techStack: Array.isArray(project.techStack) ? project.techStack : String(project.tags ?? "").split(",").map((tag) => tag.trim()).filter(Boolean),
+              liveUrl: typeof project.liveUrl === "string" ? project.liveUrl.trim() : "",
+              repoUrl: typeof project.repoUrl === "string" ? project.repoUrl.trim() : "",
+              status: project.status ?? "completed",
+              startDate: typeof project.startDate === "string" ? project.startDate : "",
+              endDate: typeof project.endDate === "string" ? project.endDate : "",
+            }
+          })
         : fallback.projects,
     reviews: Array.isArray(data?.reviews) && data.reviews.length > 0 ? data.reviews : fallback.reviews,
   }

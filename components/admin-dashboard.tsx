@@ -801,21 +801,44 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
                 if (ok) setEditingProject(null)
               }}
             >
-              <Field label="Project title">
-                <Input name="title" defaultValue={editingProject.title} required />
-              </Field>
-              <Field label="Project link">
-                <Input name="linkUrl" defaultValue={editingProject.linkUrl} />
-              </Field>
-              <Field label="Description">
-                <Textarea
-                  name="description"
-                  defaultValue={editingProject.description}
-                  className="md:col-span-2 min-h-[96px]"
-                  required
-                />
-              </Field>
-              <Field label="Tags">
+  <Field label="Project title">
+  <Input name="title" defaultValue={editingProject.title} required />
+  </Field>
+  <Field label="Slug">
+  <Input name="slug" defaultValue={editingProject.slug} required />
+  </Field>
+  <Field label="Project link">
+  <Input name="linkUrl" defaultValue={editingProject.linkUrl} />
+  </Field>
+  <Field label="Live URL">
+  <Input name="liveUrl" defaultValue={editingProject.liveUrl} />
+  </Field>
+  <Field label="Repository URL">
+  <Input name="repoUrl" defaultValue={editingProject.repoUrl} />
+  </Field>
+  <Field label="Description">
+  <Textarea
+  name="description"
+  defaultValue={editingProject.description}
+  className="md:col-span-2 min-h-[96px]"
+  required
+  />
+  </Field>
+  <Field label="Long description">
+  <Textarea name="longDescription" defaultValue={editingProject.longDescription} className="md:col-span-2 min-h-[120px]" />
+  </Field>
+  <Field label="Problem"><Textarea name="problem" defaultValue={editingProject.problem} /></Field>
+  <Field label="Solution"><Textarea name="solution" defaultValue={editingProject.solution} /></Field>
+  <Field label="Role"><Input name="role" defaultValue={editingProject.role} /></Field>
+  <Field label="Status"><Input name="status" defaultValue={editingProject.status} /></Field>
+  <Field label="Start month"><Input name="startDate" type="month" defaultValue={editingProject.startDate} /></Field>
+  <Field label="End month"><Input name="endDate" type="month" defaultValue={editingProject.endDate} /></Field>
+  <Field label="Contributions (one per line)"><Textarea name="contributions" defaultValue={editingProject.contributions.join("\n")} /></Field>
+  <Field label="Features (one per line)"><Textarea name="features" defaultValue={editingProject.features.join("\n")} /></Field>
+  <Field label="Challenges (one per line)"><Textarea name="challenges" defaultValue={editingProject.challenges.join("\n")} /></Field>
+  <Field label="Results (one per line)"><Textarea name="results" defaultValue={editingProject.results.join("\n")} /></Field>
+  <Field label="Tech stack (comma separated)"><Input name="techStack" defaultValue={editingProject.techStack.join(", ")} /></Field>
+  <Field label="Tags">
                 <Input name="tags" defaultValue={editingProject.tags} required />
               </Field>
               <Field label="Image URL (optional)">
