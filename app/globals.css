@@ -51,27 +51,31 @@
 
 #star-container {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   pointer-events: none;
-  z-index: -1;
-  background: hsl(var(--background));
+  z-index: 0;
+  background: transparent;
+}
+
+body > *:not(#star-container) {
+  position: relative;
+  z-index: 1;
 }
 
 .star-background__star {
   position: absolute;
   display: block;
   border-radius: 50%;
-  opacity: 0.1;
-  box-shadow: 0 0 5px currentColor;
+  opacity: 0.7;
+  box-shadow: 0 0 6px currentColor;
   animation: twinkle 3.5s ease-in-out infinite;
 }
 
 @keyframes twinkle {
-  0%, 100% { opacity: 0.1; }
+  0%, 100% { opacity: 0.45; }
   50% { opacity: 1; }
 }
 
