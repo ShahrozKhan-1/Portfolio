@@ -49,6 +49,32 @@
   }
 }
 
+#star-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+  background: hsl(var(--background));
+}
+
+.star-background__star {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  opacity: 0.1;
+  box-shadow: 0 0 5px currentColor;
+  animation: twinkle 3.5s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 1; }
+}
+
 @layer base {
   * {
     @apply border-border;
