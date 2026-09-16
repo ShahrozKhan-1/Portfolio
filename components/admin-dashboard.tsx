@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import type { Project, Review, SiteData, Skill } from "@/lib/site-types"
 import { cn } from "@/lib/utils"
+import { ImageUpload } from "@/components/image-upload"
 
 type Status = {
   type: "success" | "error"
@@ -545,9 +546,9 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
                           <Field label="Tags">
                             <Input name="tags" placeholder="Django, PostgreSQL, Docker" required />
                           </Field>
-                          <Field label="Image URL (optional)">
-                            <Input name="imageUrl" placeholder="https://example.com/project-image.jpg or /project-image.jpg" />
-                          </Field>
+  <Field label="Project image">
+  <ImageUpload name="imageUrl" />
+  </Field>
                           <Field label="Status">
                             <Input name="status" defaultValue="completed" placeholder="completed, in-progress, planned, or maintenance" />
                           </Field>
@@ -564,9 +565,9 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
                           <Field label="Features (one per line)"><Textarea name="features" /></Field>
                           <Field label="Challenges (one per line)"><Textarea name="challenges" /></Field>
                           <Field label="Results (one per line)"><Textarea name="results" /></Field>
-                          <Field label="Gallery image URLs (one per line)">
-                            <Textarea name="gallery" placeholder="https://example.com/screenshot-1.jpg" />
-                          </Field>
+  <Field label="Gallery images">
+  <ImageUpload name="gallery" multiple />
+  </Field>
                           <Field label="Order">
                             <Input name="orderIndex" type="number" defaultValue={0} />
                           </Field>
@@ -869,12 +870,12 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
   <Field label="Tags">
                 <Input name="tags" defaultValue={editingProject.tags} required />
               </Field>
-  <Field label="Image URL (optional)">
-                <Input name="imageUrl" defaultValue={editingProject.imageUrl ?? ""} />
-              </Field>
-              <Field label="Gallery image URLs (one per line)">
-                <Textarea name="gallery" defaultValue={editingProject.gallery.map((image) => image.url).join("\n")} />
-              </Field>
+  <Field label="Project image">
+  <ImageUpload name="imageUrl" initialValue={editingProject.imageUrl ?? ""} />
+  </Field>
+  <Field label="Gallery images">
+  <ImageUpload name="gallery" multiple initialValue={editingProject.gallery.map((image) => image.url).join("\n")} />
+  </Field>
               <Field label="Order">
                 <Input name="orderIndex" type="number" defaultValue={editingProject.orderIndex} />
               </Field>
