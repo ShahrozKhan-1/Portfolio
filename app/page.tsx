@@ -48,6 +48,12 @@ type BrandIcon = {
   hex: string
 }
 
+const terminalLines = [
+  "def build_solution(problem): return clean_code",
+  "await ship_feature(with_confidence=True)",
+  "if bug: debug_then_deliver()",
+]
+
 const brandSkillIcons: Record<string, BrandIcon> = {
   python: siPython,
   django: siDjango,
@@ -79,6 +85,34 @@ function SkillBrandIcon({ icon, className }: { icon: BrandIcon; className?: stri
 export default function Home() {
   const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [terminalLine, setTerminalLine] = useState(terminalLines[0])
+  const [terminalCursor, setTerminalCursor] = useState(terminalLines[0].length)
+
+  useEffect(() => {
+    let phraseIndex = 0
+    let characterIndex = terminalLines[0].length
+    let deleting = true
+
+    const timer = window.setInterval(() => {
+      if (deleting) {
+        characterIndex -= 1
+        setTerminalCursor(characterIndex)
+        if (characterIndex === 0) {
+          deleting = false
+          phraseIndex = (phraseIndex + 1) % terminalLines.length
+          setTerminalLine(terminalLines[phraseIndex])
+        }
+      } else {
+        characterIndex += 1
+        setTerminalCursor(characterIndex)
+        if (characterIndex === terminalLines[phraseIndex].length) {
+          deleting = true
+        }
+      }
+    }, 70)
+
+    return () => window.clearInterval(timer)
+  }, [])
   const [activeSection, setActiveSection] = useState("home")
   const observerRef = useRef<IntersectionObserver | null>(null)
   const [contactState, setContactState] = useState<{ success: boolean; message: string } | null>(null)
@@ -460,7 +494,9 @@ export default function Home() {
                     </div>
                     <div className="flex items-center">
                       <span className="text-purple-400">$</span>
-                      <span className="ml-2">def build_solution(problem): return clean_code</span>
+                      <span className="ml-2" aria-live="polite">
+                        {terminalLine.slice(0, terminalCursor)}
+                      </span>
                       <span className="ml-1 animate-pulse text-white" aria-hidden="true">|</span>
                     </div>
                   </motion.div>
