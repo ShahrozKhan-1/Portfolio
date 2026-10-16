@@ -2,6 +2,10 @@
 
 import { Resend } from "resend"
 
+function escapeHtml(value: string) {
+  return value.replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character] ?? character)
+}
+
 function getRecipientEmail(formData: FormData) {
   const fromForm = String(formData.get("recipientEmail") ?? "").trim()
   return fromForm || process.env.CONTACT_TO_EMAIL?.trim() || "shahrozkha83@gmail.com"
@@ -21,10 +25,18 @@ export async function sendContactEmail(formData: FormData) {
   const resend = new Resend(apiKey)
   const recipientEmail = getRecipientEmail(formData)
 
-  const name = String(formData.get("name") ?? "").trim()
-  const email = String(formData.get("email") ?? "").trim()
-  const subject = String(formData.get("subject") ?? "").trim()
-  const message = String(formData.get("message") ?? "").trim()
+  if (String(formData.get("website") ?? "").trim()) {
+    return { success: true, message: "Thank you for your message." }
+  }
+
+  const name = String(formData.get("name") ?? "").trim().slice(0, 80)
+  const email = String(formData.get("email") ?? "").trim().slice(0, 160)
+  const subject = String(formData.get("subject") ?? "").trim().slice(0, 120)
+  const message = String(formData.get("message") ?? "").trim().slice(0, 3000)
+  const safeName = escapeHtml(name)
+  const safeEmail = escapeHtml(email)
+  const safeSubject = escapeHtml(subject)
+  const safeMessage = escapeHtml(message)
 
   if (!name || !email || !subject || !message) {
     return {
@@ -56,19 +68,19 @@ export async function sendContactEmail(formData: FormData) {
           <div style="background: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
             <div style="margin-bottom: 20px;">
               <h3 style="color: #374151; margin: 0 0 8px 0; font-size: 16px;">From:</h3>
-              <p style="color: #6b7280; margin: 0; font-size: 18px; font-weight: 600;">${name}</p>
-              <p style="color: #6b7280; margin: 4px 0 0 0; font-size: 14px;">${email}</p>
+              <p style="color: #6b7280; margin: 0; font-size: 18px; font-weight: 600;">${safeName}</p>
+              <p style="color: #6b7280; margin: 4px 0 0 0; font-size: 14px;">${safeEmail}</p>
             </div>
 
             <div style="margin-bottom: 20px;">
               <h3 style="color: #374151; margin: 0 0 8px 0; font-size: 16px;">Subject:</h3>
-              <p style="color: #6b7280; margin: 0; font-size: 16px; font-weight: 500;">${subject}</p>
+              <p style="color: #6b7280; margin: 0; font-size: 16px; font-weight: 500;">${safeSubject}</p>
             </div>
 
             <div style="margin-bottom: 20px;">
               <h3 style="color: #374151; margin: 0 0 8px 0; font-size: 16px;">Message:</h3>
               <div style="background: #f3f4f6; padding: 16px; border-radius: 6px; border-left: 4px solid #9333ea;">
-                <p style="color: #374151; margin: 0; line-height: 1.6; white-space: pre-wrap;">${message}</p>
+                <p style="color: #374151; margin: 0; line-height: 1.6; white-space: pre-wrap;">${safeMessage}</p>
               </div>
             </div>
 

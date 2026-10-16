@@ -12,15 +12,26 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Shahroz Khan - Python Developer",
-  description:
-    "Python Developer specializing in Django, FastAPI, Flask, REST APIs, web scraping, and AI integrations. Based in Lahore, Pakistan.",
+  title: "Shahroz Khan — Software Developer",
+  description: "Shahroz Khan builds reliable web products, backend systems, AI integrations, and automations from Lahore, Pakistan.",
+  metadataBase: new URL("https://shahrozkhan.dev"),
+  alternates: { canonical: "/" },
+  openGraph: { title: "Shahroz Khan — Software Developer", description: "Reliable software, thoughtfully shipped.", url: "/", siteName: "Shahroz Khan", type: "website" },
+  twitter: { card: "summary", title: "Shahroz Khan — Software Developer", description: "Reliable software, thoughtfully shipped." },
   generator: "v0.app",
   icons: {
     icon: "/favicon-image.png",
     shortcut: "/favicon-image.png",
     apple: "/apple-icon.png",
   },
+}
+
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Shahroz Khan",
+  jobTitle: "Software Developer",
+  url: "https://shahrozkhan.dev",
 }
 
 export default function RootLayout({
@@ -30,7 +41,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
+      </head>
       <body className={`${jetbrainsMono.variable} font-mono`}>
         <StarBackground />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
