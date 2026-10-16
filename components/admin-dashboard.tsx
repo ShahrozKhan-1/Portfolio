@@ -98,6 +98,92 @@ function splitTags(tags: string) {
     .filter(Boolean)
 }
 
+function lines(values: string[]) {
+  return values.join("\n")
+}
+
+function ProjectFormDialog({
+  open,
+  onOpenChange,
+  project,
+  saving,
+  submitFormData,
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  project?: Project | null
+  saving: boolean
+  submitFormData: (args: { endpoint: string; method: "POST" | "PATCH"; formData: FormData; mutation: MutationName; successMessage: string }) => Promise<boolean>
+}) {
+  const editing = Boolean(project)
+  const value = (key: keyof Project, fallback: string | number = ""): string | number => {
+    const current = project?.[key]
+    return typeof current === "string" || typeof current === "number" ? current : fallback
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[calc(100vh-2rem)] max-w-4xl overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{editing ? "Edit project" : "Add project"}</DialogTitle>
+          <DialogDescription>{editing ? "Update the project details shown across your portfolio." : "Create a complete project case study for your portfolio."}</DialogDescription>
+        </DialogHeader>
+        <form className="flex flex-col gap-6" onSubmit={async (event) => {
+          event.preventDefault()
+          const form = event.currentTarget
+          const ok = await submitFormData({
+            endpoint: editing ? `/api/admin/projects/${project?.id}` : "/api/admin/projects",
+            method: editing ? "PATCH" : "POST",
+            formData: new FormData(form),
+            mutation: "project",
+            successMessage: editing ? "Project updated successfully." : "Project added successfully.",
+          })
+          if (ok) onOpenChange(false)
+        }}>
+          <section className="grid gap-4 rounded-xl border bg-muted/20 p-4 md:grid-cols-2">
+            <div className="md:col-span-2"><h3 className="font-semibold">Overview</h3><p className="text-sm text-muted-foreground">The essentials visitors see first.</p></div>
+            <Field label="Project title"><Input name="title" defaultValue={value("title")} placeholder="e.g. VisionIMS" required /></Field>
+            <Field label="Slug"><Input name="slug" defaultValue={value("slug")} placeholder="visionims" required /></Field>
+            <Field label="Short description"><Textarea name="description" defaultValue={value("description")} className="min-h-24 md:col-span-2" placeholder="What does this project do?" required /></Field>
+            <Field label="Status"><select name="status" defaultValue={value("status", "completed")} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" required><option value="completed">Completed</option><option value="in-progress">In progress</option><option value="planned">Planned</option><option value="maintenance">Maintenance</option></select></Field>
+            <Field label="Display order"><Input name="orderIndex" type="number" min={0} defaultValue={value("orderIndex", 0)} /></Field>
+          </section>
+
+          <section className="grid gap-4 rounded-xl border bg-muted/20 p-4 md:grid-cols-2">
+            <div className="md:col-span-2"><h3 className="font-semibold">Media and links</h3><p className="text-sm text-muted-foreground">Add a thumbnail, gallery, and useful destinations.</p></div>
+            <Field label="Thumbnail"><ImageUpload name="imageUrl" initialValue={String(value("imageUrl"))} /></Field>
+            <Field label="Gallery"><ImageUpload name="gallery" multiple initialValue={project ? project.gallery.map((image) => image.url).join("\n") : ""} /></Field>
+            <Field label="Project link"><Input name="linkUrl" type="url" defaultValue={value("linkUrl")} placeholder="https://..." /></Field>
+            <Field label="Live URL"><Input name="liveUrl" type="url" defaultValue={value("liveUrl")} placeholder="https://..." /></Field>
+            <Field label="Repository URL"><Input name="repoUrl" type="url" defaultValue={value("repoUrl")} placeholder="https://github.com/..." /></Field>
+          </section>
+
+          <section className="grid gap-4 rounded-xl border bg-muted/20 p-4 md:grid-cols-2">
+            <div className="md:col-span-2"><h3 className="font-semibold">Project story</h3><p className="text-sm text-muted-foreground">Give the case study enough context to feel credible.</p></div>
+            <Field label="Long description"><Textarea name="longDescription" defaultValue={value("longDescription")} className="min-h-28 md:col-span-2" /></Field>
+            <Field label="Problem"><Textarea name="problem" defaultValue={value("problem")} className="min-h-24" /></Field>
+            <Field label="Solution"><Textarea name="solution" defaultValue={value("solution")} className="min-h-24" /></Field>
+            <Field label="Your role"><Input name="role" defaultValue={value("role")} placeholder="e.g. Full-stack developer" /></Field>
+            <Field label="Tech stack"><Input name="techStack" defaultValue={project?.techStack.join(", ")} placeholder="Django, PostgreSQL, Docker" /></Field>
+            <Field label="Tags"><Input name="tags" defaultValue={value("tags")} placeholder="backend, SaaS, APIs" required /></Field>
+            <Field label="Start month"><Input name="startDate" type="month" defaultValue={value("startDate")} /></Field>
+            <Field label="End month"><Input name="endDate" type="month" defaultValue={value("endDate")} /></Field>
+          </section>
+
+          <section className="grid gap-4 rounded-xl border bg-muted/20 p-4 md:grid-cols-2">
+            <div className="md:col-span-2"><h3 className="font-semibold">Details</h3><p className="text-sm text-muted-foreground">Use one item per line. These power the detailed project page.</p></div>
+            <Field label="Contributions"><Textarea name="contributions" defaultValue={project ? lines(project.contributions) : ""} /></Field>
+            <Field label="Features"><Textarea name="features" defaultValue={project ? lines(project.features) : ""} /></Field>
+            <Field label="Challenges"><Textarea name="challenges" defaultValue={project ? lines(project.challenges) : ""} /></Field>
+            <Field label="Results"><Textarea name="results" defaultValue={project ? lines(project.results) : ""} /></Field>
+          </section>
+          <DialogFooter><Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>Cancel</Button><Button type="submit" disabled={saving}>{saving ? "Saving..." : editing ? "Save changes" : "Add project"}</Button></DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 function panelBorder() {
   return "border border-slate-200/70 bg-white/90 shadow-xl backdrop-blur dark:border-slate-800 dark:bg-slate-950/80"
 }
@@ -494,91 +580,10 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
                   title="Projects"
                   description="Manage the portfolio project cards that appear on the homepage."
                   action={
-                    <Dialog open={addProjectOpen} onOpenChange={setAddProjectOpen}>
-                      <DialogTrigger asChild>
-                        <Button type="button" className="gap-2 rounded-full">
-                          <Plus className="h-4 w-4" />
-                          Add project
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-h-[calc(100vh-2rem)] max-w-xl overflow-y-auto">
-                        <DialogHeader>
-                          <DialogTitle>Add project</DialogTitle>
-                          <DialogDescription>Add a new project card to the homepage.</DialogDescription>
-                        </DialogHeader>
-                        <form
-                          className="grid gap-4 md:grid-cols-2"
-                          onSubmit={async (event) => {
-                            event.preventDefault()
-                            const form = event.currentTarget
-                            const formData = new FormData(form)
-                            const ok = await submitFormData({
-                              endpoint: "/api/admin/projects",
-                              method: "POST",
-                              formData,
-                              mutation: "project",
-                              successMessage: "Project added successfully.",
-                            })
-                            if (ok) {
-                              form.reset()
-                              setAddProjectOpen(false)
-                            }
-                          }}
-                        >
-                          <Field label="Project title">
-                            <Input name="title" placeholder="e.g. VisionIMS" required />
-                          </Field>
-                          <Field label="Slug (optional)">
-                            <Input name="slug" placeholder="visionims" />
-                          </Field>
-                          <Field label="Project link">
-                            <Input name="linkUrl" placeholder="https://..." />
-                          </Field>
-                          <Field label="Live URL">
-                            <Input name="liveUrl" placeholder="https://..." />
-                          </Field>
-                          <Field label="Repository URL">
-                            <Input name="repoUrl" placeholder="https://github.com/..." />
-                          </Field>
-                          <Field label="Description">
-                            <Textarea name="description" className="md:col-span-2 min-h-[96px]" required />
-                          </Field>
-                          <Field label="Tags">
-                            <Input name="tags" placeholder="Django, PostgreSQL, Docker" required />
-                          </Field>
-  <Field label="Project image">
-  <ImageUpload name="imageUrl" />
-  </Field>
-                          <Field label="Status">
-                            <Input name="status" defaultValue="completed" placeholder="completed, in-progress, planned, or maintenance" />
-                          </Field>
-                          <Field label="Long description">
-                            <Textarea name="longDescription" className="md:col-span-2 min-h-[120px]" />
-                          </Field>
-                          <Field label="Problem"><Textarea name="problem" /></Field>
-                          <Field label="Solution"><Textarea name="solution" /></Field>
-                          <Field label="Role"><Input name="role" placeholder="e.g. Full-stack developer" /></Field>
-                          <Field label="Tech stack (comma separated)"><Input name="techStack" placeholder="Django, PostgreSQL, Docker" /></Field>
-                          <Field label="Start month"><Input name="startDate" type="month" /></Field>
-                          <Field label="End month"><Input name="endDate" type="month" /></Field>
-                          <Field label="Contributions (one per line)"><Textarea name="contributions" /></Field>
-                          <Field label="Features (one per line)"><Textarea name="features" /></Field>
-                          <Field label="Challenges (one per line)"><Textarea name="challenges" /></Field>
-                          <Field label="Results (one per line)"><Textarea name="results" /></Field>
-  <Field label="Gallery images">
-  <ImageUpload name="gallery" multiple />
-  </Field>
-                          <Field label="Order">
-                            <Input name="orderIndex" type="number" defaultValue={0} />
-                          </Field>
-                          <DialogFooter className="md:col-span-2">
-                            <Button type="submit" disabled={saving === "project"} className="rounded-full">
-                              {saving === "project" ? "Adding..." : "Add project"}
-                            </Button>
-                          </DialogFooter>
-                        </form>
-                      </DialogContent>
-                    </Dialog>
+                    <>
+                      <Button type="button" className="gap-2 rounded-full" onClick={() => setAddProjectOpen(true)}><Plus className="h-4 w-4" />Add project</Button>
+                      <ProjectFormDialog open={addProjectOpen} onOpenChange={setAddProjectOpen} saving={saving === "project"} submitFormData={submitFormData} />
+                    </>
                   }
                 />
 
@@ -807,87 +812,7 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
         </DialogContent>
       </Dialog>
 
-      {/* Edit project dialog */}
-      <Dialog open={editingProject !== null} onOpenChange={(open) => !open && setEditingProject(null)}>
-        <DialogContent className="max-h-[calc(100vh-2rem)] max-w-xl overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Edit project</DialogTitle>
-            <DialogDescription>Update this project&apos;s details.</DialogDescription>
-          </DialogHeader>
-          {editingProject ? (
-            <form
-              className="grid gap-4 md:grid-cols-2"
-              onSubmit={async (event) => {
-                event.preventDefault()
-                const formData = new FormData(event.currentTarget)
-                const ok = await submitFormData({
-                  endpoint: `/api/admin/projects/${editingProject.id}`,
-                  method: "PATCH",
-                  formData,
-                  mutation: "project",
-                  successMessage: "Project updated successfully.",
-                })
-                if (ok) setEditingProject(null)
-              }}
-            >
-  <Field label="Project title">
-  <Input name="title" defaultValue={editingProject.title} required />
-  </Field>
-  <Field label="Slug">
-  <Input name="slug" defaultValue={editingProject.slug} required />
-  </Field>
-  <Field label="Project link">
-  <Input name="linkUrl" defaultValue={editingProject.linkUrl} />
-  </Field>
-  <Field label="Live URL">
-  <Input name="liveUrl" defaultValue={editingProject.liveUrl} />
-  </Field>
-  <Field label="Repository URL">
-  <Input name="repoUrl" defaultValue={editingProject.repoUrl} />
-  </Field>
-  <Field label="Description">
-  <Textarea
-  name="description"
-  defaultValue={editingProject.description}
-  className="md:col-span-2 min-h-[96px]"
-  required
-  />
-  </Field>
-  <Field label="Long description">
-  <Textarea name="longDescription" defaultValue={editingProject.longDescription} className="md:col-span-2 min-h-[120px]" />
-  </Field>
-  <Field label="Problem"><Textarea name="problem" defaultValue={editingProject.problem} /></Field>
-  <Field label="Solution"><Textarea name="solution" defaultValue={editingProject.solution} /></Field>
-  <Field label="Role"><Input name="role" defaultValue={editingProject.role} /></Field>
-  <Field label="Status"><Input name="status" defaultValue={editingProject.status} /></Field>
-  <Field label="Start month"><Input name="startDate" type="month" defaultValue={editingProject.startDate} /></Field>
-  <Field label="End month"><Input name="endDate" type="month" defaultValue={editingProject.endDate} /></Field>
-  <Field label="Contributions (one per line)"><Textarea name="contributions" defaultValue={editingProject.contributions.join("\n")} /></Field>
-  <Field label="Features (one per line)"><Textarea name="features" defaultValue={editingProject.features.join("\n")} /></Field>
-  <Field label="Challenges (one per line)"><Textarea name="challenges" defaultValue={editingProject.challenges.join("\n")} /></Field>
-  <Field label="Results (one per line)"><Textarea name="results" defaultValue={editingProject.results.join("\n")} /></Field>
-  <Field label="Tech stack (comma separated)"><Input name="techStack" defaultValue={editingProject.techStack.join(", ")} /></Field>
-  <Field label="Tags">
-                <Input name="tags" defaultValue={editingProject.tags} required />
-              </Field>
-  <Field label="Project image">
-  <ImageUpload name="imageUrl" initialValue={editingProject.imageUrl ?? ""} />
-  </Field>
-  <Field label="Gallery images">
-  <ImageUpload name="gallery" multiple initialValue={editingProject.gallery.map((image) => image.url).join("\n")} />
-  </Field>
-              <Field label="Order">
-                <Input name="orderIndex" type="number" defaultValue={editingProject.orderIndex} />
-              </Field>
-              <DialogFooter className="md:col-span-2">
-                <Button type="submit" disabled={saving === "project"} className="rounded-full">
-                  {saving === "project" ? "Saving..." : "Save changes"}
-                </Button>
-              </DialogFooter>
-            </form>
-          ) : null}
-        </DialogContent>
-      </Dialog>
+      <ProjectFormDialog open={editingProject !== null} onOpenChange={(open) => !open && setEditingProject(null)} project={editingProject} saving={saving === "project"} submitFormData={submitFormData} />
 
       {/* Edit review dialog */}
       <Dialog open={editingReview !== null} onOpenChange={(open) => !open && setEditingReview(null)}>
