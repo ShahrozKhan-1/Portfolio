@@ -1,15 +1,8 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { StarBackground } from "@/components/star-background"
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-jetbrains",
-})
 
 export const metadata: Metadata = {
   title: "Shahroz Khan — Software Developer",
@@ -44,7 +37,7 @@ export default function RootLayout({
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
       </head>
-      <body className={`${jetbrainsMono.variable} font-mono`}>
+      <body className="font-mono">
         <StarBackground />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="relative z-[1]">{children}</div>
