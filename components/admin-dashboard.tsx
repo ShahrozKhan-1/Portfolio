@@ -123,7 +123,7 @@ function ProjectFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[calc(100vh-2rem)] max-w-4xl overflow-y-auto">
+      <DialogContent className="max-h-[calc(100dvh-2rem)] min-h-0 max-w-4xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{editing ? "Edit project" : "Add project"}</DialogTitle>
           <DialogDescription>{editing ? "Update the project details shown across your portfolio." : "Create a complete project case study for your portfolio."}</DialogDescription>
