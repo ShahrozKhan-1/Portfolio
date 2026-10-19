@@ -3,7 +3,6 @@ import type { Metadata } from "next"
 import { JetBrains_Mono } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { StarBackground } from "@/components/star-background"
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -32,7 +31,6 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className={`${jetbrainsMono.variable} font-mono`}>
-        <StarBackground />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="relative z-[1]">{children}</div>
         </ThemeProvider>
