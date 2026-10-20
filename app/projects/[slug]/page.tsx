@@ -26,7 +26,17 @@ export async function generateStaticParams() { return (await getSiteData()).proj
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
   const project = findProject((await getSiteData()).projects, slug)
-  return project ? { title: `${project.title} | Shahroz Khan`, description: project.description, openGraph: { images: project.gallery[0]?.url || project.imageUrl || "/placeholder.svg" } } : {}
+  return project
+    ? {
+        title: { absolute: `${project.title} | Shahroz Khan` },
+        description: project.description,
+        alternates: { canonical: `/projects/${project.slug}` },
+        openGraph: {
+          url: `https://shahrozkhan.vercel.app/projects/${project.slug}`,
+          images: project.gallery[0]?.url || project.imageUrl || "/placeholder.svg",
+        },
+      }
+    : {}
 }
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {

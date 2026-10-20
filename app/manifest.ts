@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next"
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Shahroz Khan - Portfolio",
+    name: "Shahroz Khan | Python Backend Developer",
     short_name: "Shahroz Khan",
-    description: "Python Developer specializing in Django, FastAPI, Flask, REST APIs, web scraping, and AI integrations",
+    description: "Python Backend Developer building reliable APIs, backend applications, and practical automations.",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",
