@@ -5,9 +5,9 @@ import { ImagePlus, Loader2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-const accept = "image/jpeg,image/png,image/webp,image/gif"
+const accept = "image/jpeg,image/png,image/webp,image/avif"
 
-export function ImageUpload({ name, multiple = false, initialValue = "" }: { name: string; multiple?: boolean; initialValue?: string }) {
+export function ImageUpload({ name, folder = "projects", multiple = false, initialValue = "" }: { name: string; folder?: "projects" | "profile" | "testimonials"; multiple?: boolean; initialValue?: string }) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [paths, setPaths] = useState(initialValue ? initialValue.split("\n").filter(Boolean) : [])
   const [uploading, setUploading] = useState(false)
@@ -19,6 +19,7 @@ export function ImageUpload({ name, multiple = false, initialValue = "" }: { nam
     setUploading(true)
     const body = new FormData()
     Array.from(files).forEach((file) => body.append("files", file))
+    body.append("folder", folder)
     try {
       const response = await fetch("/api/admin/images", { method: "POST", body })
       const result = (await response.json()) as { paths?: string[]; error?: string }
@@ -41,7 +42,7 @@ export function ImageUpload({ name, multiple = false, initialValue = "" }: { nam
         <Input ref={inputRef} type="file" accept={accept} multiple={multiple} onChange={(event) => upload(event.target.files)} className="max-w-md" aria-describedby={`${name}-help`} />
         {uploading ? <span className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="size-4 animate-spin" />Uploading...</span> : null}
       </div>
-      <p id={`${name}-help`} className="text-xs text-muted-foreground">JPG, PNG, WebP, or GIF. Maximum 5 MB per image.</p>
+      <p id={`${name}-help`} className="text-xs text-muted-foreground">JPG, PNG, WebP, or AVIF. Maximum 5 MB per image.</p>
       {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
       {paths.length ? <div className="flex flex-wrap gap-2">
         {paths.map((imagePath) => <div key={imagePath} className="group relative overflow-hidden rounded-lg border bg-muted">

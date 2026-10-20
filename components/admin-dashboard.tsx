@@ -340,8 +340,7 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
               </p>
               <h1 className="mt-2 text-3xl font-bold">Portfolio content manager</h1>
               <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-400">
-                Update the profile content, and add, edit, or remove skills, projects, and reviews from the local
-                JSON data file.
+Update the profile content, and add, edit, or remove skills, projects, and reviews. Uploaded images are stored securely in Cloudinary.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
@@ -506,8 +505,8 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
                   <Field label="LinkedIn URL">
                     <Input name="linkedinUrl" defaultValue={data.profile.linkedinUrl} required />
                   </Field>
-                  <Field label="Profile image URL">
-                    <Input name="imageUrl" defaultValue={data.profile.imageUrl} required />
+                  <Field label="Profile image">
+                    <ImageUpload name="imageUrl" folder="profile" initialValue={data.profile.imageUrl} />
                   </Field>
                   <div className="md:col-span-2 flex justify-end">
                     <Button type="submit" disabled={saving === "profile"} className="rounded-full">
@@ -747,8 +746,8 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
                           <Field label="Content">
                             <Textarea name="content" className="md:col-span-2 min-h-[96px]" required />
                           </Field>
-                          <Field label="Avatar URL">
-                            <Input name="avatarUrl" placeholder="/placeholder-user.jpg" required />
+                          <Field label="Avatar image">
+                            <ImageUpload name="avatarUrl" folder="testimonials" />
                           </Field>
                           <Field label="Rating">
                             <Input name="rating" type="number" min={1} max={5} defaultValue={5} />
