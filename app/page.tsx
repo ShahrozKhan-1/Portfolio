@@ -125,6 +125,13 @@ export default function Home() {
   const skills = visibility.skills ? siteData.skills : []
   const projects = visibility.projects ? siteData.projects.filter((project) => project.visible !== false) : []
   const reviews = visibility.reviews ? siteData.reviews : []
+  const navigationSections = [
+    "home",
+    ...(visibility.profile ? ["about"] : []),
+    ...(visibility.skills ? ["skills"] : []),
+    ...(visibility.projects ? ["projects"] : []),
+    "contact",
+  ]
 
   const developerStates = [
     { icon: <Code className="h-4 w-4" />, text: "Coding", color: "text-green-500" },
@@ -343,7 +350,7 @@ export default function Home() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex gap-8">
-            {["home", "about", "skills", "projects", "contact"].map((section) => (
+              {navigationSections.map((section) => (
               <Link
                 key={section}
                 href={`#${section}`}
@@ -400,7 +407,7 @@ export default function Home() {
             className="md:hidden absolute top-16 inset-x-0 bg-white dark:bg-slate-950 border-b shadow-lg"
           >
             <nav className="container py-4 flex flex-col">
-              {["home", "about", "skills", "projects", "contact"].map((section) => (
+            {navigationSections.map((section) => (
                 <Link
                   key={section}
                   href={`#${section}`}
