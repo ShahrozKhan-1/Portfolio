@@ -42,17 +42,12 @@ import {
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { sendContactEmail } from "./actions/contact"
+import { TerminalTypingAnimation } from "@/components/terminal-typing-animation"
 
 type BrandIcon = {
   path: string
   hex: string
 }
-
-const terminalLines = [
-  "def build_solution(problem): return clean_code",
-  "await ship_feature(with_confidence=True)",
-  "if bug: debug_then_deliver()",
-]
 
 const brandSkillIcons: Record<string, BrandIcon> = {
   python: siPython,
@@ -85,34 +80,6 @@ function SkillBrandIcon({ icon, className }: { icon: BrandIcon; className?: stri
 export default function Home() {
   const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [terminalLine, setTerminalLine] = useState(terminalLines[0])
-  const [terminalCursor, setTerminalCursor] = useState(terminalLines[0].length)
-
-  useEffect(() => {
-    let phraseIndex = 0
-    let characterIndex = terminalLines[0].length
-    let deleting = true
-
-    const timer = window.setInterval(() => {
-      if (deleting) {
-        characterIndex -= 1
-        setTerminalCursor(characterIndex)
-        if (characterIndex === 0) {
-          deleting = false
-          phraseIndex = (phraseIndex + 1) % terminalLines.length
-          setTerminalLine(terminalLines[phraseIndex])
-        }
-      } else {
-        characterIndex += 1
-        setTerminalCursor(characterIndex)
-        if (characterIndex === terminalLines[phraseIndex].length) {
-          deleting = true
-        }
-      }
-    }, 70)
-
-    return () => window.clearInterval(timer)
-  }, [])
   const [activeSection, setActiveSection] = useState("home")
   const observerRef = useRef<IntersectionObserver | null>(null)
   const [contactState, setContactState] = useState<{ success: boolean; message: string } | null>(null)
@@ -436,14 +403,14 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section id="home" className={`py-20 md:py-22 relative overflow-hidden ${!visibility.profile ? "hidden" : ""}`}>
+        <section id="home" className={`py-14 md:py-18 relative overflow-hidden ${!visibility.profile ? "hidden" : ""}`}>
           <div className="container px-4 md:px-6 relative z-10">
             <div className="grid gap-3 lg:grid-cols-[1fr_400px] lg:gap-5 xl:grid-cols-[1fr_500px]">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="flex flex-col justify-center space-y-6"
+                className="flex min-w-0 flex-col justify-center space-y-6"
               >
                 <div className="space-y-2">
                   {/* Developer Status Badge */}
@@ -487,26 +454,12 @@ export default function Home() {
 
                   {/* Typing Code Animation */}
                   <motion.div
-                    className="bg-slate-900 dark:bg-slate-800 rounded-lg p-4 font-mono text-sm text-green-400 border border-slate-700 max-w-md"
+                    className="w-full min-w-0 max-w-md"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 }}
                   >
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="flex gap-1">
-                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                      </div>
-                      <span className="text-slate-400 text-xs">terminal</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span className="text-purple-400">$</span>
-                      <span className="ml-2" aria-live="polite">
-                        {terminalLine.slice(0, terminalCursor)}
-                      </span>
-                      <span className="ml-1 animate-pulse text-white" aria-hidden="true">|</span>
-                    </div>
+                    <TerminalTypingAnimation />
                   </motion.div>
 
                   <motion.p
@@ -660,7 +613,7 @@ export default function Home() {
         </section>
 
         {/* About Section */}
-        <section id="about" className={`py-20 md:py-22 relative ${!visibility.profile ? "hidden" : ""}`}>
+        <section id="about" className={`py-14 md:py-18 relative ${!visibility.profile ? "hidden" : ""}`}>
           <div className="container px-4 md:px-6">
             <div className="mx-auto max-w-6xl">
               <div className="grid gap-12 lg:grid-cols-2 items-center">
@@ -811,7 +764,7 @@ export default function Home() {
         </section>
 
         {/* Skills Section */}
-        <section id="skills" className={`py-20 md:py-22 relative ${!visibility.skills ? "hidden" : ""}`}>
+        <section id="skills" className={`py-14 md:py-18 relative ${!visibility.skills ? "hidden" : ""}`}>
           <div className="container px-4 md:px-6">
             <div className="text-center mb-12">
               <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 mb-4">
@@ -873,7 +826,7 @@ export default function Home() {
         </section>
 
         {/* Projects Section */}
-        <section id="projects" className={`py-20 md:py-22 relative ${!visibility.projects ? "hidden" : ""}`}>
+        <section id="projects" className={`py-14 md:py-18 relative ${!visibility.projects ? "hidden" : ""}`}>
           <div className="container px-4 md:px-6">
             <div className="text-center mb-12">
               <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 mb-4">
@@ -983,17 +936,11 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="mt-12 text-center">
-              <Button variant="outline" size="lg" className="rounded-full group bg-transparent">
-                View All Projects
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </div>
           </div>
         </section>
 
         {/* Testimonials Section */}
-        <section className={`py-20 md:py-22 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 relative ${!visibility.reviews ? "hidden" : ""}`}>
+        <section className={`py-14 md:py-18 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 relative ${!visibility.reviews ? "hidden" : ""}`}>
           <div className="container px-4 md:px-6">
             <div className="text-center mb-12">
               <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 mb-4">
@@ -1065,7 +1012,7 @@ export default function Home() {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="py-20 md:py-22 relative">
+        <section id="contact" className="py-14 md:py-18 relative">
           <div className="container px-4 md:px-6">
             <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2">
               <motion.div
@@ -1253,4 +1200,3 @@ export default function Home() {
     </div>
   )
 }
-

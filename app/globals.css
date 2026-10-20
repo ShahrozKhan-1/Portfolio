@@ -74,6 +74,11 @@ body > *:not(#star-container) {
   * {
     @apply border-border;
   }
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
   body {
     @apply bg-background text-foreground;
   }
@@ -172,6 +177,114 @@ body > *:not(#star-container) {
 .font-code {
   font-family: "JetBrains Mono", "Fira Code", "Monaco", "Consolas", monospace;
   font-feature-settings: "liga" 1, "calt" 1;
+}
+
+.terminal-window {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgb(51 65 85);
+  border-radius: 0.5rem;
+  background: #0f172a;
+  padding: 1rem;
+  color: #4ade80;
+  font-family: "JetBrains Mono", "Fira Code", "Monaco", "Consolas", monospace;
+  font-size: clamp(0.68rem, 2.8vw, 0.875rem);
+  line-height: 1.5rem;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 1.25rem;
+  margin-bottom: 0.5rem;
+  white-space: nowrap;
+}
+
+.terminal-window-controls {
+  display: flex;
+  flex: none;
+  gap: 0.25rem;
+}
+
+.terminal-window-control {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+}
+
+.terminal-window-control-red { background: #ef4444; }
+.terminal-window-control-yellow { background: #eab308; }
+.terminal-window-control-green { background: #22c55e; }
+
+.terminal-title {
+  color: #94a3b8;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.terminal-command-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  height: 1.5rem;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.terminal-prompt {
+  flex: none;
+  color: #a78bfa;
+}
+
+.terminal-command-viewport {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 1.5rem;
+  overflow: hidden;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+.terminal-command-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.terminal-command {
+  display: inline-flex;
+  width: max-content;
+  min-width: 100%;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  flex: none;
+  width: 1px;
+  height: 1.1em;
+  margin-left: 0.3rem;
+  background: #f8fafc;
+  vertical-align: middle;
+  animation: terminal-cursor-blink 1.2s step-end infinite;
+}
+
+.terminal-cursor-active {
+  animation: none;
+  opacity: 1;
+}
+
+@keyframes terminal-cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal-cursor { animation: none; opacity: 1; }
 }
 
 /* Code-like elements */
