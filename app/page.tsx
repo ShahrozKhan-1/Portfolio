@@ -120,10 +120,11 @@ export default function Home() {
   const [siteData, setSiteData] = useState<SiteData>(DEFAULT_SITE_DATA)
   const [debugMode, setDebugMode] = useState(false)
   const [coffeeCount, setCoffeeCount] = useState(0)
+  const visibility = siteData.visibility ?? { profile: true, skills: true, projects: true, reviews: true }
   const profile = siteData.profile
-  const skills = siteData.skills
-  const projects = siteData.projects
-  const reviews = siteData.reviews
+  const skills = visibility.skills ? siteData.skills : []
+  const projects = visibility.projects ? siteData.projects.filter((project) => project.visible !== false) : []
+  const reviews = visibility.reviews ? siteData.reviews : []
 
   const developerStates = [
     { icon: <Code className="h-4 w-4" />, text: "Coding", color: "text-green-500" },
@@ -428,7 +429,7 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section id="home" className="py-20 md:py-22 relative overflow-hidden">
+        <section id="home" className={`py-20 md:py-22 relative overflow-hidden ${!visibility.profile ? "hidden" : ""}`}>
           <div className="container px-4 md:px-6 relative z-10">
             <div className="grid gap-3 lg:grid-cols-[1fr_400px] lg:gap-5 xl:grid-cols-[1fr_500px]">
               <motion.div
@@ -652,7 +653,7 @@ export default function Home() {
         </section>
 
         {/* About Section */}
-        <section id="about" className="py-20 md:py-22 relative">
+        <section id="about" className={`py-20 md:py-22 relative ${!visibility.profile ? "hidden" : ""}`}>
           <div className="container px-4 md:px-6">
             <div className="mx-auto max-w-6xl">
               <div className="grid gap-12 lg:grid-cols-2 items-center">
@@ -803,7 +804,7 @@ export default function Home() {
         </section>
 
         {/* Skills Section */}
-        <section id="skills" className="py-20 md:py-22 relative">
+        <section id="skills" className={`py-20 md:py-22 relative ${!visibility.skills ? "hidden" : ""}`}>
           <div className="container px-4 md:px-6">
             <div className="text-center mb-12">
               <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 mb-4">
@@ -865,7 +866,7 @@ export default function Home() {
         </section>
 
         {/* Projects Section */}
-        <section id="projects" className="py-20 md:py-22 relative">
+        <section id="projects" className={`py-20 md:py-22 relative ${!visibility.projects ? "hidden" : ""}`}>
           <div className="container px-4 md:px-6">
             <div className="text-center mb-12">
               <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 mb-4">
@@ -985,7 +986,7 @@ export default function Home() {
         </section>
 
         {/* Testimonials Section */}
-        <section className="py-20 md:py-22 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 relative">
+        <section className={`py-20 md:py-22 bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 relative ${!visibility.reviews ? "hidden" : ""}`}>
           <div className="container px-4 md:px-6">
             <div className="text-center mb-12">
               <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 mb-4">

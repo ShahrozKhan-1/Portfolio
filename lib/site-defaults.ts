@@ -1,6 +1,12 @@
 import type { SiteData } from "@/lib/site-types"
 
 export const DEFAULT_SITE_DATA: SiteData = {
+  visibility: {
+    profile: true,
+    skills: true,
+    projects: true,
+    reviews: true,
+  },
   profile: {
     name: "Shahroz Khan",
     role: "Python Developer",

@@ -29,6 +29,13 @@ export type ProjectImage = {
   caption?: string
 }
 
+export type SiteVisibility = {
+  profile: boolean
+  skills: boolean
+  projects: boolean
+  reviews: boolean
+}
+
 export type Project = {
   id: number
   title: string
@@ -54,6 +61,7 @@ export type Project = {
   startDate: string
   endDate: string
   orderIndex: number
+  visible?: boolean
 }
 
 export type Review = {
@@ -71,4 +79,5 @@ export type SiteData = {
   skills: Skill[]
   projects: Project[]
   reviews: Review[]
+  visibility: SiteVisibility
 }

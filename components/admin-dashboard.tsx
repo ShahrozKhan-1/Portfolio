@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { ExternalLink, LogOut, Pencil, Plus, Trash2 } from "lucide-react"
+import { ExternalLink, Eye, EyeOff, LogOut, Pencil, Plus, Trash2 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -40,7 +40,7 @@ type Status = {
 
 type StatusType = "success" | "error"
 
-type MutationName = "profile" | "skill" | "project" | "review" | "delete"
+type MutationName = "profile" | "skill" | "project" | "review" | "delete" | "settings"
 
 type DeleteTarget = {
   kind: "skill" | "project" | "review"
@@ -221,7 +221,7 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
   }: {
     endpoint: string
     method: "POST" | "PUT" | "PATCH" | "DELETE"
-    payload?: Record<string, string | number>
+    payload?: Record<string, string | number | boolean>
     mutation: MutationName
     successMessage: string
   }): Promise<boolean> => {
@@ -289,6 +289,14 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
     } finally {
       setSaving(null)
     }
+  }
+
+  const toggleSection = async (section: keyof SiteData["visibility"]) => {
+    await submitJson({ endpoint: "/api/admin/settings", method: "PATCH", payload: { section, visible: !data.visibility[section] }, mutation: "settings", successMessage: "Section visibility updated" })
+  }
+
+  const toggleProject = async (project: Project) => {
+    await submitJson({ endpoint: `/api/admin/projects/${project.id}/visibility`, method: "PATCH", payload: { visible: project.visible === false }, mutation: "project", successMessage: "Project visibility updated" })
   }
 
   const requestDelete = (target: DeleteTarget) => {
@@ -382,6 +390,17 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
           </div>
         </div>
 
+        <Card className={`${panelBorder()} mb-6`}>
+          <CardContent className="flex flex-wrap items-center gap-3 p-4 md:p-5">
+            <span className="mr-2 text-sm font-semibold">Public sections</span>
+            {(["profile", "skills", "projects", "reviews"] as const).map((section) => {
+              const visible = data.visibility?.[section] !== false
+              return <Button key={section} type="button" variant="outline" className="gap-2 capitalize" onClick={() => toggleSection(section)} disabled={saving !== null}>
+                {visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}{section}: {visible ? "Shown" : "Hidden"}
+              </Button>
+            })}
+          </CardContent>
+        </Card>
         <Tabs defaultValue="profile" className="w-full">
           <TabsList className="grid w-full grid-cols-2 gap-1 sm:grid-cols-4">
             <TabsTrigger value="profile">Profile</TabsTrigger>
@@ -609,6 +628,9 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
                             </div>
                           </div>
                           <div className="flex shrink-0 gap-2">
+                            <Button type="button" variant="outline" size="icon" className="h-8 w-8 bg-transparent" aria-label={`${project.visible === false ? "Show" : "Hide"} ${project.title}`} onClick={() => toggleProject(project)} disabled={saving !== null}>
+                              {project.visible === false ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                            </Button>
                             <Button
                               type="button"
                               variant="outline"

@@ -38,6 +38,10 @@ function normalizeSiteData(data: Partial<SiteData> | null | undefined): SiteData
       ...fallback.profile,
       ...(data?.profile ?? {}),
     },
+    visibility: {
+      ...fallback.visibility,
+      ...(data?.visibility ?? {}),
+    },
     skills: Array.isArray(data?.skills) && data.skills.length > 0 ? data.skills : fallback.skills,
     projects:
       Array.isArray(data?.projects) && data.projects.length > 0
@@ -57,6 +61,7 @@ function normalizeSiteData(data: Partial<SiteData> | null | undefined): SiteData
               liveUrl: typeof project.liveUrl === "string" ? project.liveUrl.trim() : "",
               repoUrl: typeof project.repoUrl === "string" ? project.repoUrl.trim() : "",
               status: project.status ?? "completed",
+              visible: project.visible !== false,
               startDate: typeof project.startDate === "string" ? project.startDate : "",
               endDate: typeof project.endDate === "string" ? project.endDate : "",
             }
@@ -139,6 +144,7 @@ export async function getSiteData(): Promise<SiteData> {
   const data = await readSiteDataFile()
   return {
     profile: data.profile,
+    visibility: data.visibility,
     skills: sortByOrder(data.skills),
     projects: sortByOrder(data.projects),
     reviews: sortByOrder(data.reviews),
@@ -148,6 +154,20 @@ export async function getSiteData(): Promise<SiteData> {
 export async function replaceSiteData(data: SiteData) {
   await queueWrite(async () => {
     await writeSiteDataFile(normalizeSiteData(data))
+  })
+}
+
+export async function updateVisibility(section: keyof SiteData["visibility"], visible: boolean) {
+  await queueWrite(async () => {
+    const current = await readSiteDataFile()
+    await writeSiteDataFile({ ...current, visibility: { ...current.visibility, [section]: visible } })
+  })
+}
+
+export async function updateProjectVisibility(id: number, visible: boolean) {
+  await queueWrite(async () => {
+    const current = await readSiteDataFile()
+    await writeSiteDataFile({ ...current, projects: current.projects.map((project) => project.id === id ? { ...project, visible } : project) })
   })
 }
 
@@ -205,6 +225,7 @@ export async function createProject(project: Omit<Project, "id">) {
     const projects = sortByOrder(current.projects)
     projects.push({
       id: nextId(projects),
+      visible: true,
       ...project,
     })
     await writeSiteDataFile({
