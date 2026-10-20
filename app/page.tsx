@@ -1,26 +1,9 @@
 "use client"
 
-import type React from "react"
-
-import { useEffect, useRef, useState } from "react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { DEFAULT_SITE_DATA } from "@/lib/site-defaults"
-import type { SiteData } from "@/lib/site-types"
-import {
-  siDocker,
-  siDjango,
-  siFastapi,
-  siN8n,
-  siPostgresql,
-  siPython,
-  siRedis,
-  siSelenium,
-  siZapier,
-} from "simple-icons"
 import {
   Github,
   Linkedin,
@@ -31,10 +14,7 @@ import {
   X,
   ArrowRight,
   Code,
-  Database,
-  FigmaIcon,
   Server,
-  Smartphone,
   Terminal,
   Coffee,
   Bug,
@@ -43,62 +23,26 @@ import {
 import { motion, AnimatePresence } from "framer-motion"
 import { sendContactEmail } from "./actions/contact"
 import { TerminalTypingAnimation } from "@/components/terminal-typing-animation"
-
-type BrandIcon = {
-  path: string
-  hex: string
-}
-
-const brandSkillIcons: Record<string, BrandIcon> = {
-  python: siPython,
-  django: siDjango,
-  fastapi: siFastapi,
-  postgresql: siPostgresql,
-  selenium: siSelenium,
-  docker: siDocker,
-  redis: siRedis,
-  automation: siZapier,
-  zapier: siZapier,
-  n8n: siN8n,
-}
-
-function SkillBrandIcon({ icon, className }: { icon: BrandIcon; className?: string }) {
-  return (
-    <svg
-      aria-hidden="true"
-      focusable="false"
-      role="img"
-      viewBox="0 0 24 24"
-      className={className}
-      style={{ color: `#${icon.hex}` }}
-    >
-      <path fill="currentColor" d={icon.path} />
-    </svg>
-  )
-}
+import { useContactForm } from "@/hooks/use-contact-form"
+import { usePortfolioData } from "@/hooks/use-portfolio-data"
+import { usePortfolioInteractions } from "@/hooks/use-portfolio-interactions"
+import { hasBrandSkillIcon, SkillIcon } from "@/components/portfolio/skill-icon"
 
 export default function Home() {
-  const router = useRouter()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState("home")
-  const observerRef = useRef<IntersectionObserver | null>(null)
-  const [contactState, setContactState] = useState<{ success: boolean; message: string } | null>(null)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [siteData, setSiteData] = useState<SiteData>(DEFAULT_SITE_DATA)
-  const [debugMode, setDebugMode] = useState(false)
-  const [coffeeCount, setCoffeeCount] = useState(0)
-  const visibility = siteData.visibility ?? { profile: true, skills: true, projects: true, reviews: true }
-  const profile = siteData.profile
-  const skills = visibility.skills ? siteData.skills : []
-  const projects = visibility.projects ? siteData.projects.filter((project) => project.visible !== false) : []
-  const reviews = visibility.reviews ? siteData.reviews : []
-  const navigationSections = [
-    "home",
-    ...(visibility.profile ? ["about"] : []),
-    ...(visibility.skills ? ["skills"] : []),
-    ...(visibility.projects ? ["projects"] : []),
-    "contact",
-  ]
+  const { visibility, profile, skills, projects, reviews, navigationSections } = usePortfolioData()
+  const {
+    isMenuOpen,
+    activeSection,
+    debugMode,
+    coffeeCount,
+    toggleMenu,
+    closeMenu,
+    closeDebugMode,
+    incrementCoffeeCount,
+    prefetchProject,
+    navigateToProject,
+  } = usePortfolioInteractions(projects)
+  const { contactState, isSubmitting, handleContactSubmit } = useContactForm(sendContactEmail)
 
   const developerStates = [
     { icon: <Code className="h-4 w-4" />, text: "Coding", color: "text-green-500" },
@@ -107,132 +51,6 @@ export default function Home() {
     { icon: <Zap className="h-4 w-4" />, text: "Optimizing", color: "text-blue-500" },
     { icon: <Terminal className="h-4 w-4" />, text: "Deploying", color: "text-purple-500" },
   ]
-
-  const skillIcons = {
-    code: <Code className="h-8 w-8" />,
-    database: <Database className="h-8 w-8" />,
-    figma: <FigmaIcon className="h-8 w-8" />,
-    server: <Server className="h-8 w-8" />,
-    smartphone: <Smartphone className="h-8 w-8" />,
-    terminal: <Terminal className="h-8 w-8" />,
-    zap: <Zap className="h-8 w-8" />,
-  } as const
-
-  const getBrandSkillIcon = (skill: SiteData["skills"][number]) => {
-    const normalizedName = skill.name.trim().toLowerCase()
-    const normalizedKey = skill.iconKey.trim().toLowerCase()
-    return brandSkillIcons[normalizedName] ?? brandSkillIcons[normalizedKey] ?? null
-  }
-
-  const getFallbackSkillIcon = (skill: SiteData["skills"][number]) => {
-    return skillIcons[skill.iconKey as keyof typeof skillIcons] ?? <Code className="h-8 w-8" />
-  }
-
-  useEffect(() => {
-    let isMounted = true
-
-    const loadSiteData = async () => {
-      try {
-        const response = await fetch("/api/site-data", { cache: "no-store" })
-        if (!response.ok) {
-          return
-        }
-
-        const data = (await response.json()) as SiteData
-        if (isMounted && data) {
-          setSiteData(data)
-        }
-      } catch {
-        // Keep the bundled defaults if the JSON source is unavailable.
-      }
-    }
-
-    const loadTimer = window.setTimeout(() => {
-      void loadSiteData()
-    }, 800)
-
-    return () => {
-      isMounted = false
-      window.clearTimeout(loadTimer)
-    }
-  }, [])
-
-  useEffect(() => {
-    const prefetchTimer = window.setTimeout(() => {
-      projects.forEach((project) => router.prefetch(`/projects/${project.slug}`))
-    }, 1500)
-
-    return () => window.clearTimeout(prefetchTimer)
-  }, [projects, router])
-
-  useEffect(() => {
-    const sections = document.querySelectorAll("section[id]")
-
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id)
-          }
-        })
-      },
-      { threshold: 0.5 },
-    )
-
-    sections.forEach((section) => {
-      observerRef.current?.observe(section)
-    })
-
-    return () => {
-      sections.forEach((section) => {
-        observerRef.current?.unobserve(section)
-      })
-    }
-  }, [])
-
-  // Debug mode toggle
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === "F12" || (e.ctrlKey && e.shiftKey && e.key === "I")) {
-        e.preventDefault()
-        setDebugMode(!debugMode)
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyPress)
-    return () => window.removeEventListener("keydown", handleKeyPress)
-  }, [debugMode])
-
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
-  const closeMenu = () => setIsMenuOpen(false)
-
-  const handleContactSubmit = async (
-  event: React.FormEvent<HTMLFormElement>
-) => {
-  event.preventDefault()
-  setIsSubmitting(true)
-  setContactState(null)
-
-  const form = event.currentTarget
-  const formData = new FormData(form)
-
-  try {
-    const result = await sendContactEmail(formData)
-    setContactState(result)
-
-    if (result.success) {
-      form.reset()
-    }
-  } catch (error) {
-    console.error("Form submission error:", error)
-    setContactState({
-      success: false,
-      message: "An unexpected error occurred. Please try again.",
-    })
-  } finally {
-    setIsSubmitting(false)
-  }
-}
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 relative">
@@ -252,7 +70,10 @@ export default function Home() {
             <div>Coffee consumed: {coffeeCount} ☕</div>
             <div>Current state: {developerStates[0].text}</div>
             <div>Lines of code: 42,069</div>
-            <button onClick={() => setDebugMode(false)} className="text-red-400 hover:text-red-300 mt-2">
+            <button
+              onClick={closeDebugMode}
+              className="text-red-400 hover:text-red-300 mt-2"
+            >
               [ESC] Close
             </button>
           </motion.div>
@@ -493,7 +314,7 @@ export default function Home() {
                     size="lg"
                     className="rounded-full bg-transparent group"
                     asChild
-                    onClick={() => setCoffeeCount((prev) => prev + 1)}
+                    onClick={incrementCoffeeCount}
                   >
                     <Link href="/resume">
                       <Download className="mr-2 h-4 w-4 group-hover:animate-bounce" />
@@ -784,7 +605,7 @@ export default function Home() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
               {skills.map((skill, index) => {
-                const brandIcon = getBrandSkillIcon(skill)
+                const hasBrandIcon = hasBrandSkillIcon(skill)
 
                 return (
                   <motion.div
@@ -803,18 +624,14 @@ export default function Home() {
                     <div className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-800 h-full flex flex-col items-center justify-center text-center transition-all duration-300 group-hover:shadow-xl">
                       <motion.div
                         className={
-                          brandIcon
+                          hasBrandIcon
                             ? "mb-4 rounded-full bg-white/95 p-3 text-slate-900 shadow-md ring-1 ring-slate-200/80 dark:bg-slate-950/90 dark:text-slate-100 dark:ring-slate-700/60"
                             : `mb-4 rounded-full bg-gradient-to-r ${skill.accent} p-3 text-white`
                         }
                         whileHover={{ rotate: 360 }}
                         transition={{ duration: 0.6 }}
                       >
-                        {brandIcon ? (
-                          <SkillBrandIcon icon={brandIcon} className="h-8 w-8" />
-                        ) : (
-                          getFallbackSkillIcon(skill)
-                        )}
+                        <SkillIcon skill={skill} />
                       </motion.div>
                       <h3 className="text-lg font-semibold mb-2 tech-tag">{skill.name}</h3>
                     </div>
@@ -859,13 +676,13 @@ export default function Home() {
                   className="group cursor-pointer"
                   role="link"
                   tabIndex={0}
-                  onMouseEnter={() => router.prefetch(`/projects/${project.slug}`)}
-                  onFocus={() => router.prefetch(`/projects/${project.slug}`)}
-                  onClick={() => router.push(`/projects/${project.slug}`)}
+                  onMouseEnter={() => prefetchProject(project.slug)}
+                  onFocus={() => prefetchProject(project.slug)}
+                  onClick={() => navigateToProject(project.slug)}
                   onKeyDown={(event) => {
                     if (event.key === "Enter" || event.key === " ") {
                       event.preventDefault()
-                      router.push(`/projects/${project.slug}`)
+                      navigateToProject(project.slug)
                     }
                   }}
                 >
