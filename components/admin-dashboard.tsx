@@ -391,14 +391,53 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
         </div>
 
         <Card className={`${panelBorder()} mb-6`}>
-          <CardContent className="flex flex-wrap items-center gap-3 p-4 md:p-5">
-            <span className="mr-2 text-sm font-semibold">Public sections</span>
-            {(["profile", "skills", "projects", "reviews"] as const).map((section) => {
-              const visible = data.visibility?.[section] !== false
-              return <Button key={section} type="button" variant="outline" className="gap-2 capitalize" onClick={() => toggleSection(section)} disabled={saving !== null}>
-                {visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}{section}: {visible ? "Shown" : "Hidden"}
-              </Button>
-            })}
+          <CardContent className="p-5 md:p-6">
+            <div className="flex flex-col gap-1 border-b border-slate-200/70 pb-4 dark:border-slate-800">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-base font-semibold text-slate-950 dark:text-white">Public sections</h2>
+                <Badge variant="secondary" className="font-normal">Controls homepage visibility</Badge>
+              </div>
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                Choose which areas visitors can see. Changes are saved automatically.
+              </p>
+            </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {(["profile", "skills", "projects", "reviews"] as const).map((section) => {
+                const visible = data.visibility?.[section] !== false
+                return (
+                  <div
+                    key={section}
+                    className={cn(
+                      "flex items-center justify-between gap-3 rounded-xl border p-3 transition-colors",
+                      visible
+                        ? "border-emerald-200 bg-emerald-50/60 dark:border-emerald-900/60 dark:bg-emerald-950/20"
+                        : "border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/60",
+                    )}
+                  >
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className={cn("flex size-9 shrink-0 items-center justify-center rounded-lg", visible ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300" : "bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400")}>
+                        {visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold capitalize text-slate-900 dark:text-white">{section}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{visible ? "Visible on site" : "Hidden from site"}</p>
+                      </div>
+                    </div>
+                    <Button
+                      type="button"
+                      variant={visible ? "outline" : "secondary"}
+                      size="sm"
+                      className="shrink-0"
+                      onClick={() => toggleSection(section)}
+                      disabled={saving !== null}
+                      aria-label={`${visible ? "Hide" : "Show"} ${section} section`}
+                    >
+                      {visible ? "Hide" : "Show"}
+                    </Button>
+                  </div>
+                )
+              })}
+            </div>
           </CardContent>
         </Card>
         <Tabs defaultValue="profile" className="w-full">
