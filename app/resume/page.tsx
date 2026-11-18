@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Download, Mail, Phone, MapPin, Linkedin, Github } from "lucide-react"
+import { ResumeButton } from "@/components/resume-button"
 
 export default function ResumePage() {
   const handleDownload = () => window.print()
@@ -10,9 +11,12 @@ export default function ResumePage() {
   return (
     <div className="min-h-screen bg-white">
       <div className="print:hidden bg-gradient-to-r from-purple-600 to-pink-600 text-white p-4">
-        <div className="container mx-auto flex justify-between items-center">
+        <div className="container mx-auto flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <Link href="/" className="flex items-center gap-2 hover:opacity-80"><ArrowLeft className="h-5 w-5" />Back to Portfolio</Link>
-          <Button onClick={handleDownload} variant="secondary" className="gap-2"><Download className="h-4 w-4" />Download/Print Resume</Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <ResumeButton variant="secondary" size="sm" />
+            <Button onClick={handleDownload} variant="secondary" size="sm" className="gap-2"><Download className="h-4 w-4" />Print Resume</Button>
+          </div>
         </div>
       </div>
 

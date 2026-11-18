@@ -27,6 +27,7 @@ import { useContactForm } from "@/hooks/use-contact-form"
 import { usePortfolioData } from "@/hooks/use-portfolio-data"
 import { usePortfolioInteractions } from "@/hooks/use-portfolio-interactions"
 import { hasBrandSkillIcon, SkillIcon } from "@/components/portfolio/skill-icon"
+import { ResumeButton } from "@/components/resume-button"
 
 export default function Home() {
   const { visibility, profile, skills, projects, reviews, navigationSections } = usePortfolioData()
@@ -158,6 +159,8 @@ export default function Home() {
             ))}
           </nav>
 
+          <ResumeButton variant="outline" size="sm" className="hidden md:inline-flex" />
+
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon" className="rounded-full" asChild>
               <Link href={profile.githubUrl} target="_blank" aria-label="GitHub">
@@ -180,7 +183,15 @@ export default function Home() {
             </Button>
 
             {/* Mobile Menu Button */}
-            <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleMenu}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={toggleMenu}
+              aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-navigation"
+            >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
           </div>
@@ -192,10 +203,11 @@ export default function Home() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
+            id="mobile-navigation"
             className="md:hidden absolute top-16 inset-x-0 bg-white dark:bg-slate-950 border-b shadow-lg"
           >
             <nav className="container py-4 flex flex-col">
-            {navigationSections.map((section) => (
+              {navigationSections.map((section) => (
                 <Link
                   key={section}
                   href={`#${section}`}
@@ -208,7 +220,9 @@ export default function Home() {
                   {section.charAt(0).toUpperCase() + section.slice(1)}
                 </Link>
               ))}
+              <ResumeButton variant="outline" className="mx-4 mt-3 w-fit" />
               <Button
+
                 variant="default"
                 className="mt-4 mx-4 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 dark:from-purple-500 dark:to-pink-500 dark:hover:from-purple-600 dark:hover:to-pink-600"
                 asChild
@@ -309,18 +323,7 @@ export default function Home() {
                       <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Link>
                   </Button>
-                  {/* <Button
-                    variant="outline"
-                    size="lg"
-                    className="rounded-full bg-transparent group"
-                    asChild
-                    onClick={incrementCoffeeCount}
-                  >
-                    <Link href="/resume">
-                      <Download className="mr-2 h-4 w-4 group-hover:animate-bounce" />
-                      Download Resume
-                    </Link>
-                  </Button> */}
+                  <ResumeButton variant="outline" size="lg" className="rounded-full bg-transparent" />
                 </motion.div>
 
                 <motion.div
@@ -824,6 +827,66 @@ export default function Home() {
                   </Card>
                 </motion.div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Resume Section */}
+        <section id="resume" className="py-14 md:py-18 relative">
+          <div className="container px-4 md:px-6">
+            <div className="mx-auto max-w-5xl">
+              <div className="mb-10 max-w-2xl">
+                <div className="mb-4 inline-flex rounded-full bg-purple-100 px-3 py-1 text-sm font-medium text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
+                  Career overview
+                </div>
+                <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Resume</h2>
+                <p className="mt-4 text-slate-700 dark:text-slate-300 md:text-lg">
+                  A concise overview of my professional experience, education, and the backend systems I enjoy building.
+                </p>
+              </div>
+              <div className="grid gap-5 md:grid-cols-2">
+                <Card className="border-slate-200 bg-white/80 dark:border-slate-800 dark:bg-slate-900/80">
+                  <CardContent className="p-6">
+                    <h3 className="mb-5 text-lg font-semibold">Experience</h3>
+                    <ol className="flex flex-col gap-5 border-l border-purple-300 pl-5 dark:border-purple-800">
+                      <li className="relative">
+                        <span className="absolute -left-[1.57rem] top-1.5 size-2 rounded-full bg-purple-600" aria-hidden="true" />
+                        <p className="font-medium">Role title · Organization</p>
+                        <p className="mt-1 text-sm text-muted-foreground">Dates · Location</p>
+                      </li>
+                      <li className="relative">
+                        <span className="absolute -left-[1.57rem] top-1.5 size-2 rounded-full bg-purple-600" aria-hidden="true" />
+                        <p className="font-medium">Previous role · Organization</p>
+                        <p className="mt-1 text-sm text-muted-foreground">Dates · Location</p>
+                      </li>
+                    </ol>
+                  </CardContent>
+                </Card>
+                <Card className="border-slate-200 bg-white/80 dark:border-slate-800 dark:bg-slate-900/80">
+                  <CardContent className="p-6">
+                    <h3 className="mb-5 text-lg font-semibold">Education</h3>
+                    <ol className="flex flex-col gap-5 border-l border-purple-300 pl-5 dark:border-purple-800">
+                      <li className="relative">
+                        <span className="absolute -left-[1.57rem] top-1.5 size-2 rounded-full bg-purple-600" aria-hidden="true" />
+                        <p className="font-medium">Degree or qualification</p>
+                        <p className="mt-1 text-sm text-muted-foreground">Institution · Graduation year</p>
+                      </li>
+                      <li className="relative">
+                        <span className="absolute -left-[1.57rem] top-1.5 size-2 rounded-full bg-purple-600" aria-hidden="true" />
+                        <p className="font-medium">Additional study</p>
+                        <p className="mt-1 text-sm text-muted-foreground">Institution · Graduation year</p>
+                      </li>
+                    </ol>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white/70 p-6 dark:border-slate-800 dark:bg-slate-900/70 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="font-medium">Last updated: November 18, 2026</p>
+                  <p className="mt-1 text-sm text-muted-foreground">Download a copy for the full summary and contact details.</p>
+                </div>
+                <ResumeButton size="lg" className="shrink-0" />
+              </div>
             </div>
           </div>
         </section>

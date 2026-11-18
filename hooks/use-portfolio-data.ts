@@ -44,6 +44,7 @@ export function usePortfolioData(loadSiteData: () => Promise<SiteData> = fetchSi
       ...(visibility.profile ? ["about"] : []),
       ...(visibility.skills ? ["skills"] : []),
       ...(visibility.projects ? ["projects"] : []),
+      "resume",
       "contact",
     ],
     [visibility.profile, visibility.projects, visibility.skills],
