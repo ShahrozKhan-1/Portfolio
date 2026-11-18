@@ -13,7 +13,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request origin." }, { status: 403 })
   }
 
-  const response = NextResponse.json({ ok: true })
+  const response = NextResponse.json({ ok: true }, {
+    headers: { "Cache-Control": "no-store, max-age=0" },
+  })
   response.cookies.set(RESUME_TOOLS_COOKIE, "", { ...resumeToolsCookieOptions(), maxAge: 0 })
   return response
 }

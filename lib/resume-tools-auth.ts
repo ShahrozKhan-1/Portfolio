@@ -6,10 +6,14 @@ export const RESUME_TOOLS_COOKIE = "resume_tools_session"
 const SESSION_ISSUER = "portfolio-resume-tools"
 const SESSION_AUDIENCE = "resume-tools"
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 12
+const MIN_SECRET_BYTES = 32
 
 function getSessionKey() {
   const secret = process.env.SESSION_SECRET
-  return secret ? new TextEncoder().encode(secret) : null
+  if (!secret) return null
+
+  const key = new TextEncoder().encode(secret)
+  return key.byteLength >= MIN_SECRET_BYTES ? key : null
 }
 
 export async function createResumeToolsSession() {

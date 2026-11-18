@@ -47,6 +47,7 @@ export default function ResumeToolsClient({ isAuthenticated: initialAuthenticate
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ password }),
+        cache: "no-store",
       })
       const payload: unknown = await response.json()
       if (!response.ok) throw new Error(getErrorMessage(payload))
@@ -63,15 +64,22 @@ export default function ResumeToolsClient({ isAuthenticated: initialAuthenticate
 
   async function handleLogout() {
     try {
-      await fetch("/api/admin/resume-tools/logout", { method: "POST" })
-    } finally {
+      const response = await fetch("/api/admin/resume-tools/logout", {
+        method: "POST",
+        cache: "no-store",
+      })
+      if (!response.ok) throw new Error("Unable to sign out. Please try again.")
+
       setIsAuthenticated(false)
+      setPassword("")
       setResume("")
       setJobDescription("")
       setResult("")
       setSuggestions([])
       setWarnings([])
       toast.success("You are signed out.")
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to sign out. Please try again.")
     }
   }
 
@@ -85,9 +93,20 @@ export default function ResumeToolsClient({ isAuthenticated: initialAuthenticate
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ resume, jobDescription }),
+        cache: "no-store",
       })
       const payload: unknown = await response.json()
-      if (!response.ok) throw new Error(getErrorMessage(payload))
+      if (!response.ok) {
+        if (response.status === 401) {
+          setIsAuthenticated(false)
+          setResume("")
+          setJobDescription("")
+          setResult("")
+          setSuggestions([])
+          setWarnings([])
+        }
+        throw new Error(getErrorMessage(payload))
+      }
 
       if (typeof payload !== "object" || payload === null || !("resume" in payload) || typeof payload.resume !== "string") {
         throw new Error("The AI response was not in the expected format. Please try again.")
@@ -127,7 +146,7 @@ export default function ResumeToolsClient({ isAuthenticated: initialAuthenticate
       link.href = url
       link.download = "Shahroz-Khan-Enhanced-Resume.pdf"
       link.click()
-      URL.revokeObjectURL(url)
+      window.setTimeout(() => URL.revokeObjectURL(url), 1_000)
       toast.success("Your resume PDF has been downloaded.")
     } catch {
       toast.error("Unable to generate the PDF. Please try again.")
@@ -194,6 +213,7 @@ export default function ResumeToolsClient({ isAuthenticated: initialAuthenticate
           </Card>
         ) : (
           <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+
             <Card className="border-border/80 bg-card/90 shadow-lg shadow-black/5">
               <CardHeader>
                 <CardTitle>Resume source</CardTitle>
