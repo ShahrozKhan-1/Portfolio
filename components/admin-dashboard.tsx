@@ -32,6 +32,7 @@ import {
 import type { Project, Review, SiteData, Skill } from "@/lib/site-types"
 import { cn } from "@/lib/utils"
 import { ImageUpload } from "@/components/image-upload"
+import { ResumeDownloadToggle } from "@/components/resume-tools/resume-download-toggle"
 
 type Status = {
   type: "success" | "error"
@@ -439,6 +440,7 @@ Update the profile content, and add, edit, or remove skills, projects, and revie
             </div>
           </CardContent>
         </Card>
+        <ResumeDownloadToggle />
         <Tabs defaultValue="profile" className="w-full">
           <TabsList className="grid w-full grid-cols-2 gap-1 sm:grid-cols-4">
             <TabsTrigger value="profile">Profile</TabsTrigger>
