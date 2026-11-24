@@ -40,8 +40,7 @@ export function About({ profile, projects, skills }: AboutProps) {
           />
           <Reveal delay={0.12}>
             <p className="max-w-xl text-[0.975rem] leading-[1.8] text-muted-foreground lg:pb-2">
-              {profile.about} My experience includes internal management systems, AI-powered hiring
-              workflows, data extraction platforms and cross-platform automations.
+              {profile.about}
             </p>
           </Reveal>
         </div>

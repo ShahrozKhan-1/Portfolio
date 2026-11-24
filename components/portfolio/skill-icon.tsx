@@ -65,11 +65,6 @@ function resolveBrandColor(skill: Skill, icon: BrandIcon): string {
   return BRAND_COLOR_OVERRIDES[skill.name.trim().toLowerCase()] ?? `#${icon.hex}`
 }
 
-export function hasBrandSkillIcon(skill: Skill): boolean {
-  return Boolean(resolveBrandIcon(skill))
-}
-
-/** Brand colour as a CSS hex string, or null when the skill has no brand mark. */
 export function getSkillBrandColor(skill: Skill): string | null {
   const icon = resolveBrandIcon(skill)
   return icon ? resolveBrandColor(skill, icon) : null

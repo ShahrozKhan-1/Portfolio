@@ -16,8 +16,16 @@ import { SiteNav } from "@/components/site/site-nav"
 import { SiteFooter } from "@/components/site/footer"
 import { ProjectCover } from "@/components/site/project-cover"
 import { Reveal } from "@/components/site/reveal"
-import { ProjectGallery } from "@/components/project-gallery"
+import { ProjectGallery } from "@/components/portfolio/project-gallery"
 import { getSiteData } from "@/lib/site-data"
+import {
+  SITE_NAME,
+  SITE_URL,
+  absoluteUrl,
+  breadcrumbSchema,
+  projectSchema,
+  truncate,
+} from "@/lib/seo"
 import type { Project } from "@/lib/site-types"
 
 function findProject(projects: Project[], slug: string) {
@@ -90,17 +98,44 @@ export async function generateMetadata({
   const { slug } = await params
   const project = findProject((await getSiteData()).projects, slug)
 
-  return project
-    ? {
-        title: { absolute: `${project.title} | Shahroz Khan` },
-        description: project.description,
-        alternates: { canonical: `/projects/${project.slug}` },
-        openGraph: {
-          url: `https://shahrozkhan.vercel.app/projects/${project.slug}`,
-          images: project.gallery[0]?.url || project.imageUrl || "/avatar.png",
+  if (!project) return {}
+
+  const title = `${project.title} — ${project.role || "Case study"}`
+  const description = truncate(project.longDescription || project.description)
+
+  return {
+    title: { absolute: `${title} | ${SITE_NAME}` },
+    description,
+    keywords: [
+      project.title,
+      ...project.techStack,
+      "backend case study",
+      "Python backend development",
+      SITE_NAME,
+    ],
+    alternates: { canonical: `/projects/${project.slug}` },
+    openGraph: {
+      type: "article",
+      url: absoluteUrl(`/projects/${project.slug}`),
+      title,
+      description,
+      siteName: `${SITE_NAME} — Portfolio`,
+      images: [
+        {
+          url: "/og.png",
+          width: 1200,
+          height: 630,
+          alt: `${project.title} — backend case study by ${SITE_NAME}`,
         },
-      }
-    : {}
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/og.png"],
+    },
+  }
 }
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -129,8 +164,26 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     "contact",
   ]
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      projectSchema(project),
+      breadcrumbSchema([
+        { name: "Home", url: SITE_URL },
+        { name: "Case studies", url: absoluteUrl("/#projects") },
+        { name: project.title, url: absoluteUrl(`/projects/${project.slug}`) },
+      ]),
+    ],
+  }
+
   return (
     <div className="relative min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+        }}
+      />
       <SiteNav
         sections={navSections}
         projects={data.projects}

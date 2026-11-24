@@ -12,6 +12,12 @@ import { Contact } from "@/components/site/contact"
 import { SiteFooter } from "@/components/site/footer"
 import { useContactForm } from "@/hooks/use-contact-form"
 import { usePortfolioData } from "@/hooks/use-portfolio-data"
+import { profilePageSchema } from "@/lib/seo"
+
+const profileStructuredData = {
+  "@context": "https://schema.org",
+  "@graph": [profilePageSchema()],
+}
 
 export default function Home() {
   const { visibility, profile, skills, projects, reviews, navigationSections } = usePortfolioData()
@@ -19,6 +25,12 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen overflow-x-clip">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(profileStructuredData).replace(/</g, "\\u003c"),
+        }}
+      />
       <SiteNav sections={navigationSections} projects={projects} profile={profile} />
 
       <main id="content">

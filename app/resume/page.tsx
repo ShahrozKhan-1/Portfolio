@@ -100,7 +100,7 @@ const EDUCATION = [
 ]
 
 const SUMMARY =
-  "Python developer with hands-on experience in backend development, RESTful API design and web scraping. Proficient in building scalable applications with Django, Flask and FastAPI, with a strong grasp of databases, third-party API integration and clean, maintainable software practices."
+  "Python backend developer with hands-on experience building REST APIs, data pipelines and web scraping systems. Comfortable across Django, Flask and FastAPI, with a solid grasp of PostgreSQL, Redis, Docker and third-party integrations — and a preference for clean, maintainable code."
 
 export default function ResumePage() {
   return (

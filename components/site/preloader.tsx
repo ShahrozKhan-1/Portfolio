@@ -16,13 +16,20 @@ export function Preloader() {
 
   useEffect(() => {
     const alreadySeen = window.sessionStorage.getItem(STORAGE_KEY)
-    if (prefersReducedMotion || alreadySeen) {
+    const isCompactScreen = window.matchMedia("(max-width: 767px)").matches
+    const saveData =
+      (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData ===
+      true
+
+    // Skip the intro entirely on small screens, data-saver connections and for
+    // returning visitors so the hero paints immediately.
+    if (prefersReducedMotion || alreadySeen || isCompactScreen || saveData) {
       setPhase("done")
       return
     }
 
     let frame = 0
-    const duration = 1000
+    const duration = 650
     const start = performance.now()
     const originalOverflow = document.documentElement.style.overflow
     document.documentElement.style.overflow = "hidden"
@@ -34,7 +41,7 @@ export function Preloader() {
       if (elapsed < 1) {
         frame = window.requestAnimationFrame(tick)
       } else {
-        window.setTimeout(() => setPhase("leaving"), 220)
+        window.setTimeout(() => setPhase("leaving"), 120)
       }
     }
 
@@ -50,7 +57,7 @@ export function Preloader() {
     if (phase !== "leaving") return
     window.sessionStorage.setItem(STORAGE_KEY, "1")
     document.documentElement.style.overflow = ""
-    const timer = window.setTimeout(() => setPhase("done"), 950)
+    const timer = window.setTimeout(() => setPhase("done"), 760)
     return () => window.clearTimeout(timer)
   }, [phase])
 
@@ -62,7 +69,7 @@ export function Preloader() {
           className="preloader fixed inset-0 z-[150] flex flex-col justify-between bg-ink px-5 py-6 print:hidden sm:px-8 lg:px-12"
           initial={{ y: 0 }}
           animate={phase === "leaving" ? { y: "-100%" } : { y: 0 }}
-          transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
+          transition={{ duration: 0.72, ease: [0.76, 0, 0.24, 1] }}
           aria-hidden="true"
         >
           <div className="flex items-center justify-between">

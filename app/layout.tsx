@@ -6,6 +6,16 @@ import "./globals.css"
 import { Backdrop } from "@/components/site/backdrop"
 import { Preloader } from "@/components/site/preloader"
 import { ScrollProgress } from "@/components/site/scroll-progress"
+import { DEFAULT_SITE_DATA } from "@/lib/site-defaults"
+import {
+  SITE_DESCRIPTION,
+  SITE_KEYWORDS,
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_URL,
+  personSchema,
+  websiteSchema,
+} from "@/lib/seo"
 
 const sans = Inter({
   subsets: ["latin"],
@@ -15,14 +25,14 @@ const sans = Inter({
 
 const display = Space_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["500", "700"],
   variable: "--font-display",
   display: "swap",
 })
 
 const mono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500"],
   variable: "--font-mono",
   display: "swap",
 })
@@ -30,69 +40,48 @@ const mono = JetBrains_Mono({
 const serif = Instrument_Serif({
   subsets: ["latin"],
   weight: ["400"],
-  style: ["normal", "italic"],
+  style: ["italic"],
   variable: "--font-serif",
   display: "swap",
 })
 
-const personStructuredData = {
+const structuredData = {
   "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Shahroz Khan",
-  jobTitle: "Python Backend Developer",
-  url: "https://shahrozkhan.vercel.app",
-  email: "shahrozkha83@gmail.com",
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Lahore",
-    addressRegion: "Punjab",
-    addressCountry: "PK",
-  },
-  knowsAbout: [
-    "Python",
-    "Django",
-    "FastAPI",
-    "REST API development",
-    "Python automation",
-    "PostgreSQL",
-    "Web scraping",
-  ],
-  sameAs: [
-    "https://github.com/ShahrozKhan-1",
-    "https://www.linkedin.com/in/shahroz-khan-b08911274",
-  ],
+  "@graph": [personSchema(DEFAULT_SITE_DATA.profile), websiteSchema()],
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://shahrozkhan.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Shahroz Khan — Python Backend Developer",
+    default: SITE_TITLE,
     template: "%s | Shahroz Khan",
   },
-  description:
-    "Shahroz Khan is a Python Backend Developer specializing in Django, FastAPI, REST API development, Python automation, and practical AI integrations. Based in Lahore, Pakistan.",
-  keywords: [
-    "Shahroz Khan",
-    "Shahroz Khan Python Developer",
-    "Python Developer",
-    "Python Backend Developer",
-    "Backend Developer",
-    "Django Developer",
-    "FastAPI Developer",
-    "REST API Development",
-    "Django REST Framework",
-    "Python Automation",
-  ],
-  authors: [{ name: "Shahroz Khan" }],
-  creator: "Shahroz Khan",
+  description: SITE_DESCRIPTION,
+  applicationName: "Shahroz Khan Portfolio",
+  category: "technology",
+  keywords: SITE_KEYWORDS,
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
   alternates: { canonical: "/" },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
     type: "website",
-    url: "https://shahrozkhan.vercel.app",
-    title: "Shahroz Khan — Python Backend Developer",
-    description:
-      "Building reliable backend systems, REST APIs, and intelligent automations with Python, Django, and FastAPI.",
-    siteName: "Shahroz Khan Portfolio",
+    locale: "en_US",
+    url: "/",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    siteName: "Shahroz Khan — Portfolio",
     images: [
       {
         url: "/og.png",
@@ -104,16 +93,18 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Shahroz Khan — Python Backend Developer",
-    description:
-      "Building reliable backend systems, REST APIs, and intelligent automations with Python, Django, and FastAPI.",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
     images: ["/og.png"],
   },
+  formatDetection: { email: false, address: false, telephone: false },
 }
 
 export const viewport: Viewport = {
   themeColor: "#07070a",
   colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
 }
 
 export default function RootLayout({
@@ -129,7 +120,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(personStructuredData).replace(/</g, "\\u003c"),
+            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
           }}
         />
         <noscript>

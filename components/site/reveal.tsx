@@ -56,7 +56,7 @@ export function LineMask({
         className={cn("block will-change-transform", className)}
         initial={reduce ? undefined : { y: "115%", rotate: 2 }}
         animate={reduce ? undefined : { y: 0, rotate: 0 }}
-        transition={{ duration: 1.05, delay, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.85, delay, ease: [0.22, 1, 0.36, 1] }}
       >
         {children}
       </motion.span>
@@ -81,7 +81,7 @@ export function FadeIn({
       className={className}
       initial={reduce ? undefined : { opacity: 0, filter: "blur(6px)" }}
       animate={reduce ? undefined : { opacity: 1, filter: "blur(0px)" }}
-      transition={{ duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.75, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>

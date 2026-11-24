@@ -32,12 +32,8 @@
     --radius: 1.25rem;
 
     --ink: #07070a;
-    --surface: rgba(255, 255, 255, 0.035);
     --hairline: rgba(255, 255, 255, 0.09);
     --signal: #c8fa4f;
-    --signal-soft: #e3ffa0;
-    --iris: #8c7cff;
-    --aqua: #5be7d2;
   }
 
   * {
@@ -123,12 +119,6 @@
     @apply font-mono text-[0.6875rem] uppercase tracking-label text-muted-foreground;
   }
 
-  .hairline {
-    height: 1px;
-    width: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent);
-  }
-
   .panel {
     position: relative;
     border-radius: 1.75rem;
@@ -136,12 +126,6 @@
     background: linear-gradient(160deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018) 45%, rgba(255, 255, 255, 0.008));
     backdrop-filter: blur(14px);
     box-shadow: 0 30px 90px -50px rgba(0, 0, 0, 0.9), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
-  }
-
-  .panel-quiet {
-    border-radius: 1.25rem;
-    border: 1px solid var(--hairline);
-    background: rgba(255, 255, 255, 0.025);
   }
 
   .btn {
@@ -182,20 +166,8 @@
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-
   .text-stroke {
     -webkit-text-stroke: 1.2px rgba(255, 255, 255, 0.34);
-    color: transparent;
-  }
-  .text-stroke-signal {
-    -webkit-text-stroke: 1.2px rgba(200, 250, 79, 0.7);
-    color: transparent;
-  }
-  .text-stroke-ink {
-    -webkit-text-stroke: 1.2px rgba(7, 7, 10, 0.65);
     color: transparent;
   }
 
@@ -212,18 +184,10 @@
     background-size: 96px 96px;
     background-position: center top;
   }
-  .dot-bg {
-    background-image: radial-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px);
-    background-size: 22px 22px;
-  }
 
   .mask-fade-x {
     mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
     -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
-  }
-  .mask-fade-b {
-    mask-image: linear-gradient(180deg, black 40%, transparent 100%);
-    -webkit-mask-image: linear-gradient(180deg, black 40%, transparent 100%);
   }
 
   .no-scrollbar {
@@ -287,40 +251,6 @@
     transform: scaleX(1);
     transform-origin: left;
   }
-
-  .edge-ticks::before,
-  .edge-ticks::after {
-    content: "+";
-    position: absolute;
-    font-family: var(--font-mono), monospace;
-    font-size: 14px;
-    line-height: 1;
-    color: rgba(255, 255, 255, 0.3);
-    pointer-events: none;
-  }
-  .edge-ticks::before {
-    top: -7px;
-    left: -4px;
-  }
-  .edge-ticks::after {
-    bottom: -7px;
-    right: -4px;
-  }
-
-  .shine {
-    background: linear-gradient(
-      100deg,
-      rgba(255, 255, 255, 0.02) 20%,
-      rgba(255, 255, 255, 0.12) 45%,
-      rgba(255, 255, 255, 0.02) 70%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 5s linear infinite;
-  }
-
-  .perspective {
-    perspective: 1200px;
-  }
 }
 
 /* ========================== REUSABLE KEYFRAMES ========================== */
@@ -382,9 +312,18 @@
   .aurora-fallback,
   .availability-dot,
   .scroll-cue-line,
-  .shine,
   .marquee {
     animation: none !important;
+  }
+}
+
+/* Keep the atmosphere cheap on phones: smaller blur radii, dimmer blobs. */
+@media (max-width: 640px) {
+  .aurora-fallback {
+    opacity: 0.7;
+  }
+  .aurora-fallback > div {
+    filter: blur(64px);
   }
 }
 

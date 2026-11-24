@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
 import { useRef } from "react"
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion"
 import { ArrowDownRight, ArrowUpRight } from "lucide-react"
@@ -40,6 +39,8 @@ export function Hero({ profile, skills, projects }: HeroProps) {
   const ticker = skills.length
     ? Array.from(new Set([...skills.map((skill) => skill.name), ...STACK_TICKER]))
     : STACK_TICKER
+
+  const useLocalPortrait = !profile.imageUrl || profile.imageUrl === "/avatar.png"
 
   return (
     <section
@@ -88,7 +89,7 @@ export function Hero({ profile, skills, projects }: HeroProps) {
             <FadeIn delay={0.5}>
               <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2">
                 <span className="font-mono text-[0.7rem] uppercase tracking-label text-white/55">
-                  Python · Backend Engineer
+                  Python Backend Developer
                 </span>
                 <span className="h-px w-8 bg-white/20" />
                 <span className="font-serif text-xl italic text-white/45">
@@ -99,8 +100,7 @@ export function Hero({ profile, skills, projects }: HeroProps) {
 
             <FadeIn delay={0.62}>
               <p className="mt-6 max-w-[34rem] text-pretty text-[1.0625rem] leading-[1.7] text-white/60">
-                {profile.headline} I design APIs, data pipelines and automations that stay
-                dependable long after launch.
+                {profile.headline}
               </p>
             </FadeIn>
 
@@ -126,8 +126,7 @@ export function Hero({ profile, skills, projects }: HeroProps) {
             style={reduce ? undefined : { y: portraitY }}
             className="relative mx-auto w-full max-w-[440px] sm:max-w-[480px] lg:mr-0 lg:ml-auto"
           >
-            <FadeIn delay={0.35}>
-              <figure className="relative">
+            <figure className="relative">
                 {/* Viewfinder corner brackets */}
                 <span aria-hidden="true" className="absolute -left-2.5 -top-2.5 z-20 h-5 w-5 border-l border-t border-primary/60" />
                 <span aria-hidden="true" className="absolute -right-2.5 -top-2.5 z-20 h-5 w-5 border-r border-t border-white/25" />
@@ -136,14 +135,36 @@ export function Hero({ profile, skills, projects }: HeroProps) {
 
                 <div className="relative overflow-hidden rounded-[1.75rem] border border-white/12 bg-paper shadow-[0_60px_140px_-50px_rgba(0,0,0,0.95)]">
                   <div className="relative aspect-[4/5]">
-                    <Image
-                      src={profile.imageUrl || "/avatar.png"}
-                      alt={`${profile.name}, ${profile.role}`}
-                      fill
-                      priority
-                      sizes="(max-width: 1024px) 90vw, 44vw"
-                      className="scale-[1.06] object-cover object-top"
-                    />
+                    {useLocalPortrait ? (
+                      <picture>
+                        <source
+                          type="image/webp"
+                          srcSet="/avatar-480.webp 480w, /avatar-720.webp 720w, /avatar-960.webp 960w"
+                          sizes="(max-width: 640px) 88vw, (max-width: 1024px) 70vw, 480px"
+                        />
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src="/avatar.png"
+                          alt={`${profile.name}, ${profile.role}`}
+                          width={896}
+                          height={1195}
+                          fetchPriority="high"
+                          decoding="async"
+                          className="absolute inset-0 h-full w-full scale-[1.06] object-cover object-top"
+                        />
+                      </picture>
+                    ) : (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={profile.imageUrl}
+                        alt={`${profile.name}, ${profile.role}`}
+                        width={896}
+                        height={1195}
+                        fetchPriority="high"
+                        decoding="async"
+                        className="absolute inset-0 h-full w-full scale-[1.06] object-cover object-top"
+                      />
+                    )}
                     <div className="absolute inset-0 grain opacity-[0.22] mix-blend-multiply" />
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,transparent_45%,rgba(28,22,14,0.14))]" />
 
@@ -198,7 +219,6 @@ export function Hero({ profile, skills, projects }: HeroProps) {
                   </span>
                 </div>
               </figure>
-            </FadeIn>
           </motion.div>
         </div>
 

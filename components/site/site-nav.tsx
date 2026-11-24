@@ -2,12 +2,17 @@
 
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
+import dynamic from "next/dynamic"
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { ArrowUpRight, Command, Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { CommandPalette } from "@/components/site/command-palette"
 import { LocalTime } from "@/components/site/local-time"
 import type { Profile, Project } from "@/lib/site-types"
+
+const CommandPalette = dynamic(
+  () => import("@/components/site/command-palette").then((mod) => mod.CommandPalette),
+  { ssr: false },
+)
 
 const SECTION_LABELS: Record<string, string> = {
   home: "Home",
@@ -252,13 +257,15 @@ export function SiteNav({ sections, projects, profile, variant = "home" }: SiteN
         ) : null}
       </AnimatePresence>
 
-      <CommandPalette
-        open={paletteOpen}
-        onOpenChange={setPaletteOpen}
-        sections={sections}
-        projects={projects}
-        profile={profile}
-      />
+      {paletteOpen ? (
+        <CommandPalette
+          open
+          onOpenChange={setPaletteOpen}
+          sections={sections}
+          projects={projects}
+          profile={profile}
+        />
+      ) : null}
     </>
   )
 }

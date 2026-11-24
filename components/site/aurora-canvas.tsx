@@ -95,6 +95,10 @@ export function AuroraCanvas() {
     if (!canvas) return
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    const saveData =
+      (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData ===
+      true
+    const staticFrame = reducedMotion || saveData
     const gl = canvas.getContext("webgl", {
       alpha: false,
       antialias: false,
@@ -138,7 +142,7 @@ export function AuroraCanvas() {
     let height = 1
 
     const resize = () => {
-      const scale = Math.min(1, 900 / Math.max(window.innerWidth, 1)) * 0.62
+      const scale = Math.min(0.55, 720 / Math.max(window.innerWidth, 1))
       width = Math.max(1, Math.floor(window.innerWidth * scale))
       height = Math.max(1, Math.floor(window.innerHeight * scale))
       canvas.width = width
@@ -159,22 +163,30 @@ export function AuroraCanvas() {
 
     let frame = 0
     let visible = true
+    let lastDraw = 0
     const start = performance.now()
 
+    // The aurora drifts slowly, so 30fps is visually identical and halves GPU work.
     const render = (now: number) => {
       if (!visible) return
+      frame = window.requestAnimationFrame(render)
+      if (now - lastDraw < 33) return
+      lastDraw = now
       pointer.x += (target.x - pointer.x) * 0.035
       pointer.y += (target.y - pointer.y) * 0.035
       gl.uniform1f(timeLocation, (now - start) / 1000)
       gl.uniform2f(pointerLocation, pointer.x, pointer.y)
       gl.drawArrays(gl.TRIANGLES, 0, 3)
-      frame = window.requestAnimationFrame(render)
     }
 
-    if (reducedMotion) {
+    const drawStatic = () => {
       gl.uniform1f(timeLocation, 12)
       gl.uniform2f(pointerLocation, 0, 0)
       gl.drawArrays(gl.TRIANGLES, 0, 3)
+    }
+
+    if (staticFrame) {
+      drawStatic()
     } else {
       frame = window.requestAnimationFrame(render)
       window.addEventListener("pointermove", onPointerMove, { passive: true })
@@ -183,14 +195,14 @@ export function AuroraCanvas() {
     const onVisibilityChange = () => {
       if (document.hidden) {
         window.cancelAnimationFrame(frame)
-      } else if (!reducedMotion) {
+      } else if (!staticFrame) {
         frame = window.requestAnimationFrame(render)
       }
     }
 
     const onResize = () => {
       resize()
-      if (reducedMotion) gl.drawArrays(gl.TRIANGLES, 0, 3)
+      if (staticFrame) drawStatic()
     }
 
     document.addEventListener("visibilitychange", onVisibilityChange)

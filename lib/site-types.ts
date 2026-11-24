@@ -51,7 +51,7 @@ export type Project = {
   results: string[]
   techStack: string[]
   tags: string
-  /** Optional thumbnail URL. The UI uses a local placeholder when it is empty. */
+  /** Optional thumbnail URL. Empty renders the generated project cover artwork. */
   imageUrl?: string
   gallery: ProjectImage[]
   linkUrl: string

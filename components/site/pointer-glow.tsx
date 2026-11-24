@@ -35,7 +35,12 @@ export function PointerGlow() {
     const loop = () => {
       x += (tx - x) * 0.09
       y += (ty - y) * 0.09
-      node.style.transform = `translate3d(${x - 400}px, ${y - 400}px, 0)`
+      node.style.transform = `translate3d(${x - 320}px, ${y - 320}px, 0)`
+      if (Math.abs(tx - x) < 0.6 && Math.abs(ty - y) < 0.6) {
+        // Settled — stop the loop until the pointer moves again.
+        active = false
+        return
+      }
       raf = window.requestAnimationFrame(loop)
     }
 
@@ -58,7 +63,7 @@ export function PointerGlow() {
   return (
     <div
       ref={ref}
-      className="absolute left-0 top-0 h-[800px] w-[800px] opacity-0 transition-opacity duration-700"
+      className="absolute left-0 top-0 h-[640px] w-[640px] opacity-0 transition-opacity duration-700"
       style={{
         background:
           "radial-gradient(circle at center, rgba(200,250,79,0.05), rgba(140,124,255,0.045) 34%, transparent 62%)",

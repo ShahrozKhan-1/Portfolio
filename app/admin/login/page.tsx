@@ -1,8 +1,15 @@
 import Link from "next/link"
+import type { Metadata } from "next"
 import { ArrowLeft, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export const dynamic = "force-dynamic"
+
+export const metadata: Metadata = {
+  title: "Admin sign in",
+  alternates: { canonical: "/admin/login" },
+  robots: { index: false, follow: false, nocache: true },
+}
 
 export default function AdminLoginPage({
   searchParams,

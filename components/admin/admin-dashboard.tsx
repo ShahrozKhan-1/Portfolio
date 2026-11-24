@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import type { Project, Review, SiteData, Skill } from "@/lib/site-types"
 import { cn } from "@/lib/utils"
-import { ImageUpload } from "@/components/image-upload"
+import { ImageUpload } from "@/components/admin/image-upload"
 
 type Status = {
   type: "success" | "error"
