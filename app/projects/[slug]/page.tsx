@@ -1,31 +1,95 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
-import { ArrowLeft, ArrowRight, ArrowUpRight, Briefcase, CalendarDays, CheckCircle2, Code2, Github, Layers3 } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
+  CalendarDays,
+  CircleDot,
+  Github,
+  Layers3,
+  Sparkles,
+  UserRound,
+} from "lucide-react"
+import { SiteNav } from "@/components/site/site-nav"
+import { SiteFooter } from "@/components/site/footer"
+import { ProjectCover } from "@/components/site/project-cover"
+import { Reveal } from "@/components/site/reveal"
 import { ProjectGallery } from "@/components/project-gallery"
 import { getSiteData } from "@/lib/site-data"
 import type { Project } from "@/lib/site-types"
 
-function findProject(projects: Project[], slug: string) { return projects.find((project) => project.slug === slug) }
+function findProject(projects: Project[], slug: string) {
+  return projects.find((project) => project.slug === slug)
+}
 
-function formatDate(value: string) {
-  if (!value) return "Not documented"
+function formatDate(value: string, fallback = "Not documented") {
+  if (!value) return fallback
   const [year, month] = value.split("-")
-  return new Date(Number(year), Number(month) - 1).toLocaleDateString("en", { month: "short", year: "numeric" })
+  if (!year || !month) return fallback
+  return new Date(Number(year), Number(month) - 1).toLocaleDateString("en", {
+    month: "short",
+    year: "numeric",
+  })
 }
 
-function DetailList({ title, items }: { title: string; items: string[] }) {
+function ListSection({
+  index,
+  label,
+  title,
+  items,
+  variant = "default",
+}: {
+  index: string
+  label: string
+  title: string
+  items: string[]
+  variant?: "default" | "numbered" | "check"
+}) {
   if (!items.length) return null
-  return <section className="rounded-2xl border border-slate-200 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/70 sm:p-8"><h2 className="mb-5 text-2xl font-bold tracking-tight">{title}</h2><ul className="grid gap-3 sm:grid-cols-2">{items.map((item) => <li key={item} className="flex gap-3 rounded-xl border border-slate-200 bg-slate-50/80 p-4 text-sm leading-6 text-slate-700 dark:border-slate-800 dark:bg-slate-950/50 dark:text-slate-300"><CheckCircle2 className="mt-0.5 size-4 shrink-0 text-purple-600 dark:text-purple-400" /><span>{item}</span></li>)}</ul></section>
+
+  return (
+    <section>
+      <div className="flex items-center gap-3">
+        <span className="font-mono text-[0.6rem] uppercase tracking-label text-primary">{index}</span>
+        <span className="h-px w-8 bg-white/20" />
+        <span className="eyebrow">{label}</span>
+      </div>
+      <h2 className="mt-5 font-display text-2xl tracking-tight text-white/90 sm:text-3xl">{title}</h2>
+      <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+        {items.map((item, itemIndex) => (
+          <li
+            key={item}
+            className="group flex gap-3 rounded-xl border border-white/[0.08] bg-white/[0.02] p-4 transition-colors hover:border-primary/25 hover:bg-white/[0.04]"
+          >
+            {variant === "numbered" ? (
+              <span className="mt-0.5 font-mono text-[0.6rem] text-primary/80">
+                {String(itemIndex + 1).padStart(2, "0")}
+              </span>
+            ) : (
+              <CircleDot className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary/70" />
+            )}
+            <span className="text-[0.875rem] leading-relaxed text-white/55">{item}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
 }
 
-export async function generateStaticParams() { return (await getSiteData()).projects.map(({ slug }) => ({ slug })) }
+export async function generateStaticParams() {
+  return (await getSiteData()).projects.map(({ slug }) => ({ slug }))
+}
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
   const { slug } = await params
   const project = findProject((await getSiteData()).projects, slug)
+
   return project
     ? {
         title: { absolute: `${project.title} | Shahroz Khan` },
@@ -33,7 +97,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         alternates: { canonical: `/projects/${project.slug}` },
         openGraph: {
           url: `https://shahrozkhan.vercel.app/projects/${project.slug}`,
-          images: project.gallery[0]?.url || project.imageUrl || "/placeholder.svg",
+          images: project.gallery[0]?.url || project.imageUrl || "/avatar.png",
         },
       }
     : {}
@@ -44,25 +108,345 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const data = await getSiteData()
   const index = data.projects.findIndex((item) => item.slug === slug)
   const project = data.projects[index]
-  if (!project) notFound()
+
+  if (!project || project.visible === false) notFound()
+
   const previous = data.projects[index - 1]
   const next = data.projects[index + 1]
-  const tags = project.tags.split(",").map((tag) => tag.trim()).filter(Boolean)
+  const tags = project.tags
+    .split(",")
+    .map((tag) => tag.trim())
+    .filter(Boolean)
   const techStack = project.techStack.length ? project.techStack : tags
   const projectUrl = project.liveUrl || project.linkUrl
+  const statusLabel = project.status.replace("-", " ")
 
-  return <div className="min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100 text-foreground dark:from-slate-950 dark:to-slate-900">
-    <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true"><div className="absolute -left-24 top-24 size-80 rounded-full bg-purple-300/30 blur-3xl dark:bg-purple-900/30" /><div className="absolute -right-24 top-1/3 size-96 rounded-full bg-pink-300/25 blur-3xl dark:bg-pink-900/20" /><div className="absolute bottom-0 left-1/3 size-72 rounded-full bg-blue-300/20 blur-3xl dark:bg-blue-900/20" /></div>
-    <header className="sticky top-0 z-30 border-b bg-white/70 backdrop-blur-lg dark:bg-slate-950/70"><div className="container flex h-16 items-center justify-between px-4 md:px-6"><Link href="/" className="text-xl font-bold"><span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent dark:from-purple-500 dark:to-pink-500">{data.profile.name}</span></Link><nav className="hidden items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-300 sm:flex"><Link className="transition-colors hover:text-purple-600 dark:hover:text-purple-400" href="/#about">About</Link><Link className="text-purple-600 dark:text-purple-400" href="/#projects">Projects</Link><Link className="transition-colors hover:text-purple-600 dark:hover:text-purple-400" href="/#contact">Contact</Link></nav><Button variant="outline" size="sm" className="rounded-full" asChild><Link href="/#projects"><ArrowLeft className="mr-2 size-4" />All projects</Link></Button></div></header>
-    <main className="container px-4 pb-16 pt-10 md:px-6 md:pb-24 md:pt-16">
-      <Link href="/#projects" className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-purple-600 dark:text-slate-400 dark:hover:text-purple-400"><ArrowLeft className="size-4" />Back to selected work</Link>
-      <section className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(340px,.9fr)] lg:items-stretch">
-        <div className="rounded-3xl border border-slate-200 bg-white/80 p-7 shadow-xl shadow-purple-950/5 backdrop-blur sm:p-10 dark:border-slate-800 dark:bg-slate-900/75"><div className="mb-7 flex flex-wrap items-center gap-2"><Badge className="bg-gradient-to-r from-purple-600 to-pink-600 capitalize text-white">{project.status.replace("-", " ")}</Badge><span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Project {String(index + 1).padStart(2, "0")}</span></div><h1 className="max-w-3xl text-4xl font-bold tracking-[-0.055em] sm:text-6xl lg:text-7xl"><span className="bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-600 bg-clip-text text-transparent dark:from-purple-400 dark:via-fuchsia-400 dark:to-pink-400">{project.title}</span></h1><p className="mt-6 max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300 sm:text-lg">{project.longDescription || project.description}</p><div className="mt-8 flex flex-wrap gap-3">{projectUrl ? <Button size="lg" className="rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700" asChild><a href={projectUrl} target="_blank" rel="noreferrer">View live project <ArrowUpRight className="ml-2 size-4" /></a></Button> : null}{project.repoUrl ? <Button variant="outline" size="lg" className="rounded-full" asChild><a href={project.repoUrl} target="_blank" rel="noreferrer"><Github className="mr-2 size-4" />View repository</a></Button> : null}</div></div>
-        <div className="relative min-h-[300px] overflow-hidden rounded-3xl border border-slate-200 bg-slate-900 shadow-xl shadow-purple-950/10 dark:border-slate-800 sm:min-h-[360px]">{project.imageUrl ? <img src={project.imageUrl} alt={`${project.title} preview`} className="absolute inset-0 size-full object-cover" /> : <><div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(168,85,247,.6),transparent_35%),radial-gradient(circle_at_80%_75%,rgba(236,72,153,.55),transparent_40%),linear-gradient(135deg,#111827,#312e81)]" /><div className="absolute inset-8 rounded-2xl border border-white/15" /><div className="absolute inset-0 grid place-items-center"><Code2 className="size-16 text-white/70" /></div></>}<div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/90 via-slate-950/35 to-transparent p-6 text-white"><div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em]"><span className="size-2 rounded-full bg-emerald-400" />Case study</div><p className="mt-2 text-sm text-slate-300">{tags.slice(0, 3).join(" · ") || "Selected work"}</p></div></div>
-      </section>
-      <section className="mt-8 grid gap-4 sm:grid-cols-3"><div className="rounded-2xl border border-slate-200 bg-white/70 p-5 backdrop-blur dark:border-slate-800 dark:bg-slate-900/70"><Briefcase className="mb-3 size-5 text-purple-600 dark:text-purple-400" /><p className="text-xs font-semibold uppercase tracking-[.16em] text-slate-500">Role</p><p className="mt-1 font-semibold">{project.role || "Not documented"}</p></div><div className="rounded-2xl border border-slate-200 bg-white/70 p-5 backdrop-blur dark:border-slate-800 dark:bg-slate-900/70"><CalendarDays className="mb-3 size-5 text-pink-600 dark:text-pink-400" /><p className="text-xs font-semibold uppercase tracking-[.16em] text-slate-500">Timeline</p><p className="mt-1 font-semibold">{formatDate(project.startDate)} — {formatDate(project.endDate)}</p></div><div className="rounded-2xl border border-slate-200 bg-white/70 p-5 backdrop-blur dark:border-slate-800 dark:bg-slate-900/70"><Layers3 className="mb-3 size-5 text-indigo-600 dark:text-indigo-400" /><p className="text-xs font-semibold uppercase tracking-[.16em] text-slate-500">Stack</p><p className="mt-1 font-semibold">{techStack.length} technologies</p></div></section>
-      <section className="mt-14 grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]"><div className="space-y-8"><section className="rounded-2xl border border-slate-200 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/70 sm:p-8"><p className="text-xs font-semibold uppercase tracking-[.18em] text-purple-600 dark:text-purple-400">Overview</p><h2 className="mt-3 text-3xl font-bold tracking-tight">Built with purpose.</h2><p className="mt-5 max-w-3xl leading-8 text-slate-600 dark:text-slate-300">{project.description}</p></section>{project.problem ? <section className="rounded-2xl border border-slate-200 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/70 sm:p-8"><p className="text-xs font-semibold uppercase tracking-[.18em] text-pink-600 dark:text-pink-400">The challenge</p><h2 className="mt-3 text-2xl font-bold">Problem</h2><p className="mt-4 leading-8 text-slate-600 dark:text-slate-300">{project.problem}</p></section> : null}{project.solution ? <section className="rounded-2xl border border-slate-200 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/70 sm:p-8"><p className="text-xs font-semibold uppercase tracking-[.18em] text-purple-600 dark:text-purple-400">The approach</p><h2 className="mt-3 text-2xl font-bold">Solution</h2><p className="mt-4 leading-8 text-slate-600 dark:text-slate-300">{project.solution}</p></section> : null}<DetailList title="Contributions" items={project.contributions} /><DetailList title="Key features" items={project.features} /><DetailList title="Challenges" items={project.challenges} /><DetailList title="Results" items={project.results} /><ProjectGallery images={project.gallery} /></div><aside className="h-fit rounded-2xl border border-slate-200 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/70 lg:sticky lg:top-24"><p className="text-xs font-semibold uppercase tracking-[.18em] text-purple-600 dark:text-purple-400">Technology</p><h2 className="mt-2 text-xl font-bold">Tech stack</h2><div className="mt-5 flex flex-wrap gap-2">{techStack.map((item) => <Badge key={item} variant="secondary" className="bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">{item.trim()}</Badge>)}</div></aside></section>
-      <nav className="mt-14 grid gap-4 border-t border-slate-200 pt-8 dark:border-slate-800 sm:grid-cols-2">{previous ? <Link href={`/projects/${previous.slug}`} className="group rounded-2xl border border-slate-200 bg-white/70 p-5 transition hover:-translate-y-1 hover:border-purple-300 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/70 dark:hover:border-purple-700"><span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[.16em] text-slate-500"><ArrowLeft className="size-4" />Previous project</span><span className="mt-2 block text-lg font-bold group-hover:text-purple-600 dark:group-hover:text-purple-400">{previous.title}</span></Link> : <span />}{next ? <Link href={`/projects/${next.slug}`} className="group rounded-2xl border border-slate-200 bg-white/70 p-5 text-right transition hover:-translate-y-1 hover:border-pink-300 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900/70 dark:hover:border-pink-700"><span className="flex items-center justify-end gap-2 text-xs font-semibold uppercase tracking-[.16em] text-slate-500">Next project <ArrowRight className="size-4" /></span><span className="mt-2 block text-lg font-bold group-hover:text-pink-600 dark:group-hover:text-pink-400">{next.title}</span></Link> : <span />}</nav>
-    </main>
-  </div>
+  const navSections = [
+    "home",
+    ...(data.visibility.profile ? ["about"] : []),
+    ...(data.visibility.skills ? ["skills"] : []),
+    ...(data.visibility.projects ? ["projects"] : []),
+    "contact",
+  ]
+
+  return (
+    <div className="relative min-h-screen">
+      <SiteNav
+        sections={navSections}
+        projects={data.projects}
+        profile={data.profile}
+        variant="inner"
+      />
+
+      <main id="content" className="relative pt-24 sm:pt-28">
+        <div className="shell">
+          <Link
+            href="/#projects"
+            className="group inline-flex items-center gap-2 font-mono text-[0.6rem] uppercase tracking-label text-white/40 transition-colors hover:text-primary"
+          >
+            <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
+            Back to selected work
+          </Link>
+
+          <header className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-14">
+            <Reveal y={16}>
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/[0.08] px-3 py-1 font-mono text-[0.6rem] uppercase tracking-label text-primary">
+                  <Sparkles className="h-3 w-3" />
+                  Case study
+                </span>
+                <span className="font-mono text-[0.6rem] uppercase tracking-label text-white/35">
+                  {String(index + 1).padStart(2, "0")} / {String(data.projects.length).padStart(2, "0")}
+                </span>
+                <span className="h-3 w-px bg-white/15" />
+                <span className="font-mono text-[0.6rem] capitalize tracking-label text-white/35">
+                  {statusLabel}
+                </span>
+              </div>
+
+              <h1 className="mt-6 font-display text-display-sm text-white sm:text-display-md">
+                {project.title}
+              </h1>
+
+              <p className="mt-6 max-w-xl text-[1rem] leading-[1.75] text-white/55">
+                {project.longDescription || project.description}
+              </p>
+
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                {projectUrl ? (
+                  <a
+                    href={projectUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn-signal group"
+                  >
+                    Visit live project
+                    <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </a>
+                ) : (
+                  <Link href="/#contact" className="btn-signal group">
+                    Discuss a similar build
+                    <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </Link>
+                )}
+                {project.repoUrl ? (
+                  <a
+                    href={project.repoUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn-ghost"
+                  >
+                    <Github className="h-4 w-4" />
+                    Repository
+                  </a>
+                ) : null}
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.1} y={20}>
+              <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-white/10 shadow-[0_50px_120px_-50px_rgba(0,0,0,1)]">
+                <ProjectCover project={project} index={index} />
+                <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10" />
+              </div>
+            </Reveal>
+          </header>
+
+          <Reveal delay={0.12}>
+            <dl className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.07] sm:grid-cols-4">
+              {[
+                { icon: UserRound, label: "Role", value: project.role || "Not documented", capitalize: false },
+                {
+                  icon: CalendarDays,
+                  label: "Timeline",
+                  value: `${formatDate(project.startDate)} — ${formatDate(project.endDate, "Present")}`,
+                  capitalize: false,
+                },
+                {
+                  icon: Layers3,
+                  label: "Stack",
+                  value: `${techStack.length} technologies`,
+                  capitalize: false,
+                },
+                { icon: CircleDot, label: "Status", value: statusLabel, capitalize: true },
+              ].map((item) => (
+                <div key={item.label} className="bg-ink/80 p-5">
+                  <item.icon className="h-4 w-4 text-primary/70" />
+                  <dt className="mt-3 font-mono text-[0.55rem] uppercase tracking-label text-white/30">
+                    {item.label}
+                  </dt>
+                  <dd
+                    className={`mt-1.5 text-[0.85rem] text-white/80 ${
+                      item.capitalize ? "capitalize" : ""
+                    }`}
+                  >
+                    {item.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
+
+          <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-16">
+            <article className="space-y-12">
+              <Reveal>
+                <div>
+                  <div className="flex items-center gap-3">
+                    <span className="font-mono text-[0.6rem] uppercase tracking-label text-primary">01</span>
+                    <span className="h-px w-8 bg-white/20" />
+                    <span className="eyebrow">Overview</span>
+                  </div>
+                  <h2 className="mt-5 font-display text-2xl tracking-tight text-white/90 sm:text-3xl">
+                    Built with purpose.
+                  </h2>
+                  <p className="mt-5 max-w-2xl text-[0.975rem] leading-[1.8] text-white/55">
+                    {project.description}
+                  </p>
+                </div>
+              </Reveal>
+
+              {project.problem || project.solution ? (
+                <Reveal>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {project.problem ? (
+                      <div className="panel p-6">
+                        <span className="eyebrow text-primary/70">The challenge</span>
+                        <h3 className="mt-3 font-display text-lg text-white/90">Problem</h3>
+                        <p className="mt-3 text-[0.85rem] leading-relaxed text-white/50">
+                          {project.problem}
+                        </p>
+                      </div>
+                    ) : null}
+                    {project.solution ? (
+                      <div className="panel p-6">
+                        <span className="eyebrow text-primary/70">The approach</span>
+                        <h3 className="mt-3 font-display text-lg text-white/90">Solution</h3>
+                        <p className="mt-3 text-[0.85rem] leading-relaxed text-white/50">
+                          {project.solution}
+                        </p>
+                      </div>
+                    ) : null}
+                  </div>
+                </Reveal>
+              ) : null}
+
+              <ListSection
+                index="02"
+                label="Contribution"
+                title="What I built"
+                items={project.contributions}
+                variant="numbered"
+              />
+
+              {project.features.length ? (
+                <Reveal>
+                  <div>
+                    <div className="flex items-center gap-3">
+                      <span className="font-mono text-[0.6rem] uppercase tracking-label text-primary">03</span>
+                      <span className="h-px w-8 bg-white/20" />
+                      <span className="eyebrow">Capabilities</span>
+                    </div>
+                    <h2 className="mt-5 font-display text-2xl tracking-tight text-white/90 sm:text-3xl">
+                      Key features
+                    </h2>
+                    <ul className="mt-6 flex flex-wrap gap-2">
+                      {project.features.map((feature) => (
+                        <li
+                          key={feature}
+                          className="rounded-full border border-white/[0.09] bg-white/[0.025] px-3.5 py-2 text-[0.78rem] text-white/60"
+                        >
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </Reveal>
+              ) : null}
+
+              <ListSection
+                index="04"
+                label="Constraints"
+                title="Challenges"
+                items={project.challenges}
+              />
+
+              <ListSection index="05" label="Outcome" title="Results" items={project.results} />
+
+              <ProjectGallery images={project.gallery} />
+            </article>
+
+            <aside className="h-fit space-y-4 lg:sticky lg:top-28">
+              <div className="panel p-6">
+                <span className="eyebrow">Technology</span>
+                <ul className="mt-5 space-y-2.5">
+                  {techStack.map((tech, techIndex) => (
+                    <li
+                      key={tech}
+                      className="flex items-center justify-between gap-3 border-b border-white/[0.06] pb-2.5 text-[0.85rem] text-white/60 last:border-0 last:pb-0"
+                    >
+                      {tech}
+                      <span className="font-mono text-[0.55rem] text-white/20">
+                        {String(techIndex + 1).padStart(2, "0")}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="panel p-6">
+                <span className="eyebrow">Links</span>
+                <div className="mt-4 space-y-2">
+                  {projectUrl ? (
+                    <a
+                      href={projectUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group flex items-center justify-between text-[0.85rem] text-white/60 transition-colors hover:text-primary"
+                    >
+                      Live project
+                      <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    </a>
+                  ) : null}
+                  {project.repoUrl ? (
+                    <a
+                      href={project.repoUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group flex items-center justify-between text-[0.85rem] text-white/60 transition-colors hover:text-primary"
+                    >
+                      Repository
+                      <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    </a>
+                  ) : null}
+                  <Link
+                    href="/resume"
+                    className="group flex items-center justify-between text-[0.85rem] text-white/60 transition-colors hover:text-primary"
+                  >
+                    Full résumé
+                    <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </Link>
+                </div>
+              </div>
+
+              <div className="relative overflow-hidden rounded-3xl border border-primary/25 bg-primary/[0.07] p-6">
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(200,250,79,0.35),transparent_65%)] blur-2xl"
+                />
+                <p className="relative font-display text-lg leading-snug tracking-tight text-white">
+                  Need something similar built?
+                </p>
+                <p className="relative mt-2 text-[0.8rem] leading-relaxed text-white/55">
+                  I&apos;m available for backend and automation work.
+                </p>
+                <Link href="/#contact" className="btn-signal relative mt-5 w-full justify-center">
+                  Start a conversation
+                  <ArrowUpRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </aside>
+          </div>
+
+          <nav
+            aria-label="Project navigation"
+            className="mt-16 grid gap-4 border-t border-white/[0.08] pt-8 sm:grid-cols-2"
+          >
+            {previous ? (
+              <Link
+                href={`/projects/${previous.slug}`}
+                className="group rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30"
+              >
+                <span className="flex items-center gap-2 font-mono text-[0.55rem] uppercase tracking-label text-white/30">
+                  <ArrowLeft className="h-3.5 w-3.5" />
+                  Previous
+                </span>
+                <span className="mt-3 block font-display text-lg tracking-tight text-white/80 transition-colors group-hover:text-white">
+                  {previous.title}
+                </span>
+              </Link>
+            ) : (
+              <span />
+            )}
+            {next ? (
+              <Link
+                href={`/projects/${next.slug}`}
+                className="group rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 text-right transition-all duration-300 hover:-translate-y-1 hover:border-primary/30"
+              >
+                <span className="flex items-center justify-end gap-2 font-mono text-[0.55rem] uppercase tracking-label text-white/30">
+                  Next
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </span>
+                <span className="mt-3 block font-display text-lg tracking-tight text-white/80 transition-colors group-hover:text-white">
+                  {next.title}
+                </span>
+              </Link>
+            ) : (
+              <span />
+            )}
+          </nav>
+        </div>
+      </main>
+
+      <SiteFooter profile={data.profile} basePath="/" />
+    </div>
+  )
 }

@@ -46,6 +46,7 @@ export function ImageUpload({ name, folder = "projects", multiple = false, initi
       {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
       {paths.length ? <div className="flex flex-wrap gap-2">
         {paths.map((imagePath) => <div key={imagePath} className="group relative overflow-hidden rounded-lg border bg-muted">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={imagePath} alt="Uploaded preview" className="size-20 object-cover" />
           <Button type="button" size="icon" variant="destructive" className="absolute right-1 top-1 size-6 opacity-0 transition-opacity group-hover:opacity-100 focus:opacity-100" onClick={() => remove(imagePath)} aria-label="Remove uploaded image"><X className="size-3" /></Button>
         </div>)}

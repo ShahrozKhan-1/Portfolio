@@ -89,37 +89,170 @@
     {
       "id": 1,
       "title": "VisionIMS",
+      "slug": "visionims",
       "description": "Internal management system with projects, leads, tickets, attendance, real-time chat, milestones, and role-based access control.",
+      "longDescription": "An internal operations platform that keeps projects, leads, tickets, attendance and team chat in one place — with role-based access control applied consistently across every module.",
+      "problem": "Delivery, support and attendance lived in separate spreadsheets and group chats, so status was hard to read and accountability was unclear.",
+      "solution": "Django and Django REST Framework model the business domain — projects, milestones, leads, tickets and attendance — behind per-role permissions, with real-time chat over WebSockets and a PostgreSQL schema designed for reporting.",
+      "role": "Backend development",
+      "contributions": [
+        "Built backend APIs and business workflows across projects, leads and tickets",
+        "Implemented role-based access control for module-level permissions",
+        "Added attendance tracking and milestone management",
+        "Built real-time chat and notifications with WebSockets"
+      ],
+      "features": [
+        "Project and lead management",
+        "Tickets and milestones",
+        "Attendance tracking",
+        "Real-time chat",
+        "Role-based access control"
+      ],
+      "challenges": [
+        "Keeping permission rules consistent across every API endpoint",
+        "Modelling overlapping project, ticket and attendance data cleanly"
+      ],
+      "results": [
+        "One workspace replaced several spreadsheets and group chats",
+        "Permissions are enforced centrally instead of per screen"
+      ],
+      "techStack": ["Django", "Django REST Framework", "PostgreSQL", "WebSockets"],
       "tags": "Django, DRF, PostgreSQL",
-      "imageUrl": "/placeholder.svg?height=300&width=500",
+      "imageUrl": "/placeholder.svg?height=600&width=800",
+      "gallery": [],
       "linkUrl": "https://www.visionims.com",
+      "liveUrl": "https://www.visionims.com",
+      "repoUrl": "",
+      "status": "completed",
+      "startDate": "2025-07",
+      "endDate": "",
       "orderIndex": 2
     },
     {
       "id": 2,
       "title": "EvaHires",
+      "slug": "evahires",
       "description": "AI-powered hiring platform with candidate onboarding, resume matching, live interviews, recording, transcripts, and AI-generated evaluations.",
+      "longDescription": "An end-to-end hiring workflow: candidate intake, resume matching, AI-led live interviews, recording, transcription and structured evaluation — served by a FastAPI backend with a React front end and PostgreSQL.",
+      "problem": "Hiring teams were stitching scheduling, screening and note-taking together across disconnected tools, so candidate context was lost between each step.",
+      "solution": "A single workflow API connects onboarding, matching, interviews and evaluation. OpenAI and ElevenLabs power conversational interviews and transcripts, Redis handles asynchronous work, and Docker keeps environments reproducible.",
+      "role": "API and workflow development",
+      "contributions": [
+        "Designed and built REST APIs for candidate onboarding, job management and resume matching",
+        "Integrated OpenAI and ElevenLabs for live interviews, recording and transcript generation",
+        "Modelled evaluation data and AI-generated candidate assessments in PostgreSQL",
+        "Containerised the stack with Docker and added Redis-backed async processing",
+        "Shipped React-facing features in a three-person Agile team with Git-based reviews"
+      ],
+      "features": [
+        "Candidate onboarding and job management",
+        "Resume matching",
+        "AI live interviews with recording",
+        "Automatic transcripts",
+        "AI-generated candidate evaluations",
+        "Secure media storage"
+      ],
+      "challenges": [
+        "Coordinating long-running interview and transcription work without blocking API requests",
+        "Keeping AI-generated evaluations consistent across different interview formats"
+      ],
+      "results": [
+        "The hiring flow moved from disconnected tools to a single API-driven pipeline",
+        "Transcripts and evaluations are produced automatically after each interview"
+      ],
+      "techStack": ["FastAPI", "React", "PostgreSQL", "Redis", "Docker", "OpenAI", "ElevenLabs"],
       "tags": "FastAPI, React, PostgreSQL",
-      "imageUrl": "/placeholder.svg?height=300&width=500",
+      "imageUrl": "/placeholder.svg?height=600&width=800",
+      "gallery": [],
       "linkUrl": "https://www.evahires.com",
+      "liveUrl": "https://www.evahires.com",
+      "repoUrl": "",
+      "status": "completed",
+      "startDate": "2025-07",
+      "endDate": "",
       "orderIndex": 1
     },
     {
       "id": 3,
       "title": "Web Scraping Automation",
+      "slug": "web-scraping-automation",
       "description": "Reusable Selenium and BeautifulSoup scraping solutions with pagination, dynamic content handling, data cleaning, multithreading, and CSV export.",
+      "longDescription": "A collection of reusable extraction pipelines for dynamic websites — handling pagination, rendering, retries and cleaning, then exporting structured datasets.",
+      "problem": "Product and research data had to be collected by hand from sites with pagination, lazy loading and dynamic content — slowly, and differently every time.",
+      "solution": "Reusable Selenium and BeautifulSoup pipelines handle pagination, dynamic rendering, retries and normalisation, then export clean structured data to CSV. Multithreading cuts the wall-clock time of large collections.",
+      "role": "Automation development",
+      "contributions": [
+        "Built reusable extraction scripts for ecommerce, job and news sites",
+        "Handled pagination and dynamic content with Selenium",
+        "Cleaned and normalised output with BeautifulSoup and Requests",
+        "Added multithreading to speed up large collections"
+      ],
+      "features": [
+        "Pagination handling",
+        "Dynamic content support",
+        "Data cleaning and normalisation",
+        "CSV export",
+        "Reusable site adapters"
+      ],
+      "challenges": [
+        "Site markup changes breaking selectors",
+        "Keeping output schemas consistent across very different sources"
+      ],
+      "results": [
+        "Collections that took hours now run unattended",
+        "Every export lands in the same clean schema"
+      ],
+      "techStack": ["Python", "Selenium", "BeautifulSoup", "Requests"],
       "tags": "Python, Selenium, BeautifulSoup",
-      "imageUrl": "/placeholder.svg?height=300&width=500",
+      "imageUrl": "/placeholder.svg?height=600&width=800",
+      "gallery": [],
       "linkUrl": "",
+      "liveUrl": "",
+      "repoUrl": "",
+      "status": "completed",
+      "startDate": "2025-01",
+      "endDate": "2025-12",
       "orderIndex": 3
     },
     {
       "id": 4,
       "title": "Automation & AI Integration",
+      "slug": "automation-ai-integration",
       "description": "Zapier and n8n workflows connecting QuickBooks, Monday.com, AI services, and automated contextual chatbot responses.",
+      "longDescription": "Cross-platform workflows that keep business records in sync and route incoming questions through AI services for contextual answers.",
+      "problem": "Customer, vendor and payment records were duplicated between QuickBooks and Monday.com, and routine questions needed a faster first response.",
+      "solution": "Zapier workflows synchronise QuickBooks records with Monday.com using explicit triggers and field mappings, while an n8n workflow processes incoming questions through AI services and returns contextual answers.",
+      "role": "Automation integration",
+      "contributions": [
+        "Designed the QuickBooks to Monday.com sync workflow, triggers and field mappings",
+        "Configured workflow logic for customers, vendors and payments",
+        "Built an n8n chatbot workflow integrating AI services",
+        "Tested edge cases and reconciled data across both systems"
+      ],
+      "features": [
+        "QuickBooks and Monday.com connections",
+        "Trigger and field mapping logic",
+        "AI service integrations",
+        "Contextual chatbot responses"
+      ],
+      "challenges": [
+        "Mapping fields between systems with different data models",
+        "Keeping synchronisation idempotent so records do not duplicate"
+      ],
+      "results": [
+        "Records stay consistent across both platforms without manual entry",
+        "Routine questions are answered automatically with context"
+      ],
+      "techStack": ["Zapier", "n8n", "AI integrations"],
       "tags": "Zapier, n8n, AI Integrations",
-      "imageUrl": "/placeholder.svg?height=300&width=500",
-      "linkUrl": "#contact",
+      "imageUrl": "/placeholder.svg?height=600&width=800",
+      "gallery": [],
+      "linkUrl": "",
+      "liveUrl": "",
+      "repoUrl": "",
+      "status": "completed",
+      "startDate": "2025-03",
+      "endDate": "2025-10",
       "orderIndex": 4
     }
   ],
@@ -151,5 +284,11 @@
       "rating": 5,
       "orderIndex": 3
     }
-  ]
+  ],
+  "visibility": {
+    "profile": true,
+    "skills": true,
+    "projects": true,
+    "reviews": true
+  }
 }

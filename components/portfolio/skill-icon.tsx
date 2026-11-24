@@ -20,6 +20,7 @@ import {
 } from "lucide-react"
 import type { ReactNode } from "react"
 import type { Skill } from "@/lib/site-types"
+import { cn } from "@/lib/utils"
 
 type BrandIcon = {
   path: string
@@ -49,33 +50,68 @@ const fallbackSkillIcons: Record<string, ReactNode> = {
   zap: <Zap className="h-8 w-8" />,
 } as const
 
-export function hasBrandSkillIcon(skill: Skill): boolean {
+function resolveBrandIcon(skill: Skill): BrandIcon | undefined {
   const normalizedName = skill.name.trim().toLowerCase()
   const normalizedKey = skill.iconKey.trim().toLowerCase()
-  return Boolean(brandSkillIcons[normalizedName] ?? brandSkillIcons[normalizedKey])
+  return brandSkillIcons[normalizedName] ?? brandSkillIcons[normalizedKey]
 }
 
-export function SkillIcon({ skill }: { skill: Skill }) {
-  const normalizedName = skill.name.trim().toLowerCase()
-  const normalizedKey = skill.iconKey.trim().toLowerCase()
-  const brandIcon = brandSkillIcons[normalizedName] ?? brandSkillIcons[normalizedKey]
+// A few brand marks ship with very dark colours that disappear on an ink canvas.
+const BRAND_COLOR_OVERRIDES: Record<string, string> = {
+  django: "#44B78B",
+}
+
+function resolveBrandColor(skill: Skill, icon: BrandIcon): string {
+  return BRAND_COLOR_OVERRIDES[skill.name.trim().toLowerCase()] ?? `#${icon.hex}`
+}
+
+export function hasBrandSkillIcon(skill: Skill): boolean {
+  return Boolean(resolveBrandIcon(skill))
+}
+
+/** Brand colour as a CSS hex string, or null when the skill has no brand mark. */
+export function getSkillBrandColor(skill: Skill): string | null {
+  const icon = resolveBrandIcon(skill)
+  return icon ? resolveBrandColor(skill, icon) : null
+}
+
+export function SkillIcon({
+  skill,
+  className,
+  glow = false,
+}: {
+  skill: Skill
+  className?: string
+  glow?: boolean
+}) {
+  const brandIcon = resolveBrandIcon(skill)
 
   if (brandIcon) {
+    const color = resolveBrandColor(skill, brandIcon)
     return (
       <svg
         aria-hidden="true"
         focusable="false"
         role="img"
         viewBox="0 0 24 24"
-        className="h-8 w-8"
-        style={{ color: `#${brandIcon.hex}` }}
+        className={cn("h-8 w-8", className)}
+        style={{
+          color,
+          filter: glow
+            ? `drop-shadow(0 0 10px ${color}88) brightness(1.28) saturate(1.08)`
+            : undefined,
+        }}
       >
         <path fill="currentColor" d={brandIcon.path} />
       </svg>
     )
   }
 
-  return fallbackSkillIcons[normalizedKey] ?? (
-    <Code className="h-8 w-8" />
+  const normalizedKey = skill.iconKey.trim().toLowerCase()
+
+  return (
+    <span className={cn("inline-flex text-white/80", className)}>
+      {fallbackSkillIcons[normalizedKey] ?? <Code className="h-8 w-8" />}
+    </span>
   )
 }
