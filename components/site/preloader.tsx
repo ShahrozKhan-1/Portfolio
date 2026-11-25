@@ -73,8 +73,8 @@ export function Preloader() {
           aria-hidden="true"
         >
           <div className="flex items-center justify-between">
-            <span className="eyebrow text-white/50">Shahroz Khan — Portfolio</span>
-            <span className="eyebrow text-white/50">Lahore, PK</span>
+            <span className="eyebrow text-white/60">Shahroz Khan / Portfolio</span>
+            <span className="eyebrow text-white/60">Lahore, PK</span>
           </div>
 
           <div className="flex flex-col gap-6">
@@ -92,7 +92,7 @@ export function Preloader() {
 
             <div className="flex items-end justify-between gap-6">
               <div className="w-full max-w-md">
-                <div className="mb-3 flex items-center justify-between font-mono text-[0.65rem] uppercase tracking-label text-white/40">
+                <div className="mb-3 flex items-center justify-between font-mono text-[0.65rem] uppercase tracking-label text-white/60">
                   <span>Initialising interface</span>
                   <span>{String(progress).padStart(3, "0")}%</span>
                 </div>
@@ -110,7 +110,7 @@ export function Preloader() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between font-mono text-[0.65rem] uppercase tracking-label text-white/35">
+          <div className="flex items-center justify-between font-mono text-[0.65rem] uppercase tracking-label text-white/55">
             <span>Python · Django · FastAPI</span>
             <span className="hidden sm:inline">Scroll to explore</span>
           </div>

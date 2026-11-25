@@ -81,13 +81,13 @@ export const metadata: Metadata = {
     url: "/",
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-    siteName: "Shahroz Khan — Portfolio",
+    siteName: "Shahroz Khan Portfolio",
     images: [
       {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Shahroz Khan — Python Backend Developer",
+        alt: "Shahroz Khan, Python Backend Developer",
       },
     ],
   },

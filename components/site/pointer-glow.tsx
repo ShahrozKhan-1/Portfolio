@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react"
 
 /**
- * A soft, lagging light that follows the pointer — adds material depth on
+ * A soft, lagging light that follows the pointer, adding material depth on
  * desktop without replacing the native cursor.
  */
 export function PointerGlow() {
@@ -37,7 +37,7 @@ export function PointerGlow() {
       y += (ty - y) * 0.09
       node.style.transform = `translate3d(${x - 320}px, ${y - 320}px, 0)`
       if (Math.abs(tx - x) < 0.6 && Math.abs(ty - y) < 0.6) {
-        // Settled — stop the loop until the pointer moves again.
+        // Settled: stop the loop until the pointer moves again.
         active = false
         return
       }

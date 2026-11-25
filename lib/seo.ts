@@ -2,7 +2,7 @@ import type { Profile, Project } from "@/lib/site-types"
 
 export const SITE_URL = "https://shahrozkhan.vercel.app"
 export const SITE_NAME = "Shahroz Khan"
-export const SITE_TITLE = "Shahroz Khan — Python Backend Developer"
+export const SITE_TITLE = "Shahroz Khan | Python Backend Developer"
 export const SITE_DESCRIPTION =
   "Python backend developer in Lahore, Pakistan. I build REST APIs, data pipelines and automations with Django, FastAPI, PostgreSQL, Redis and Docker."
 export const SITE_KEYWORDS = [
@@ -90,7 +90,7 @@ export function websiteSchema() {
     "@type": "WebSite",
     "@id": `${SITE_URL}/#website`,
     url: SITE_URL,
-    name: `${SITE_NAME} — Portfolio`,
+    name: `${SITE_NAME} Portfolio`,
     description: SITE_DESCRIPTION,
     inLanguage: "en",
     publisher: { "@id": `${SITE_URL}/#person` },

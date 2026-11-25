@@ -40,12 +40,12 @@ export function Projects({ projects }: { projects: Project[] }) {
           />
           <Reveal delay={0.1}>
             <div className="flex items-center gap-4 lg:pb-3">
-              <span className="font-mono text-[0.65rem] uppercase tracking-label text-white/35">
+              <span className="font-mono text-[0.65rem] uppercase tracking-label text-white/55">
                 {String(projects.length).padStart(2, "0")} case studies
               </span>
               <span className="h-px w-10 bg-white/15" />
-              <span className="font-mono text-[0.65rem] uppercase tracking-label text-white/35">
-                2025 — 2026
+              <span className="font-mono text-[0.65rem] uppercase tracking-label text-white/55">
+                2025 / 2026
               </span>
             </div>
           </Reveal>
@@ -72,9 +72,10 @@ export function Projects({ projects }: { projects: Project[] }) {
                     )}
                   />
                   <span
+                    aria-hidden="true"
                     className={cn(
                       "w-7 shrink-0 font-mono text-[0.65rem] transition-colors duration-300",
-                      isActive ? "text-primary" : "text-white/25",
+                      isActive ? "text-primary" : "text-white/55",
                     )}
                   >
                     {String(index + 1).padStart(2, "0")}
@@ -84,7 +85,7 @@ export function Projects({ projects }: { projects: Project[] }) {
                     <span
                       className={cn(
                         "flex items-baseline gap-3 font-display text-[clamp(1.5rem,2.4vw,2.1rem)] leading-none tracking-tight transition-all duration-500 ease-expo",
-                        isActive ? "translate-x-1 text-white" : "text-white/65",
+                        isActive ? "translate-x-1 text-white" : "text-white/70",
                       )}
                     >
                       {project.title}
@@ -92,29 +93,31 @@ export function Projects({ projects }: { projects: Project[] }) {
                     <span
                       className={cn(
                         "mt-2.5 block max-w-xl truncate text-[0.83rem] leading-relaxed transition-colors duration-300",
-                        isActive ? "text-white/50" : "text-white/30",
+                        isActive ? "text-white/55" : "text-white/55",
                       )}
                     >
                       {project.description}
                     </span>
+                    <span className="sr-only">View {project.title} case study</span>
                   </span>
 
                   <span
+                    aria-hidden="true"
                     className={cn(
-                      "grid h-9 w-9 shrink-0 place-items-center rounded-full border transition-all duration-300",
+                      "grid h-10 w-10 shrink-0 place-items-center rounded-full border transition-all duration-300",
                       isActive
                         ? "border-primary bg-primary text-primary-foreground"
-                        : "border-white/10 text-white/40",
+                        : "border-white/10 text-white/60",
                     )}
                   >
-                    <ArrowUpRight className="h-3.5 w-3.5" />
+                    <ArrowUpRight className="h-4 w-4" />
                   </span>
                 </Link>
               )
             })}
-            <div className="flex items-center justify-between py-5 font-mono text-[0.55rem] uppercase tracking-label text-white/25">
-              <span>Hover a row to preview</span>
-              <span>Click to open the case study</span>
+            <div className="flex items-center justify-between py-5 font-mono text-[0.55rem] uppercase tracking-label text-white/60">
+              <span>Hover or tab through to preview</span>
+              <span>Select a row to open the case study</span>
             </div>
           </div>
 
@@ -137,16 +140,22 @@ export function Projects({ projects }: { projects: Project[] }) {
                 <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/10" />
               </div>
 
-              <div className="mt-4 flex items-center justify-between gap-4 border-t border-white/[0.08] pt-4 font-mono text-[0.58rem] uppercase tracking-label">
-                <span className="text-white/30">
-                  {String(safeIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")} — Selected work
+              <div
+                aria-live="polite"
+                className="mt-4 flex items-center justify-between gap-4 border-t border-white/[0.08] pt-4 font-mono text-[0.58rem] uppercase tracking-label"
+              >
+                <span className="text-white/60">
+                  {String(safeIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")} · Selected work
                 </span>
                 <Link
                   href={`/projects/${activeProject.slug}`}
-                  className="group inline-flex shrink-0 items-center gap-1.5 text-white/60 transition-colors hover:text-primary"
+                  className="group inline-flex shrink-0 items-center gap-1.5 text-white/70 transition-colors hover:text-primary"
                 >
                   Open case study
-                  <ArrowUpRight className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  <ArrowUpRight
+                    aria-hidden="true"
+                    className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  />
                 </Link>
               </div>
             </div>
@@ -164,14 +173,13 @@ export function Projects({ projects }: { projects: Project[] }) {
                     <ProjectCover project={project} index={index} variant="compact" />
                   </div>
                   <div className="p-5">
-                    <div className="flex items-center justify-between font-mono text-[0.55rem] uppercase tracking-label text-white/30">
-                      <span>{String(index + 1).padStart(2, "0")}</span>
-                      <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary" />
+                    <div className="font-mono text-[0.55rem] uppercase tracking-label text-white/60">
+                      <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
                     </div>
                     <h3 className="mt-3 font-display text-xl tracking-tight text-white">
                       {project.title}
                     </h3>
-                    <p className="mt-2 line-clamp-2 text-[0.82rem] leading-relaxed text-white/40">
+                    <p className="mt-2 line-clamp-2 text-[0.82rem] leading-relaxed text-white/60">
                       {project.description}
                     </p>
                     <div className="mt-4 flex flex-wrap gap-1.5">
@@ -183,11 +191,20 @@ export function Projects({ projects }: { projects: Project[] }) {
                         .map((tag) => (
                           <span
                             key={tag}
-                            className="rounded-full border border-white/[0.09] px-2 py-0.5 font-mono text-[0.5rem] uppercase tracking-[0.12em] text-white/40"
+                            className="rounded-full border border-white/[0.09] px-2 py-0.5 font-mono text-[0.5rem] uppercase tracking-[0.12em] text-white/60"
                           >
                             {tag}
                           </span>
                         ))}
+                    </div>
+                    <div className="mt-4 flex items-center justify-between border-t border-white/[0.07] pt-3.5">
+                      <span className="font-mono text-[0.55rem] uppercase tracking-label text-white/60">
+                        View case study
+                      </span>
+                      <ArrowUpRight
+                        aria-hidden="true"
+                        className="h-4 w-4 text-primary transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                      />
                     </div>
                   </div>
                 </Link>

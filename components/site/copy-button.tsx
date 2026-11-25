@@ -36,11 +36,26 @@ export function CopyButton({ value, label = "Copy", className, toastLabel }: Cop
   }
 
   return (
-    <button type="button" onClick={copy} className={cn("group inline-flex items-center gap-2", className)}>
-      <span className="grid h-8 w-8 place-items-center rounded-full border border-white/12 bg-white/[0.04] transition-colors group-hover:border-primary/50 group-hover:bg-primary/10">
-        {copied ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5" />}
+    <button
+      type="button"
+      onClick={copy}
+      title={copied ? "Email address copied" : "Copy email address to clipboard"}
+      className={cn(
+        "group inline-flex min-h-11 items-center gap-2.5 rounded-full pr-1 transition-colors",
+        className,
+      )}
+    >
+      <span className="grid h-10 w-10 place-items-center rounded-full border border-white/12 bg-white/[0.04] transition-colors group-hover:border-primary/50 group-hover:bg-primary/10">
+        {copied ? (
+          <Check aria-hidden="true" className="h-4 w-4 text-primary" />
+        ) : (
+          <Copy aria-hidden="true" className="h-4 w-4" />
+        )}
       </span>
-      <span className="font-mono text-[0.65rem] uppercase tracking-label text-muted-foreground transition-colors group-hover:text-foreground">
+      <span
+        aria-live="polite"
+        className="font-mono text-[0.65rem] uppercase tracking-label text-white/55 transition-colors group-hover:text-white"
+      >
         {copied ? "Copied" : label}
       </span>
     </button>

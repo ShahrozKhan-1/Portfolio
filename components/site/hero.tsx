@@ -63,7 +63,7 @@ export function Hero({ profile, skills, projects }: HeroProps) {
                   <span className="availability-dot relative h-1.5 w-1.5 rounded-full bg-primary" />
                   Available for work
                 </span>
-                <span className="inline-flex items-center gap-1.5 font-mono text-[0.625rem] uppercase tracking-label text-white/40">
+                <span className="inline-flex items-center gap-1.5 font-mono text-[0.625rem] uppercase tracking-label text-white/55">
                   Lahore, PK
                   <span className="h-3 w-px bg-white/15" />
                   <LocalTime />
@@ -92,7 +92,7 @@ export function Hero({ profile, skills, projects }: HeroProps) {
                   Python Backend Developer
                 </span>
                 <span className="h-px w-8 bg-white/20" />
-                <span className="font-serif text-xl italic text-white/45">
+                <span className="font-serif text-xl italic text-white/60">
                   building systems, not just features
                 </span>
               </div>
@@ -109,13 +109,13 @@ export function Hero({ profile, skills, projects }: HeroProps) {
                 <Magnetic strength={6} className="w-full min-[420px]:w-auto">
                   <Link href="#projects" className="btn-signal group w-full justify-center min-[420px]:w-auto">
                     Explore selected work
-                    <ArrowDownRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:translate-y-0.5" />
+                    <ArrowDownRight aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:translate-y-0.5" />
                   </Link>
                 </Magnetic>
                 <Magnetic strength={5} className="w-full min-[420px]:w-auto">
                   <Link href="#contact" className="btn-ghost group w-full justify-center min-[420px]:w-auto">
                     Start a conversation
-                    <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    <ArrowUpRight aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </Link>
                 </Magnetic>
               </div>
@@ -168,10 +168,10 @@ export function Hero({ profile, skills, projects }: HeroProps) {
                     <div className="absolute inset-0 grain opacity-[0.22] mix-blend-multiply" />
                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,transparent_45%,rgba(28,22,14,0.14))]" />
 
-                    <div className="absolute inset-x-0 top-0 flex items-start justify-between p-5 font-mono text-[0.55rem] uppercase tracking-label text-ink/40">
+                    <div className="absolute inset-x-0 top-0 flex items-start justify-between p-5 font-mono text-[0.55rem] uppercase tracking-label text-ink/65">
                       <span className="inline-flex items-center gap-1.5">
                         <span className="h-1 w-1 rounded-full bg-[#6b7f1f]" />
-                        Fig. 01 — Portrait
+                        Fig. 01 / Portrait
                       </span>
                       <span>31.5°N / 74.3°E</span>
                     </div>
@@ -181,11 +181,11 @@ export function Hero({ profile, skills, projects }: HeroProps) {
                         <p className="truncate font-display text-lg leading-none tracking-tight text-ink">
                           {profile.name}
                         </p>
-                        <p className="mt-1.5 truncate font-mono text-[0.55rem] uppercase tracking-label text-ink/50">
+                        <p className="mt-1.5 truncate font-mono text-[0.55rem] uppercase tracking-label text-ink/70">
                           {profile.role} · Lahore, PK
                         </p>
                       </div>
-                      <span className="shrink-0 font-mono text-[0.55rem] uppercase tracking-[0.16em] text-ink/35">
+                      <span className="shrink-0 font-mono text-[0.55rem] uppercase tracking-[0.16em] text-ink/65">
                         01 / 01
                       </span>
                     </figcaption>
@@ -237,7 +237,7 @@ export function Hero({ profile, skills, projects }: HeroProps) {
                   <p className="font-display text-2xl tracking-tight text-white/90 sm:text-[1.75rem]">
                     {stat.value}
                   </p>
-                  <p className="mt-1.5 font-mono text-[0.58rem] uppercase leading-relaxed tracking-label text-white/35">
+                  <p className="mt-1.5 font-mono text-[0.58rem] uppercase leading-relaxed tracking-label text-white/60">
                     {stat.label}
                   </p>
                 </div>
@@ -246,11 +246,11 @@ export function Hero({ profile, skills, projects }: HeroProps) {
 
             <Link
               href="#contact"
-              className="group inline-flex items-center gap-2 self-start font-mono text-[0.6rem] uppercase tracking-label text-white/45 transition-colors hover:text-primary sm:self-auto"
+              className="group inline-flex min-h-10 items-center gap-2 self-start font-mono text-[0.6rem] uppercase tracking-label text-white/60 transition-colors hover:text-primary sm:self-auto"
             >
               <span className="availability-dot h-1.5 w-1.5 rounded-full bg-primary" />
               Open to full-time &amp; freelance
-              <ArrowUpRight className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              <ArrowUpRight aria-hidden="true" className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
           </div>
         </FadeIn>
@@ -263,7 +263,7 @@ export function Hero({ profile, skills, projects }: HeroProps) {
             <span className="relative flex h-7 w-4 justify-center overflow-hidden rounded-full border border-white/15">
               <span className="scroll-cue-line mt-1 h-2 w-px bg-primary" />
             </span>
-            <span className="font-mono text-[0.55rem] uppercase tracking-label text-white/30">
+            <span className="font-mono text-[0.55rem] uppercase tracking-label text-white/60">
               Scroll
             </span>
           </div>
@@ -273,7 +273,7 @@ export function Hero({ profile, skills, projects }: HeroProps) {
           >
             {ticker.map((item) => (
               <span key={item} className="flex items-center">
-                <span className="px-6 font-display text-[clamp(1rem,2.2vw,1.4rem)] uppercase tracking-tight text-white/35">
+                <span className="px-6 font-display text-[clamp(1rem,2.2vw,1.4rem)] uppercase tracking-tight text-white/55">
                   {item}
                 </span>
                 <span className="text-primary/60">✳</span>

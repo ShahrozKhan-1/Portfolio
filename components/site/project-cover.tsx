@@ -139,7 +139,7 @@ export function ProjectCover({
           compact ? "p-4" : "p-5 sm:p-6",
         )}
       >
-        <div className="flex items-center justify-between font-mono text-[0.55rem] uppercase tracking-label text-white/50">
+        <div className="flex items-center justify-between font-mono text-[0.55rem] uppercase tracking-label text-white/60">
           <span className="inline-flex items-center gap-1.5">
             <span className="h-1 w-1 rounded-full bg-primary" />
             Case study

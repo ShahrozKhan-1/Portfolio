@@ -31,7 +31,7 @@ export default function AdminLoginPage({
           <h1 className="mt-2 font-display text-3xl tracking-tight text-white">
             Portfolio control panel
           </h1>
-          <p className="mt-2 text-sm leading-relaxed text-white/40">
+          <p className="mt-2 text-sm leading-relaxed text-white/60">
             Sign in with the single admin account configured in your environment variables.
           </p>
         </div>
@@ -46,7 +46,7 @@ export default function AdminLoginPage({
           <div className="space-y-2">
             <label
               htmlFor="username"
-              className="font-mono text-[0.6rem] uppercase tracking-label text-white/40"
+              className="font-mono text-[0.6rem] uppercase tracking-label text-white/60"
             >
               Username
             </label>
@@ -62,7 +62,7 @@ export default function AdminLoginPage({
           <div className="space-y-2">
             <label
               htmlFor="password"
-              className="font-mono text-[0.6rem] uppercase tracking-label text-white/40"
+              className="font-mono text-[0.6rem] uppercase tracking-label text-white/60"
             >
               Password
             </label>
@@ -84,7 +84,7 @@ export default function AdminLoginPage({
         <div className="mt-6 border-t border-white/[0.08] pt-5 text-center">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 font-mono text-[0.6rem] uppercase tracking-label text-white/45 transition-colors hover:text-primary"
+            className="inline-flex items-center gap-2 font-mono text-[0.6rem] uppercase tracking-label text-white/60 transition-colors hover:text-primary"
           >
             <ArrowLeft className="h-3 w-3" />
             Back to portfolio

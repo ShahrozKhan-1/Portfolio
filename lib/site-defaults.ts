@@ -10,7 +10,7 @@ export const DEFAULT_SITE_DATA: SiteData = {
   profile: {
     name: "Shahroz Khan",
     role: "Python Backend Developer",
-    headline: "I build the backend products quietly depend on — REST APIs, data pipelines and automations that stay reliable long after launch.",
+    headline: "I build the backend products quietly depend on: REST APIs, data pipelines and automations that stay reliable long after launch.",
     about:
       "I'm a Python developer based in Lahore who likes the invisible parts of software: APIs with clear contracts, schemas that hold up, and background jobs that quietly do their work. Most of what I build sits between a product team and the data it depends on.",
     summary:
@@ -103,11 +103,11 @@ export const DEFAULT_SITE_DATA: SiteData = {
       description:
         "Internal management system with projects, leads, tickets, attendance, real-time chat, milestones, and role-based access control.",
       longDescription:
-        "An internal operations platform that keeps projects, leads, tickets, attendance and team chat in one place — with role-based access control applied consistently across every module.",
+        "An internal operations platform that keeps projects, leads, tickets, attendance and team chat in one place, with role-based access control applied consistently across every module.",
       problem:
         "Delivery, support and attendance lived in separate spreadsheets and group chats, so status was hard to read and accountability was unclear.",
       solution:
-        "Django and Django REST Framework model the business domain — projects, milestones, leads, tickets and attendance — behind per-role permissions, with real-time chat over WebSockets and a PostgreSQL schema designed for reporting.",
+        "Django and Django REST Framework model the business domain (projects, milestones, leads, tickets and attendance) behind per-role permissions, with real-time chat over WebSockets and a PostgreSQL schema designed for reporting.",
       role: "Backend development",
       contributions: [
         "Built backend APIs and business workflows across projects, leads and tickets",
@@ -149,7 +149,7 @@ export const DEFAULT_SITE_DATA: SiteData = {
       description:
         "AI-powered hiring platform with candidate onboarding, resume matching, live interviews, recording, transcripts, and AI-generated evaluations.",
       longDescription:
-        "An end-to-end hiring workflow: candidate intake, resume matching, AI-led live interviews, recording, transcription and structured evaluation — served by a FastAPI backend with a React front end and PostgreSQL.",
+        "An end-to-end hiring workflow: candidate intake, resume matching, AI-led live interviews, recording, transcription and structured evaluation, served by a FastAPI backend with a React front end and PostgreSQL.",
       problem:
         "Hiring teams were stitching scheduling, screening and note-taking together across disconnected tools, so candidate context was lost between each step.",
       solution:
@@ -197,9 +197,9 @@ export const DEFAULT_SITE_DATA: SiteData = {
       description:
         "Reusable Selenium and BeautifulSoup scraping solutions with pagination, dynamic content handling, data cleaning, multithreading, and CSV export.",
       longDescription:
-        "A collection of reusable extraction pipelines for dynamic websites — handling pagination, rendering, retries and cleaning, then exporting structured datasets.",
+        "A collection of reusable extraction pipelines for dynamic websites: handling pagination, rendering, retries and cleaning, then exporting structured datasets.",
       problem:
-        "Product and research data had to be collected by hand from sites with pagination, lazy loading and dynamic content — slowly, and differently every time.",
+        "Product and research data had to be collected by hand from sites with pagination, lazy loading and dynamic content, slowly and differently every time.",
       solution:
         "Reusable Selenium and BeautifulSoup pipelines handle pagination, dynamic rendering, retries and normalisation, then export clean structured data to CSV. Multithreading cuts the wall-clock time of large collections.",
       role: "Automation development",

@@ -100,7 +100,7 @@ export async function generateMetadata({
 
   if (!project) return {}
 
-  const title = `${project.title} — ${project.role || "Case study"}`
+  const title = `${project.title}: ${project.role || "Case study"}`
   const description = truncate(project.longDescription || project.description)
 
   return {
@@ -119,13 +119,13 @@ export async function generateMetadata({
       url: absoluteUrl(`/projects/${project.slug}`),
       title,
       description,
-      siteName: `${SITE_NAME} — Portfolio`,
+      siteName: `${SITE_NAME} Portfolio`,
       images: [
         {
           url: "/og.png",
           width: 1200,
           height: 630,
-          alt: `${project.title} — backend case study by ${SITE_NAME}`,
+          alt: `${project.title}: backend case study by ${SITE_NAME}`,
         },
       ],
     },
@@ -195,7 +195,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         <div className="shell">
           <Link
             href="/#projects"
-            className="group inline-flex items-center gap-2 font-mono text-[0.6rem] uppercase tracking-label text-white/40 transition-colors hover:text-primary"
+            className="group inline-flex min-h-10 items-center gap-2 font-mono text-[0.6rem] uppercase tracking-label text-white/60 transition-colors hover:text-primary"
           >
             <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
             Back to selected work
@@ -208,11 +208,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                   <Sparkles className="h-3 w-3" />
                   Case study
                 </span>
-                <span className="font-mono text-[0.6rem] uppercase tracking-label text-white/35">
+                <span className="font-mono text-[0.6rem] uppercase tracking-label text-white/60">
                   {String(index + 1).padStart(2, "0")} / {String(data.projects.length).padStart(2, "0")}
                 </span>
                 <span className="h-3 w-px bg-white/15" />
-                <span className="font-mono text-[0.6rem] capitalize tracking-label text-white/35">
+                <span className="font-mono text-[0.6rem] capitalize tracking-label text-white/60">
                   {statusLabel}
                 </span>
               </div>
@@ -234,12 +234,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     className="btn-signal group"
                   >
                     Visit live project
-                    <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    <span className="sr-only"> (opens in a new tab)</span>
+                    <ArrowUpRight aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </a>
                 ) : (
                   <Link href="/#contact" className="btn-signal group">
                     Discuss a similar build
-                    <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    <ArrowUpRight aria-hidden="true" className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </Link>
                 )}
                 {project.repoUrl ? (
@@ -249,8 +250,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     rel="noreferrer"
                     className="btn-ghost"
                   >
-                    <Github className="h-4 w-4" />
+                    <Github aria-hidden="true" className="h-4 w-4" />
                     Repository
+                    <span className="sr-only"> (opens in a new tab)</span>
                   </a>
                 ) : null}
               </div>
@@ -271,7 +273,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 {
                   icon: CalendarDays,
                   label: "Timeline",
-                  value: `${formatDate(project.startDate)} — ${formatDate(project.endDate, "Present")}`,
+                  value: `${formatDate(project.startDate)} to ${formatDate(project.endDate, "Present")}`,
                   capitalize: false,
                 },
                 {
@@ -283,12 +285,12 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 { icon: CircleDot, label: "Status", value: statusLabel, capitalize: true },
               ].map((item) => (
                 <div key={item.label} className="bg-ink/80 p-5">
-                  <item.icon className="h-4 w-4 text-primary/70" />
-                  <dt className="mt-3 font-mono text-[0.55rem] uppercase tracking-label text-white/30">
+                  <dt className="flex items-center gap-2 font-mono text-[0.55rem] uppercase tracking-label text-white/60">
+                    <item.icon aria-hidden="true" className="h-4 w-4 text-primary/70" />
                     {item.label}
                   </dt>
                   <dd
-                    className={`mt-1.5 text-[0.85rem] text-white/80 ${
+                    className={`mt-3 text-[0.85rem] text-white/80 ${
                       item.capitalize ? "capitalize" : ""
                     }`}
                   >
@@ -324,7 +326,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                       <div className="panel p-6">
                         <span className="eyebrow text-primary/70">The challenge</span>
                         <h3 className="mt-3 font-display text-lg text-white/90">Problem</h3>
-                        <p className="mt-3 text-[0.85rem] leading-relaxed text-white/50">
+                        <p className="mt-3 text-[0.85rem] leading-relaxed text-white/60">
                           {project.problem}
                         </p>
                       </div>
@@ -333,7 +335,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                       <div className="panel p-6">
                         <span className="eyebrow text-primary/70">The approach</span>
                         <h3 className="mt-3 font-display text-lg text-white/90">Solution</h3>
-                        <p className="mt-3 text-[0.85rem] leading-relaxed text-white/50">
+                        <p className="mt-3 text-[0.85rem] leading-relaxed text-white/60">
                           {project.solution}
                         </p>
                       </div>
@@ -397,7 +399,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                       className="flex items-center justify-between gap-3 border-b border-white/[0.06] pb-2.5 text-[0.85rem] text-white/60 last:border-0 last:pb-0"
                     >
                       {tech}
-                      <span className="font-mono text-[0.55rem] text-white/20">
+                      <span aria-hidden="true" className="font-mono text-[0.55rem] text-white/60">
                         {String(techIndex + 1).padStart(2, "0")}
                       </span>
                     </li>
@@ -413,10 +415,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                       href={projectUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="group flex items-center justify-between text-[0.85rem] text-white/60 transition-colors hover:text-primary"
+                      className="group flex min-h-9 items-center justify-between text-[0.85rem] text-white/70 transition-colors hover:text-primary"
                     >
-                      Live project
-                      <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                      <span>Live project<span className="sr-only"> (opens in a new tab)</span></span>
+                      <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                     </a>
                   ) : null}
                   {project.repoUrl ? (
@@ -424,18 +426,18 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                       href={project.repoUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="group flex items-center justify-between text-[0.85rem] text-white/60 transition-colors hover:text-primary"
+                      className="group flex min-h-9 items-center justify-between text-[0.85rem] text-white/70 transition-colors hover:text-primary"
                     >
-                      Repository
-                      <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                      <span>Repository<span className="sr-only"> (opens in a new tab)</span></span>
+                      <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                     </a>
                   ) : null}
                   <Link
                     href="/resume"
-                    className="group flex items-center justify-between text-[0.85rem] text-white/60 transition-colors hover:text-primary"
+                    className="group flex min-h-9 items-center justify-between text-[0.85rem] text-white/70 transition-colors hover:text-primary"
                   >
                     Full résumé
-                    <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </Link>
                 </div>
               </div>
@@ -453,7 +455,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 </p>
                 <Link href="/#contact" className="btn-signal relative mt-5 w-full justify-center">
                   Start a conversation
-                  <ArrowUpRight className="h-4 w-4" />
+                  <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
                 </Link>
               </div>
             </aside>
@@ -468,8 +470,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 href={`/projects/${previous.slug}`}
                 className="group rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30"
               >
-                <span className="flex items-center gap-2 font-mono text-[0.55rem] uppercase tracking-label text-white/30">
-                  <ArrowLeft className="h-3.5 w-3.5" />
+                <span className="flex items-center gap-2 font-mono text-[0.55rem] uppercase tracking-label text-white/60">
+                  <ArrowLeft aria-hidden="true" className="h-3.5 w-3.5" />
                   Previous
                 </span>
                 <span className="mt-3 block font-display text-lg tracking-tight text-white/80 transition-colors group-hover:text-white">
@@ -484,9 +486,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 href={`/projects/${next.slug}`}
                 className="group rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 text-right transition-all duration-300 hover:-translate-y-1 hover:border-primary/30"
               >
-                <span className="flex items-center justify-end gap-2 font-mono text-[0.55rem] uppercase tracking-label text-white/30">
+                <span className="flex items-center justify-end gap-2 font-mono text-[0.55rem] uppercase tracking-label text-white/60">
                   Next
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  <ArrowRight aria-hidden="true" className="h-3.5 w-3.5" />
                 </span>
                 <span className="mt-3 block font-display text-lg tracking-tight text-white/80 transition-colors group-hover:text-white">
                   {next.title}

@@ -24,7 +24,7 @@ export default function NotFound() {
       <h1 className="mt-4 font-display text-display-xs text-white">
         This route was never <span className="font-serif italic text-primary">deployed.</span>
       </h1>
-      <p className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-white/45">
+      <p className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-white/60">
         The page you&apos;re looking for doesn&apos;t exist, moved, or is still sitting in a
         feature branch.
       </p>

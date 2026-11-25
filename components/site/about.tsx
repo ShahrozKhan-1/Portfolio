@@ -51,17 +51,17 @@ export function About({ profile, projects, skills }: AboutProps) {
               <div className="relative z-10 flex h-full flex-col justify-between gap-8">
                 <div className="flex items-start justify-between">
                   <span className="eyebrow">The approach</span>
-                  <Sparkles className="h-4 w-4 text-primary/70" />
+                  <Sparkles aria-hidden="true" className="h-4 w-4 text-primary/70" />
                 </div>
 
                 <p className="max-w-[34rem] font-display text-[clamp(1.35rem,2.4vw,1.85rem)] leading-[1.35] tracking-tight text-white/90">
                   I turn complex requirements into <span className="text-primary">clean, maintainable</span>{" "}
-                  software — pairing solid architecture with the patience to ship it.
+                  software, pairing solid architecture with the patience to ship it.
                 </p>
 
                 <div className="space-y-3">
                   <div className="h-px w-full bg-white/[0.08]" />
-                  <p className="max-w-[38rem] text-sm leading-relaxed text-white/45">
+                  <p className="max-w-[38rem] text-sm leading-relaxed text-white/60">
                     {profile.summary}
                   </p>
                 </div>
@@ -84,10 +84,10 @@ export function About({ profile, projects, skills }: AboutProps) {
                   <p className="font-display text-[2.5rem] leading-none tracking-tight text-white">
                     <CountUp value={stat.value} suffix={stat.suffix} />
                   </p>
-                  <p className="mt-3 font-mono text-[0.6rem] uppercase leading-relaxed tracking-label text-white/45">
+                  <p className="mt-3 font-mono text-[0.6rem] uppercase leading-relaxed tracking-label text-white/60">
                     {stat.label}
                   </p>
-                  <p className="mt-1 font-mono text-[0.55rem] uppercase tracking-label text-white/20">
+                  <p className="mt-1 font-mono text-[0.55rem] uppercase tracking-label text-white/60">
                     {stat.note}
                   </p>
                 </div>
@@ -103,12 +103,12 @@ export function About({ profile, projects, skills }: AboutProps) {
                   {PRINCIPLES.map((principle, index) => (
                     <li key={principle} className="group flex items-start gap-3">
                       <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full border border-primary/25 bg-primary/10">
-                        <Check className="h-3 w-3 text-primary" />
+                        <Check aria-hidden="true" className="h-3 w-3 text-primary" />
                       </span>
                       <span className="text-[0.9rem] leading-relaxed text-white/60 transition-colors group-hover:text-white/90">
                         {principle}
                       </span>
-                      <span className="ml-auto hidden font-mono text-[0.55rem] text-white/20 sm:block">
+                      <span className="ml-auto hidden font-mono text-[0.55rem] text-white/50 sm:block">
                         0{index + 1}
                       </span>
                     </li>
@@ -130,15 +130,15 @@ export function About({ profile, projects, skills }: AboutProps) {
                     <span className="eyebrow">Currently</span>
                     <h3 className="mt-4 font-display text-2xl tracking-tight text-white sm:text-[1.75rem]">
                       Python Developer
-                      <span className="text-white/35"> @ </span>
+                      <span className="text-white/55"> @ </span>
                       SiliconWhiz
                     </h3>
-                    <p className="mt-3 max-w-md text-sm leading-relaxed text-white/45">
+                    <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60">
                       Building internal operations platforms, AI hiring workflows and automation
-                      tooling inside a small Agile team — from database schema to deployed API.
+                      tooling inside a small Agile team, from database schema to deployed API.
                     </p>
                   </div>
-                  <Layers3 className="hidden h-5 w-5 shrink-0 text-white/30 sm:block" />
+                  <Layers3 aria-hidden="true" className="hidden h-5 w-5 shrink-0 text-white/60 sm:block" />
                 </div>
 
                 <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/[0.08] pt-5">
@@ -151,10 +151,10 @@ export function About({ profile, projects, skills }: AboutProps) {
                   </div>
                   <Link
                     href="/resume"
-                    className="group inline-flex items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-label text-white/60 transition-colors hover:text-primary"
+                    className="group inline-flex min-h-10 items-center gap-1.5 font-mono text-[0.65rem] uppercase tracking-label text-white/70 transition-colors hover:text-primary"
                   >
                     Full résumé
-                    <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </Link>
                 </div>
               </div>

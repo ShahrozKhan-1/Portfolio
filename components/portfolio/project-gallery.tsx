@@ -33,7 +33,7 @@ export function ProjectGallery({ images }: { images: ProjectImage[] }) {
           id="gallery-heading"
           className="flex items-center gap-2 font-display text-2xl tracking-tight text-white/90"
         >
-          <ImageIcon className="h-4 w-4 text-primary/70" />
+          <ImageIcon aria-hidden="true" className="h-4 w-4 text-primary/70" />
           Gallery
         </h2>
       </div>
@@ -44,7 +44,8 @@ export function ProjectGallery({ images }: { images: ProjectImage[] }) {
             key={`${image.url}-${index}`}
             type="button"
             onClick={() => setActive(index)}
-            className="group overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.02] text-left transition-all duration-300 hover:-translate-y-1 hover:border-primary/30"
+            aria-label={`Open image ${index + 1} of ${images.length}: ${image.alt}`}
+            className="group overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.02] text-left transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 focus-visible:border-primary"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -54,7 +55,7 @@ export function ProjectGallery({ images }: { images: ProjectImage[] }) {
               className="aspect-video w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
             />
             {image.caption ? (
-              <span className="block p-3 font-mono text-[0.6rem] uppercase tracking-label text-white/40">
+              <span className="block p-3 font-mono text-[0.6rem] uppercase tracking-label text-white/55">
                 {image.caption}
               </span>
             ) : null}
@@ -64,7 +65,11 @@ export function ProjectGallery({ images }: { images: ProjectImage[] }) {
 
       <Dialog open={active !== null} onOpenChange={(open) => !open && setActive(null)}>
         <DialogContent className="max-w-5xl border-white/10 bg-ink-2 p-2 text-white sm:p-4">
-          <DialogTitle className="sr-only">Project gallery image</DialogTitle>
+          <DialogTitle className="sr-only">
+            {current
+              ? `Gallery image ${active! + 1} of ${images.length}: ${current.alt}`
+              : "Project gallery image"}
+          </DialogTitle>
           {current ? (
             <div className="relative">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -80,7 +85,7 @@ export function ProjectGallery({ images }: { images: ProjectImage[] }) {
                   aria-label="Previous image"
                   onClick={() => setActive((active! - 1 + images.length) % images.length)}
                 >
-                  <ChevronLeft />
+                  <ChevronLeft aria-hidden="true" />
                 </Button>
                 <Button
                   size="icon"
@@ -88,9 +93,15 @@ export function ProjectGallery({ images }: { images: ProjectImage[] }) {
                   aria-label="Next image"
                   onClick={() => setActive((active! + 1) % images.length)}
                 >
-                  <ChevronRight />
+                  <ChevronRight aria-hidden="true" />
                 </Button>
               </div>
+              <p
+                aria-live="polite"
+                className="absolute inset-x-0 bottom-3 mx-auto w-fit rounded-full bg-black/70 px-3 py-1 font-mono text-[0.6rem] uppercase tracking-label text-white/80"
+              >
+                {active! + 1} / {images.length}
+              </p>
             </div>
           ) : null}
         </DialogContent>

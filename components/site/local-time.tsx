@@ -21,7 +21,7 @@ export function LocalTime({ className }: { className?: string }) {
 
   return (
     <span className={className} suppressHydrationWarning>
-      {time || "--:--"} <span className="text-white/35">PKT</span>
+      {time || "--:--"} <span className="text-white/55">PKT</span>
     </span>
   )
 }

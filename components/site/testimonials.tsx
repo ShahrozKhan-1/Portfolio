@@ -22,12 +22,12 @@ function ReviewCard({ review, index }: { review: Review; index: number }) {
     <figure className="mr-4 flex w-[19rem] shrink-0 flex-col justify-between whitespace-normal rounded-2xl border border-white/[0.08] bg-white/[0.025] p-6 transition-colors duration-500 hover:border-primary/25 hover:bg-white/[0.045] sm:mr-5 sm:w-[23rem] sm:p-7">
       <div>
         <div className="flex items-start justify-between">
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1" role="img" aria-label={`${review.rating || 5} out of 5 stars`}>
             {Array.from({ length: Math.max(1, Math.min(review.rating || 5, 5)) }).map((_, starIndex) => (
-              <Star key={starIndex} className="h-3.5 w-3.5 fill-primary text-primary" />
+              <Star key={starIndex} aria-hidden="true" className="h-3.5 w-3.5 fill-primary text-primary" />
             ))}
           </div>
-          <span className="font-serif text-4xl leading-none text-white/15">&rdquo;</span>
+          <span className="font-serif text-4xl leading-none text-white/50">&rdquo;</span>
         </div>
 
         <blockquote className="mt-5 text-[0.92rem] leading-[1.75] text-white/60">
@@ -45,17 +45,17 @@ function ReviewCard({ review, index }: { review: Review; index: number }) {
             className="h-10 w-10 rounded-full border border-white/15 object-cover"
           />
         ) : (
-          <span className="grid h-10 w-10 place-items-center rounded-full border border-primary/25 bg-primary/10 font-mono text-[0.7rem] text-primary">
+          <span aria-hidden="true" className="grid h-10 w-10 place-items-center rounded-full border border-primary/25 bg-primary/10 font-mono text-[0.7rem] text-primary">
             {initials(review.name)}
           </span>
         )}
         <div className="min-w-0">
           <p className="truncate text-[0.85rem] font-medium text-white/85">{review.name}</p>
-          <p className="truncate font-mono text-[0.58rem] uppercase tracking-[0.14em] text-white/35">
+          <p className="truncate font-mono text-[0.58rem] uppercase tracking-[0.14em] text-white/60">
             {review.role}
           </p>
         </div>
-        <span className="ml-auto font-mono text-[0.55rem] text-white/20">
+        <span aria-hidden="true" className="ml-auto font-mono text-[0.55rem] text-white/60">
           {String(index + 1).padStart(2, "0")}
         </span>
       </figcaption>
@@ -90,9 +90,9 @@ export function Testimonials({ reviews }: { reviews: Review[] }) {
               <div>
                 <p className="font-display text-4xl leading-none tracking-tight text-white">
                   {average.toFixed(1)}
-                  <span className="text-lg text-white/30">/5</span>
+                  <span className="text-lg text-white/55">/5</span>
                 </p>
-                <p className="mt-2 font-mono text-[0.6rem] uppercase tracking-label text-white/35">
+                <p className="mt-2 font-mono text-[0.6rem] uppercase tracking-label text-white/55">
                   {String(reviews.length).padStart(2, "0")} reviews
                 </p>
               </div>
@@ -101,6 +101,7 @@ export function Testimonials({ reviews }: { reviews: Review[] }) {
                 {reviews.map((review) => (
                   <span
                     key={review.id}
+                    aria-hidden="true"
                     className="grid h-9 w-9 place-items-center rounded-full border border-white/15 bg-ink-3 font-mono text-[0.6rem] text-white/60"
                   >
                     {initials(review.name)}

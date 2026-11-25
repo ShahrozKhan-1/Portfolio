@@ -20,7 +20,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command"
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog"
 import type { Profile, Project } from "@/lib/site-types"
 
 type CommandPaletteProps = {
@@ -73,17 +73,22 @@ export function CommandPalette({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="top-[14%] max-w-2xl translate-y-0 overflow-hidden border-white/10 bg-[#0A0A10]/95 p-0 shadow-[0_50px_140px_-40px_rgba(0,0,0,1)] backdrop-blur-2xl sm:rounded-3xl">
         <DialogTitle className="sr-only">Command menu</DialogTitle>
+        <DialogDescription className="sr-only">
+          Search sections, case studies and quick actions. Use the arrow keys to move, Enter to
+          select and Escape to close.
+        </DialogDescription>
         <Command className="bg-transparent text-foreground">
           <div className="flex items-center border-b border-white/[0.07] px-5 pr-12 [&_[cmdk-input-wrapper]]:w-full [&_[cmdk-input-wrapper]]:border-0 [&_[cmdk-input-wrapper]]:px-0">
             <CommandInput
               autoFocus
+              aria-label="Search sections, projects and actions"
               placeholder="Search sections, projects, actions…"
-              className="h-16 flex-1 border-0 bg-transparent px-0 text-[14px] outline-none placeholder:text-white/30 focus:outline-none focus-visible:outline-none focus:ring-0"
+              className="h-16 flex-1 border-0 bg-transparent px-0 text-[14px] outline-none placeholder:text-white/60 focus:outline-none focus-visible:outline-none focus:ring-0"
             />
           </div>
 
-          <CommandList className="max-h-[min(58vh,420px)] overflow-y-auto p-2 [&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-[0.6rem] [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-label [&_[cmdk-group-heading]]:text-white/35">
-            <CommandEmpty className="py-10 text-center text-sm text-white/45">
+          <CommandList className="max-h-[min(58vh,420px)] overflow-y-auto p-2 [&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-[0.6rem] [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-label [&_[cmdk-group-heading]]:text-white/60">
+            <CommandEmpty className="py-10 text-center text-sm text-white/60">
               Nothing found. Try “projects” or “email”.
             </CommandEmpty>
 
@@ -99,7 +104,7 @@ export function CommandPalette({
                     {String(index + 1).padStart(2, "0")}
                   </span>
                   <span>{SECTION_LABELS[section] ?? section}</span>
-                  <ArrowUpRight className="ml-auto h-3.5 w-3.5 text-white/30" />
+                  <ArrowUpRight aria-hidden="true" className="ml-auto h-3.5 w-3.5 text-white/60" />
                 </CommandItem>
               ))}
             </CommandGroup>
@@ -115,9 +120,9 @@ export function CommandPalette({
                       onSelect={() => go(`/projects/${project.slug}`)}
                       className={itemClass}
                     >
-                      <span className="h-1.5 w-1.5 rounded-full bg-primary/70" />
+                      <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-primary/70" />
                       <span>{project.title}</span>
-                      <span className="ml-auto font-mono text-[0.6rem] uppercase tracking-widest text-white/30">
+                      <span className="ml-auto font-mono text-[0.6rem] uppercase tracking-widest text-white/60">
                         Case study
                       </span>
                     </CommandItem>
@@ -129,16 +134,16 @@ export function CommandPalette({
             <CommandSeparator className="my-1 bg-white/[0.06]" />
             <CommandGroup heading="Elsewhere">
               <CommandItem value="copy email address" onSelect={copyEmail} className={itemClass}>
-                <Copy className="h-3.5 w-3.5 text-white/40" />
+                <Copy aria-hidden="true" className="h-3.5 w-3.5 text-white/55" />
                 <span>Copy email address</span>
-                <span className="ml-auto font-mono text-[0.6rem] text-white/30">{profile.email}</span>
+                <span className="ml-auto font-mono text-[0.6rem] text-white/60">{profile.email}</span>
               </CommandItem>
               <CommandItem value="email me contact" onSelect={() => go("/#contact")} className={itemClass}>
-                <Mail className="h-3.5 w-3.5 text-white/40" />
+                <Mail aria-hidden="true" className="h-3.5 w-3.5 text-white/55" />
                 <span>Start a project enquiry</span>
               </CommandItem>
               <CommandItem value="resume cv" onSelect={() => go("/resume")} className={itemClass}>
-                <FileText className="h-3.5 w-3.5 text-white/40" />
+                <FileText aria-hidden="true" className="h-3.5 w-3.5 text-white/55" />
                 <span>Open résumé</span>
               </CommandItem>
               <CommandItem
@@ -149,9 +154,9 @@ export function CommandPalette({
                 }}
                 className={itemClass}
               >
-                <Github className="h-3.5 w-3.5 text-white/40" />
-                <span>GitHub</span>
-                <ArrowUpRight className="ml-auto h-3.5 w-3.5 text-white/25" />
+                <Github aria-hidden="true" className="h-3.5 w-3.5 text-white/55" />
+                <span>GitHub<span className="sr-only"> (opens in a new tab)</span></span>
+                <ArrowUpRight aria-hidden="true" className="ml-auto h-3.5 w-3.5 text-white/60" />
               </CommandItem>
               <CommandItem
                 value="linkedin profile"
@@ -161,14 +166,14 @@ export function CommandPalette({
                 }}
                 className={itemClass}
               >
-                <Linkedin className="h-3.5 w-3.5 text-white/40" />
-                <span>LinkedIn</span>
-                <ArrowUpRight className="ml-auto h-3.5 w-3.5 text-white/25" />
+                <Linkedin aria-hidden="true" className="h-3.5 w-3.5 text-white/55" />
+                <span>LinkedIn<span className="sr-only"> (opens in a new tab)</span></span>
+                <ArrowUpRight aria-hidden="true" className="ml-auto h-3.5 w-3.5 text-white/60" />
               </CommandItem>
             </CommandGroup>
           </CommandList>
 
-          <div className="flex items-center justify-between border-t border-white/[0.07] px-4 py-2.5 font-mono text-[0.6rem] uppercase tracking-label text-white/30">
+          <div className="flex items-center justify-between border-t border-white/[0.07] px-4 py-2.5 font-mono text-[0.6rem] uppercase tracking-label text-white/60">
             <span>Command menu</span>
             <span className="flex items-center gap-3">
               <span>↑↓ navigate</span>

@@ -11,7 +11,7 @@ export function Backdrop() {
       {/* Deep base wash */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_65%_45%_at_50%_-8%,rgba(124,92,255,0.16),transparent_72%)]" />
 
-      {/* Layered CSS aurora — instant fallback and colour body behind the shader */}
+      {/* Layered CSS aurora: instant fallback and colour body behind the shader */}
       <div className="aurora-fallback absolute -inset-[18%] opacity-90 [mix-blend-mode:screen]">
         <div className="absolute -left-[8%] top-[-16%] h-[80vh] w-[72vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(124,92,255,0.30),transparent_60%)] blur-[120px]" />
         <div className="aurora-fallback absolute right-[-14%] top-[16%] h-[62vh] w-[58vw] rounded-full bg-[radial-gradient(circle_at_center,rgba(47,211,192,0.16),transparent_62%)] blur-[120px] [animation-delay:-9s]" />

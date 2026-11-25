@@ -25,7 +25,7 @@ const EXPERIENCE = [
     company: "SiliconWhiz",
     role: "Python Developer",
     location: "Lahore, Pakistan",
-    dates: "Jul 2025 — Present",
+    dates: "Jul 2025 to Present",
     bullets: [
       "Develop and maintain scalable backend applications and RESTful APIs using Python, FastAPI, Django, Flask, DRF, PostgreSQL and Docker.",
       "Contributed to VisionIMS, an internal management system with projects, leads, tickets, attendance and real-time chat, and hardened role-based access control.",
@@ -35,7 +35,7 @@ const EXPERIENCE = [
     ],
   },
   {
-    company: "SiliconWhiz — EvaHires",
+    company: "SiliconWhiz · EvaHires",
     role: "Junior Python Developer",
     location: "Lahore, Pakistan",
     dates: "",
@@ -85,22 +85,22 @@ const EDUCATION = [
   {
     title: "BS Computer Science",
     school: "University of Lahore, Lahore",
-    dates: "2021 — 2025",
+    dates: "2021 to 2025",
   },
   {
-    title: "ICS — Intermediate Computer Science",
+    title: "ICS, Intermediate Computer Science",
     school: "KIPS College, Lahore",
-    dates: "2021 — 2025",
+    dates: "2021 to 2025",
   },
   {
     title: "Matric with Computer Science",
     school: "Dar-e-Arqam School, Lahore",
-    dates: "2017 — 2019",
+    dates: "2017 to 2019",
   },
 ]
 
 const SUMMARY =
-  "Python backend developer with hands-on experience building REST APIs, data pipelines and web scraping systems. Comfortable across Django, Flask and FastAPI, with a solid grasp of PostgreSQL, Redis, Docker and third-party integrations — and a preference for clean, maintainable code."
+  "Python backend developer with hands-on experience building REST APIs, data pipelines and web scraping systems. Comfortable across Django, Flask and FastAPI, with a solid grasp of PostgreSQL, Redis, Docker and third-party integrations, and a preference for clean, maintainable code."
 
 export default function ResumePage() {
   return (
@@ -109,25 +109,34 @@ export default function ResumePage() {
         <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-ink via-ink/70 to-transparent" />
         <div className="shell relative">
           <div className="mt-3 flex items-center justify-between gap-3 rounded-full border border-white/[0.07] bg-ink/60 px-3 py-2 backdrop-blur-xl sm:mt-4">
-            <Link href="/" className="group flex items-center gap-2 rounded-full px-1 text-[13px] text-white/70 transition-colors hover:text-white">
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-primary font-display text-[11px] font-bold text-primary-foreground">
+            <Link href="/" className="group flex min-h-10 items-center gap-2 rounded-full px-1 text-[13px] text-white/75 transition-colors hover:text-white">
+              <span
+                aria-hidden="true"
+                className="grid h-8 w-8 place-items-center rounded-full bg-primary font-display text-[11px] font-bold text-primary-foreground"
+              >
                 SK
               </span>
-              <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
+              <ArrowLeft aria-hidden="true" className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
               <span className="hidden sm:inline">Back to portfolio</span>
+              <span className="sr-only">for Shahroz Khan</span>
             </Link>
 
-            <span className="hidden font-mono text-[0.6rem] uppercase tracking-label text-white/30 md:block">
-              Résumé — 2026
+            <span className="hidden font-mono text-[0.6rem] uppercase tracking-label text-white/60 md:block">
+              Résumé / 2026
             </span>
 
             <button
               type="button"
               onClick={() => window.print()}
-              className="group inline-flex h-9 items-center gap-2 rounded-full bg-primary px-4 text-[13px] font-medium text-primary-foreground transition-all hover:shadow-[0_12px_30px_-8px_rgba(200,250,79,0.5)]"
+              title="Print this résumé or save it as a PDF"
+              aria-describedby="resume-print-hint"
+              className="group inline-flex h-10 items-center gap-2 rounded-full bg-primary px-4 text-[13px] font-medium text-primary-foreground transition-all hover:shadow-[0_12px_30px_-8px_rgba(200,250,79,0.5)]"
             >
-              <Download className="h-3.5 w-3.5" />
+              <Download aria-hidden="true" className="h-3.5 w-3.5" />
               Print / Save PDF
+              <span id="resume-print-hint" className="sr-only">
+                Opens your browser print dialog where you can save this page as a PDF.
+              </span>
             </button>
           </div>
         </div>
@@ -137,7 +146,7 @@ export default function ResumePage() {
         <div className="mx-auto max-w-[880px] print:max-w-none">
           <div className="mb-5 flex items-end justify-between print:hidden">
             <p className="eyebrow">Curriculum vitae</p>
-            <p className="font-mono text-[0.6rem] uppercase tracking-label text-white/25">
+            <p className="font-mono text-[0.6rem] uppercase tracking-label text-white/60">
               Updated November 2026
             </p>
           </div>
@@ -151,13 +160,13 @@ export default function ResumePage() {
             <header className="relative">
               <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-start">
                 <div>
-                  <p className="font-mono text-[0.6rem] uppercase tracking-label text-[#6b7a1a]">
+                  <p className="font-mono text-[0.6rem] uppercase tracking-label text-[#5f6d12]">
                     Python · Backend · Automation
                   </p>
                   <h1 className="mt-3 font-display text-[clamp(2.5rem,6vw,3.75rem)] leading-none tracking-tight text-ink">
                     Shahroz Khan
                   </h1>
-                  <p className="mt-3 font-display text-lg tracking-tight text-ink/60">
+                  <p className="mt-3 font-display text-lg tracking-tight text-ink/70">
                     Python Backend Developer
                   </p>
                 </div>
@@ -165,9 +174,9 @@ export default function ResumePage() {
                   {CONTACT.slice(0, 3).map((item) => (
                     <span
                       key={item.label}
-                      className="inline-flex items-center gap-2 font-mono text-[0.68rem] text-ink/55"
+                      className="inline-flex items-center gap-2 font-mono text-[0.68rem] text-ink/65"
                     >
-                      <item.icon className="h-3 w-3 text-[#6b7a1a]" />
+                      <item.icon aria-hidden="true" className="h-3 w-3 text-[#5f6d12]" />
                       {item.href ? (
                         <a href={item.href} className="hover:text-ink">
                           {item.label}
@@ -187,15 +196,16 @@ export default function ResumePage() {
                     href={item.href ?? "#"}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-ink/55 hover:text-ink"
+                    className="inline-flex min-h-9 items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-ink/70 hover:text-ink"
                   >
-                    <item.icon className="h-3 w-3" />
+                    <item.icon aria-hidden="true" className="h-3 w-3" />
                     {item.label}
-                    <ArrowUpRight className="h-2.5 w-2.5 opacity-40" />
+                    <span className="sr-only"> (opens in a new tab)</span>
+                    <ArrowUpRight aria-hidden="true" className="h-2.5 w-2.5 opacity-60" />
                   </a>
                 ))}
-                <span className="inline-flex items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-[#6b7a1a]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#8aa11a]" />
+                <span className="inline-flex items-center gap-2 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-[#5f6d12]">
+                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-[#8aa11a]" />
                   Available for work
                 </span>
               </div>
@@ -209,7 +219,7 @@ export default function ResumePage() {
               <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
                 {SKILL_GROUPS.map((group) => (
                   <div key={group.label} className="flex flex-col gap-1 border-b border-ink/[0.07] pb-3">
-                    <dt className="font-mono text-[0.58rem] uppercase tracking-label text-[#6b7a1a]">
+                    <dt className="font-mono text-[0.58rem] uppercase tracking-label text-[#5f6d12]">
                       {group.label}
                     </dt>
                     <dd className="text-[0.85rem] leading-relaxed text-ink/70">{group.value}</dd>
@@ -225,9 +235,9 @@ export default function ResumePage() {
                     <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-baseline">
                       <h3 className="font-display text-[1.05rem] leading-snug tracking-tight text-ink">
                         {job.role}
-                        <span className="text-ink/35"> — {job.company}</span>
+                        <span className="text-ink/70"> · {job.company}</span>
                       </h3>
-                      <span className="shrink-0 font-mono text-[0.6rem] uppercase tracking-[0.12em] text-ink/40">
+                      <span className="shrink-0 font-mono text-[0.6rem] uppercase tracking-[0.12em] text-ink/65">
                         {job.location}
                         {job.dates ? ` · ${job.dates}` : ""}
                       </span>
@@ -256,9 +266,9 @@ export default function ResumePage() {
                       <h3 className="font-display text-[0.98rem] tracking-tight text-ink">
                         {item.title}
                       </h3>
-                      <p className="mt-0.5 text-[0.82rem] text-ink/55">{item.school}</p>
+                      <p className="mt-0.5 text-[0.82rem] text-ink/70">{item.school}</p>
                     </div>
-                    <span className="font-mono text-[0.6rem] uppercase tracking-[0.12em] text-ink/40">
+                    <span className="font-mono text-[0.6rem] uppercase tracking-[0.12em] text-ink/65">
                       {item.dates}
                     </span>
                   </div>
@@ -267,10 +277,10 @@ export default function ResumePage() {
             </ResumeSection>
 
             <footer className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-ink/10 pt-5 print:mt-6">
-              <p className="font-mono text-[0.58rem] uppercase tracking-label text-ink/35">
-                Shahroz Khan — Curriculum vitae
+              <p className="font-mono text-[0.58rem] uppercase tracking-label text-ink/70">
+                Shahroz Khan · Curriculum vitae
               </p>
-              <p className="font-mono text-[0.58rem] uppercase tracking-label text-ink/35">
+              <p className="font-mono text-[0.58rem] uppercase tracking-label text-ink/70">
                 shahrozkha83@gmail.com
               </p>
             </footer>
@@ -292,8 +302,8 @@ function ResumeSection({
 }) {
   return (
     <section className="mt-9 break-inside-avoid sm:mt-10">
-      <h2 className="flex items-center gap-3 border-t border-ink/10 pt-5 font-mono text-[0.6rem] uppercase tracking-label text-[#6b7a1a]">
-        <span className="text-ink/30">{index}</span>
+      <h2 className="flex items-center gap-3 border-t border-ink/10 pt-5 font-mono text-[0.6rem] uppercase tracking-label text-[#5f6d12]">
+        <span className="text-ink/60">{index}</span>
         {title}
       </h2>
       <div className="mt-4">{children}</div>
