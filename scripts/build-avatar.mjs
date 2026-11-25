@@ -4,6 +4,7 @@
  */
 import sharp from "sharp"
 
+
 const SIZES = [480, 720, 960]
 
 for (const width of SIZES) {
