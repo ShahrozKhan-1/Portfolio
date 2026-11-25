@@ -60,8 +60,8 @@ function SectionTitle({
   return (
     <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
       <div>
-        <h2 className="text-2xl font-bold text-slate-950 dark:text-white">{title}</h2>
-        <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{description}</p>
+        <h2 className="font-display text-2xl tracking-tight text-foreground">{title}</h2>
+        <p className="mt-1 text-sm text-muted-foreground">{description}</p>
       </div>
       {action}
     </div>
@@ -77,7 +77,7 @@ function Field({
 }) {
   return (
     <label className="block space-y-2">
-      <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{label}</span>
+      <span className="text-sm font-medium text-foreground/85">{label}</span>
       {children}
     </label>
   )
@@ -85,7 +85,7 @@ function Field({
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+    <div className="rounded-2xl border border-dashed border-white/15 p-8 text-center text-sm text-muted-foreground">
       {message}
     </div>
   )
@@ -185,11 +185,11 @@ function ProjectFormDialog({
 }
 
 function panelBorder() {
-  return "border border-slate-200/70 bg-white/90 shadow-xl backdrop-blur dark:border-slate-800 dark:bg-slate-950/80"
+  return "border border-white/10 bg-white/[0.035] shadow-[0_30px_90px_-50px_rgba(0,0,0,0.9)] backdrop-blur-xl"
 }
 
 function itemCard() {
-  return "rounded-2xl border border-slate-200 bg-slate-50 p-4 transition-colors hover:border-purple-200 dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-purple-900"
+  return "rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition-colors hover:border-primary/40"
 }
 
 export default function AdminDashboard({ data }: { data: SiteData }) {
@@ -330,29 +330,40 @@ export default function AdminDashboard({ data }: { data: SiteData }) {
   const currentTagsCount = data.projects.reduce((total, project) => total + splitTags(project.tags).length, 0)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 px-4 py-8 text-slate-950 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900 dark:text-white md:px-6">
+    <div className="relative min-h-screen px-4 py-10 text-foreground md:px-8">
       <div className="mx-auto max-w-7xl space-y-6">
-        <div className={cn("rounded-3xl p-6", panelBorder())}>
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <header className={cn("relative overflow-hidden rounded-[2rem] p-6 sm:p-8", panelBorder())}>
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-20 -top-28 size-72 rounded-full bg-primary/10 blur-3xl"
+          />
+          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div>
-              <p className="text-sm uppercase tracking-[0.25em] text-purple-600 dark:text-purple-300">
-                Admin Panel
-              </p>
-              <h1 className="mt-2 text-3xl font-bold">Portfolio content manager</h1>
-              <p className="mt-2 max-w-3xl text-sm text-slate-600 dark:text-slate-400">
-Update the profile content, and add, edit, or remove skills, projects, and reviews. Uploaded images are stored securely in Cloudinary.
+              <div className="flex items-center gap-3">
+                <span className="grid size-10 place-items-center rounded-full bg-primary font-display text-sm font-bold text-primary-foreground">
+                  SK
+                </span>
+                <p className="eyebrow text-primary">Admin panel</p>
+              </div>
+              <h1 className="mt-5 font-display text-3xl tracking-tight sm:text-4xl">
+                Portfolio content manager
+              </h1>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                Update your profile, then add, edit or remove skills, projects and reviews. Images are stored
+                securely in Cloudinary.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <Button asChild variant="outline" className="gap-2 bg-transparent">
-                <Link href="/" target="_blank">
-                  <ExternalLink className="h-4 w-4" />
+              <Button asChild variant="outline" className="gap-2">
+                <Link href="/" target="_blank" rel="noreferrer">
+                  <ExternalLink className="h-4 w-4" aria-hidden="true" />
                   View site
+                  <span className="sr-only">(opens in a new tab)</span>
                 </Link>
               </Button>
               <form action="/api/admin/logout" method="post">
                 <Button type="submit" variant="destructive" className="gap-2">
-                  <LogOut className="h-4 w-4" />
+                  <LogOut className="h-4 w-4" aria-hidden="true" />
                   Logout
                 </Button>
               </form>
@@ -361,42 +372,46 @@ Update the profile content, and add, edit, or remove skills, projects, and revie
 
           {status ? (
             <div
+              role="status"
+              aria-live="polite"
               className={cn(
-                "mt-6 rounded-2xl border p-4 text-sm",
+                "relative mt-6 rounded-2xl border p-4 text-sm",
                 status.type === "success"
-                  ? "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-900/20 dark:text-emerald-100"
-                  : "border-red-200 bg-red-50 text-red-800 dark:border-red-900/60 dark:bg-red-900/20 dark:text-red-100",
+                  ? "border-primary/25 bg-primary/10 text-primary"
+                  : "border-red-400/30 bg-red-500/10 text-red-200",
               )}
             >
               {status.message}
             </div>
           ) : null}
 
-          <div className="mt-6 grid gap-4 md:grid-cols-4">
+          <div className="relative mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
             {[
               { label: "Skills", value: data.skills.length },
               { label: "Projects", value: data.projects.length },
               { label: "Reviews", value: data.reviews.length },
               { label: "Tags", value: currentTagsCount },
             ].map((item) => (
-              <Card key={item.label} className="border-0 bg-white/80 dark:bg-slate-900/80">
+              <Card key={item.label} className="border-0 bg-white/[0.04]">
                 <CardContent className="p-4">
-                  <div className="text-2xl font-bold text-purple-600 dark:text-purple-300">{item.value}</div>
-                  <div className="text-sm text-slate-600 dark:text-slate-400">{item.label}</div>
+                  <div className="font-display text-3xl tracking-tight text-primary">{item.value}</div>
+                  <div className="mt-1 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted-foreground">
+                    {item.label}
+                  </div>
                 </CardContent>
               </Card>
             ))}
           </div>
-        </div>
+        </header>
 
         <Card className={`${panelBorder()} mb-6`}>
           <CardContent className="p-5 md:p-6">
-            <div className="flex flex-col gap-1 border-b border-slate-200/70 pb-4 dark:border-slate-800">
+            <div className="flex flex-col gap-1 border-b border-white/10 pb-4">
               <div className="flex items-center justify-between gap-3">
-                <h2 className="text-base font-semibold text-slate-950 dark:text-white">Public sections</h2>
+                <h2 className="text-base font-semibold text-foreground">Public sections</h2>
                 <Badge variant="secondary" className="font-normal">Controls homepage visibility</Badge>
               </div>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
+              <p className="text-sm text-muted-foreground">
                 Choose which areas visitors can see. Changes are saved automatically.
               </p>
             </div>
@@ -409,17 +424,17 @@ Update the profile content, and add, edit, or remove skills, projects, and revie
                     className={cn(
                       "flex items-center justify-between gap-3 rounded-xl border p-3 transition-colors",
                       visible
-                        ? "border-emerald-200 bg-emerald-50/60 dark:border-emerald-900/60 dark:bg-emerald-950/20"
-                        : "border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/60",
+                        ? "border-primary/25 bg-primary/[0.07]"
+                        : "border-white/10 bg-white/[0.03]",
                     )}
                   >
                     <div className="flex min-w-0 items-center gap-3">
-                      <div className={cn("flex size-9 shrink-0 items-center justify-center rounded-lg", visible ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300" : "bg-slate-200 text-slate-500 dark:bg-slate-800 dark:text-slate-400")}>
+                      <div className={cn("flex size-9 shrink-0 items-center justify-center rounded-lg", visible ? "bg-primary/15 text-primary" : "bg-white/[0.06] text-muted-foreground")}>
                         {visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
                       </div>
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold capitalize text-slate-900 dark:text-white">{section}</p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">{visible ? "Visible on site" : "Hidden from site"}</p>
+                        <p className="truncate text-sm font-semibold capitalize text-foreground">{section}</p>
+                        <p className="text-xs text-muted-foreground">{visible ? "Visible on site" : "Hidden from site"}</p>
                       </div>
                     </div>
                     <Button
@@ -569,7 +584,7 @@ Update the profile content, and add, edit, or remove skills, projects, and revie
                             <Input name="iconKey" placeholder="code, server, database, zap, terminal..." required />
                           </Field>
                           <Field label="Accent">
-                            <Input name="accent" placeholder="from-blue-500 to-cyan-500" required />
+                            <Input name="accent" placeholder="from-lime-300 to-emerald-400" required />
                           </Field>
                           <Field label="Order">
                             <Input name="orderIndex" type="number" defaultValue={0} />
@@ -594,10 +609,10 @@ Update the profile content, and add, edit, or remove skills, projects, and revie
                         <div className="flex items-start justify-between gap-4">
                           <div className="min-w-0">
                             <h3 className="font-semibold">{skill.name}</h3>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">
-                              {skill.category} · {skill.iconKey}
+                            <p className="text-sm text-muted-foreground">
+                              {skill.category} Â· {skill.iconKey}
                             </p>
-                            <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">{skill.description}</p>
+                            <p className="mt-2 text-sm text-foreground/85">{skill.description}</p>
                           </div>
                           <div className="flex shrink-0 gap-2">
                             <Button
@@ -653,10 +668,10 @@ Update the profile content, and add, edit, or remove skills, projects, and revie
                         <div className="flex items-start justify-between gap-4">
                           <div className="min-w-0">
                             <h3 className="font-semibold">{project.title}</h3>
-                            <p className="mt-1 truncate text-sm text-slate-500 dark:text-slate-400">
+                            <p className="mt-1 truncate text-sm text-muted-foreground">
                               {project.linkUrl || "No link"}
                             </p>
-                            <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">{project.description}</p>
+                            <p className="mt-2 text-sm text-foreground/85">{project.description}</p>
                             <div className="mt-3 flex flex-wrap gap-2">
                               {splitTags(project.tags).map((tag) => (
                                 <Badge key={tag} variant="secondary">
@@ -775,11 +790,11 @@ Update the profile content, and add, edit, or remove skills, projects, and revie
                         <div className="flex items-start justify-between gap-4">
                           <div className="min-w-0">
                             <h3 className="font-semibold">{review.name}</h3>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">{review.role}</p>
-                            <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">{review.content}</p>
+                            <p className="text-sm text-muted-foreground">{review.role}</p>
+                            <p className="mt-2 text-sm text-foreground/85">{review.content}</p>
                             <div className="mt-3 flex gap-1 text-yellow-500">
                               {Array.from({ length: review.rating }, (_, index) => (
-                                <span key={index}>★</span>
+                                <span key={index}>â˜…</span>
                               ))}
                             </div>
                           </div>

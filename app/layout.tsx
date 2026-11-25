@@ -5,6 +5,7 @@ import { Toaster } from "sonner"
 import "./globals.css"
 import { Backdrop } from "@/components/site/backdrop"
 import { Preloader } from "@/components/site/preloader"
+import { RouteProgress } from "@/components/site/route-progress"
 import { ScrollProgress } from "@/components/site/scroll-progress"
 import { DEFAULT_SITE_DATA } from "@/lib/site-defaults"
 import {
@@ -138,6 +139,7 @@ export default function RootLayout({
         <Backdrop />
         <Preloader />
         <ScrollProgress />
+        <RouteProgress />
         <div className="relative z-10">{children}</div>
         <Toaster
           theme="dark"
